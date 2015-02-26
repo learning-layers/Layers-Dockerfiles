@@ -1,4 +1,4 @@
-FROM busybox
+FROM learninglayers/base
 
 ADD conf/ /usr/local/openresty/conf/
 
