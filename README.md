@@ -1,2 +1,2 @@
 # Layers-Dockerfiles
-This repo contains all the basic Dockfiles used in the Layers Box.
+This repo contains all the basic Dockerfiles used in the Layers Box.
