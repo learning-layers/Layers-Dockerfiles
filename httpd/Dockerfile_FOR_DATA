@@ -1,6 +1,6 @@
 FROM busybox
-MAINTAINER Yordan Manolov <yordan.manolov@dbis-rwth.aachen.de>
+MAINTAINER Yordan Manolov <manolov@dbis-rwth.aachen.de>
 
-ENV HTTPD_DATA /var/www/html
-RUN mkdir -p $HTTPD_DATA
-VOLUME ["$HTTPD_DATA"]
+#ENV HTTPD_DATA /var/www/html
+#RUN mkdir -p $HTTPD_DATA
+#VOLUME ["$HTTPD_DATA"]
