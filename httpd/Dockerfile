@@ -1,6 +1,6 @@
 FROM learninglayers/base
 
-MAINTAINER Yordan Manolov 
+MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 
 ENV SITEDIR /var/www/http
 
