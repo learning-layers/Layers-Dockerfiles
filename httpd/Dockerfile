@@ -15,6 +15,7 @@ COPY apache2.conf /etc/apache2/apache2.conf
 
 #COPY docker-php-ext-* /usr/local/bin/ 
 COPY apache2-foreground /usr/local/bin/
+RUN chmod +x /usr/local/bin/apache2-foreground
 WORKDIR /var/www/htmldocker-php-ext-install
 
 EXPOSE 80
