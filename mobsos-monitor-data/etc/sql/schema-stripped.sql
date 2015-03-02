@@ -1,12 +1,3 @@
-drop schema if exists MM_DB;
-create schema if not exists MM_DB default character set utf8 collate utf8_general_ci;
-use MM_DB;
-
-grant usage on MM_DB.* to 'MM_USER'@'%' identified by 'MM_PASS'; 
-grant all privileges on MM_DB.* to 'MM_USER'@'%';
-grant all on MM_DB.* to 'MM_USER'@'%';
-grant select on openidconnect.* to 'MM_USER'@'%';
-
 create table log (
     id bigint not null auto_increment,
 	time datetime not null,
@@ -19,7 +10,7 @@ create table log (
     uri varchar(256) not null,
     status smallint not null,
     referer varchar(512),
-	useragent varchar(512),
+	useragent varchar(256),
 	accept varchar(128),
 	received_content varchar(64),
 	sent_content varchar(64),
@@ -56,4 +47,7 @@ create table log_ipgeo (
   lon float(8,5) not null,
   timezone varchar(10) not null,
   primary key  (ip)
-);
+)
+
+
+

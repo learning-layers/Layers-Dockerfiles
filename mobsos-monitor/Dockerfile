@@ -13,17 +13,19 @@ RUN apt-get install -y \
                      openjdk-7-jre \
                      dos2unix
 
-CMD mkdir /opt
+RUN mkdir /opt/mobsos-monitor
+RUN mkdir /opt/mobsos-monitor/etc
 WORKDIR /opt
 
-# Download and unzip newest build from CI server
-# Start the mysql daemon
-# dos2unix fixes the "textfile open" error
+# Download and unzip newest build from CI server, prepare database connections and then start. 
 CMD wget http://layers.dbis.rwth-aachen.de/jenkins/job/MobSOS%20Monitor/lastSuccessfulBuild/artifact/*zip*/archive.zip && \
     unzip archive.zip && \
-	mv archive mobsos-monitor && \
+	rm -rf archive/etc && \
+	cp -R archive/* mobsos-monitor && \
+	rm -rf archive.zip archive && \
     cd mobsos-monitor && \
-	mysql -uroot -ppass -hmysql mobsos_monitor < etc/sql/schema.sql && \
+	mysql -uroot -ppass -hmysql < etc/sql/schema.sql && \
 	dos2unix bin/start.sh && \
     chmod +x bin/start.sh && \
-    bin/start.sh
+    bin/start.sh /usr/local/openresty/logs/access.log
+
