@@ -4,17 +4,16 @@
 # Author: Dominik Renzel, RWTH Aachen University
 
 # set variables to be forwarded as environment variables to docker containers
-LAYERS_SCHEME="http";
-LAYERS_API_URL="localhost";
-LAYERS_APP_URL="localhost";
+LAYERS_API_URI="http://localhost/";
+LAYERS_APP_URI="http://localhost/";
 MYSQL_ROOT_PASSWORD="pass";
 
-echo "Layers API URL: $LAYERS_API_URL";
-echo "Layers App URL: $LAYERS_APP_URL";
+echo "Layers API URL: $LAYERS_API_URI";
+echo "Layers App URL: $LAYERS_APP_URI";
 
 # Define alias for docker run including all environment variables that must be available to containers.
 # TODO: think about solution of not exposing mysql root password to all containers
-alias drenv='docker run -e "LAYERS_API_URL=$LAYERS_API_URL" -e "LAYERS_APP_URL=$LAYERS_APP_URL" -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD"';
+alias drenv='docker run -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LAYERS_APP_URI=$LAYERS_APP_URI"';
 
 # Clean up: remove all docker containers first to avoid conflicts
 # IMPORTANT: make sure data volume containers stay there!
@@ -23,27 +22,16 @@ docker stop adapter mysql mobsos-monitor &&
 docker rm $(docker ps -a -q) &&
 echo "Removed all containers" &&
 
-# docker rmi $(docker images -q) &&
-# echo "Removed all images" &&
-
 # start Layers Storage mysql data volume container
-drenv --name mysql-data learninglayers/mysql-data &&
+drenv -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --name mysql-data learninglayers/mysql-data &&
 echo "Started Layers Common Data Storage mysql data volume container" &&
 
 # start Layers Storage mysql container
-# TODO: remove -p parameter and replace by link
-drenv -d -p 3306:3306 --volumes-from mysql-data --name mysql learninglayers/mysql &&
+drenv -d -p 3306:3306 -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --volumes-from mysql-data --name mysql learninglayers/mysql &&
 echo "Started Layers Common Data Storage mysql database server" &&
-sleep 5;
-
-# create OpenID Connect database
-#OIDC_USER="oidc" &&
-#OIDC_DB="openidconnect" &&
-#OIDC_PASS=`drenv --link mysql:mysql learninglayers/mysql-create -pMYSQL_ROOT_PASSWORD --new-database $OIDC_DB --new-user $OIDC_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | sed -e 's/-p//g'` &&
-#echo "Created OpenID Connect database $OIDC_DB with user $OIDC_USER ($OIDC_PASS)" &&
 
 # start Layers Adapter data volume container
-drenv --name adapter-data learninglayers/adapter-data &&
+drenv --name adapter-data nmaster/adapter-data &&
 echo "Started Layers Adapter data volume" &&
 
 # start Layers Adapter
@@ -52,7 +40,7 @@ echo "Started Layers Adapter" &&
 
 # create MobSOS Monitor user & database
 
-MM_DB="mobsos_monitor" && # MobSOS Monitor database
+MM_DB="mobsos_logs" && # MobSOS Monitor database
 MM_USER="mobsos_monitor" && # MobSOS Monitor database user
 MM_PASS="123456" &&
 #MM_PASS=`drenv --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $MM_DB --new-user $MM_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | sed -e 's/-p//g'` && # MobSOS Monitor database password (auto-generated)
