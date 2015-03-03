@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM learninglayers/base
 MAINTAINER Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
 
 RUN apt-get update -q && apt-get install -yq wget
