@@ -13,5 +13,5 @@ CMD sed -i "s/LAYERS_API_URL/${LAYERS_API_URL}/g" /opt/mobsos-monitor/etc/conf.p
 	sed -i "s/MM_USER/${MM_USER}/g" /opt/mobsos-monitor/etc/sql/schema.sql && \
 	sed -i "s/MM_DB/${MM_DB}/g" /opt/mobsos-monitor/etc/sql/schema.sql
 	
-# provide directory etc as volume
-VOLUME ["/opt/mobsos-monitor/etc/"]
+# provide directories etc and log as volumes
+VOLUME ["/opt/mobsos-monitor/etc/","/opt/mobsos-monitor/log"]
