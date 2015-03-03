@@ -24,7 +24,7 @@ CMD wget http://layers.dbis.rwth-aachen.de/jenkins/job/MobSOS%20Monitor/lastSucc
 	cp -R archive/* mobsos-monitor && \
 	rm -rf archive.zip archive && \
     cd mobsos-monitor && \
-	mysql -uroot -ppass -hmysql < etc/sql/schema.sql && \
+	mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql < etc/sql/schema.sql && \
 	dos2unix bin/start.sh && \
     chmod +x bin/start.sh && \
     bin/start.sh /usr/local/openresty/logs/access.log
