@@ -18,8 +18,8 @@
 -- Create schema OpenIDConnect
 --
 
-CREATE DATABASE IF NOT EXISTS OpenIDConnect;
-USE OpenIDConnect;
+--CREATE DATABASE IF NOT EXISTS OpenIDConnect;
+USE openidconnecttest;
 
 --
 -- Definition of table `access_token`
