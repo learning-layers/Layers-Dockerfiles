@@ -3,16 +3,14 @@ FROM learninglayers/base
 MAINTAINER Petru Nicolaescu
 
 # install mysql client
-RUN apt-get -y install mysql-client
+#RUN apt-get -y install mysql-client
 
-# Install build tools
-RUN apt-get install -y \
-                     wget \
-                     unzip \
-					 openjdk-7-jre \
-                     dos2unix
+RUN apt-get install -y wget \
+					   tar \
+					 mysql-client \
+					 openjdk-7-jre 
 
-RUN mkdir /opt
+#RUN mkdir /opt
 WORKDIR /opt
 
 CMD wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-7/v7.0.59/bin/apache-tomcat-7.0.59.tar.gz -O  /tempdircopy/apache-tomcat-7.0.59.tar.gz  && \
