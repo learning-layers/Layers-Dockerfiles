@@ -18,8 +18,8 @@ alias drenv='docker run -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LAYERS_APP_URI=$
 # Clean up: remove all docker containers first to avoid conflicts
 # IMPORTANT: make sure data volume containers stay there!
 
-docker stop adapter mysql mobsos-monitor &&
-docker rm $(docker ps -a -q) &&
+docker stop adapter mysql mobsos-monitor;
+docker rm $(docker ps -a -q);
 echo "Removed all containers" &&
 
 # start Layers Storage mysql data volume container
@@ -31,7 +31,7 @@ drenv -d -p 3306:3306 -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --volumes-fr
 echo "Started Layers Common Data Storage mysql database server" &&
 
 # start Layers Adapter data volume container
-drenv --name adapter-data nmaster/adapter-data &&
+drenv --name adapter-data learninglayers/adapter-data &&
 echo "Started Layers Adapter data volume" &&
 
 # start Layers Adapter
@@ -43,37 +43,15 @@ echo "Started Layers Adapter" &&
 MM_DB="mobsos_logs" && # MobSOS Monitor database
 MM_USER="mobsos_monitor" && # MobSOS Monitor database user
 MM_PASS="123456" &&
-#MM_PASS=`drenv --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $MM_DB --new-user $MM_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | sed -e 's/-p//g'` && # MobSOS Monitor database password (auto-generated)
-MM_IPINFODB_KEY="shitload" # MobSOS Monitor IPInfoDB API key (used for IP geolocation; check http://ipinfodb.com/ip_location_api_json.php to get a free key)
-
-echo "Created MobSOS Monitor database $MM_DB with user $MM_USER ($MM_PASS)" &&
+#MM_PASS=`drenv --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $MM_DB --new-user $MM_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` && # MobSOS Monitor database password (auto-generated)
+MM_IPINFODB_KEY="apikey" && # MobSOS Monitor IPInfoDB API key (used for IP geolocation; check http://ipinfodb.com/ip_location_api_json.php to get a free key)
 
 # start MobSOS Monitor data volume
-drenv -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "IPINFODB_KEY=$MM_IPINFODB_KEY" --name mobsos-monitor-data nmaster/mobsos-monitor-data &&
+drenv -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "IPINFODB_KEY=$MM_IPINFODB_KEY" --name mobsos-monitor-data learninglayers/mobsos-monitor-data &&
 echo "Started MobSOS Monitor data volume"
 
 # start MobSOS Monitor
-drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" --link mysql:mysql --volumes-from adapter-data --volumes-from mobsos-monitor-data --name mobsos-monitor nmaster/mobsos-monitor &&
+drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --link mysql:mysql --volumes-from adapter-data --volumes-from mobsos-monitor-data --name mobsos-monitor learninglayers/mobsos-monitor &&
 echo "Started MobSOS Monitor";
 
-# jump into MobSOS Monitor to check if monitoring works
-docker logs -f mobsos-monitor
-
-# create MobSOS Surveys user & database
-#MS_USER="mobsos_surveys" &&
-#MS_DB="mobsos_surveys" &&
-#MS_PASS=`drenv --link mysql:mysql learninglayers/mysql-create -ppass --new-database $MS_DB --new-user $MS_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | sed -e 's/-p//g'` &&
-#echo "Created MobSOS Surveys database $MS_DB with user $MS_USER ($MS_PASS)";
-
-# start MobSOS Surveys data volume
-#drenv -e "MS_PASS=$MS_PASS" -e "MS_USER=$MS_USER" -e "MS_DB=$MS_DB" --name mobsos-surveys-data nmaster/mobsos-surveys-data &&
-#echo "Started MobSOS Surveys data volume"
-
-#drenv -e "MS_PASS=$MS_PASS" -e "MS_USER=$MS_USER" -d --link mysql:mysql --volumes-from adapter-data --name mobsos-surveys nmaster/mobsos-surveys && 
-# retrieve IP address of MobSOS Surveys to add
-#MS_IP=`docker inspect -f '{{.NetworkSettings.IPAddress}}' mobsos-surveys` &&
-#echo "Started MobSOS Surveys at $MS_IP";
-
-
-
-# TODO: start rest of the containers...
+# TODO: add missing containers
