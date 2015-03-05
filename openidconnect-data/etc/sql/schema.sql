@@ -19,7 +19,8 @@
 --
 
 --CREATE DATABASE IF NOT EXISTS OpenIDConnect;
-USE openidconnecttest;
+CREATE DATABASE IF NOT EXISTS OpenIDConnect;
+USE OpenIDConnect;
 
 --
 -- Definition of table `access_token`
