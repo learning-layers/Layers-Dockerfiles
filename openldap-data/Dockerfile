@@ -4,7 +4,7 @@ FROM learninglayers/base
 ADD conf/ /usr/local/etc/openldap/
 
 # Create a database folder
-RUN /usr/local/etc/openldap/openldap-data
+RUN mkdir /usr/local/etc/openldap/openldap-data
 
 # provide directories conf and logs as volumes
 VOLUME ["/usr/local/etc/openldap"]
