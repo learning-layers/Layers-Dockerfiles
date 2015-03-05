@@ -1,17 +1,21 @@
 FROM learninglayers/base
 
-# add files to data volume 
-ADD etc /opt/mobsos-monitor/etc
+MAINTAINER Dominik Renzel
 
-# in MobSOS Monitor config replace API URI (environment variable $LAYERS_API_URI), database user and generated password (environment variables $MM_USER and $MM_PASS), and a valid key for the used IPInfoDB API (environment variable $IPINFODB_KEY).
-CMD sed -i "s/LAYERS_API_URI/${LAYERS_API_URI}/g" /opt/mobsos-monitor/etc/conf.properties && \
-	sed -i "s/PASSWORD/${MM_PASS}/g" /opt/mobsos-monitor/etc/conf.properties && \
-	sed -i "s/USER/${MM_USER}/g" /opt/mobsos-monitor/etc/conf.properties && \
-	sed -i "s/DATABASE/${MM_DB}/g" /opt/mobsos-monitor/etc/conf.properties && \
-	sed -i "s/IPINFODB_KEY/${IPINFODB_KEY}/g" /opt/mobsos-monitor/etc/conf.properties && \
-	sed -i "s/MM_PASS/${MM_PASS}/g" /opt/mobsos-monitor/etc/sql/schema.sql && \
-	sed -i "s/MM_USER/${MM_USER}/g" /opt/mobsos-monitor/etc/sql/schema.sql && \
-	sed -i "s/MM_DB/${MM_DB}/g" /opt/mobsos-monitor/etc/sql/schema.sql
+# add content to data volumes
+ADD etc /opt/mobsos-surveys/etc
+ADD doc /opt/mobsos-surveys/doc
+
+# do necessary replacements by environment variable values (
+CMD sed -i "s#MS_DB#${MS_DB}#g" /opt/mobsos-surveys/etc/sql/schema.sql && \
+	sed -i "s#MS_USER#${MS_USER}#g" /opt/mobsos-surveys/etc/sql/schema.sql && \
+	sed -i "s#MS_PASS#${MS_PASS}#g" /opt/mobsos-surveys/etc/sql/schema.sql && \
+	sed -i "s#LAYERS_API_URI#${LAYERS_API_URI}#g" /opt/mobsos-surveys/etc/i5.las2peer.webConnector.WebConnector.properties && \
+	sed -i "s#LAYERS_API_URI#${LAYERS_API_URI}#g" /opt/mobsos-surveys/etc/i5.las2peer.services.mobsos.SurveyService.properties && \
+	sed -i "s#MS_DB#${MS_DB}#g" /opt/mobsos-surveys/etc/i5.las2peer.services.mobsos.SurveyService.properties && \
+	sed -i "s#MS_USER#${MS_USER}#g" /opt/mobsos-surveys/etc/i5.las2peer.services.mobsos.SurveyService.properties && \
+	sed -i "s#MS_PASS#${MS_PASS}#g" /opt/mobsos-surveys/etc/i5.las2peer.services.mobsos.SurveyService.properties && \
+	sed -i "s#MS_OIDC_CLIENT_ID#${MS_OIDC_CLIENT_ID}#g" /opt/mobsos-surveys/etc/i5.las2peer.services.mobsos.SurveyService.properties
 	
 # provide directories etc and log as volumes
-VOLUME ["/opt/mobsos-monitor/etc/","/opt/mobsos-monitor/log"]
+VOLUME ["/opt/mobsos-surveys/etc/","/opt/mobsos-surveys/doc"]
