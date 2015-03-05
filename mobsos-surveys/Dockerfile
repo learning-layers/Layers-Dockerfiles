@@ -13,16 +13,23 @@ RUN apt-get install -y \
                      openjdk-7-jre \
                      dos2unix
 
-CMD mkdir /opt
 WORKDIR /opt
 
 # Download, unzip and start newest build from CI server
 CMD wget http://layers.dbis.rwth-aachen.de/jenkins/job/MobSOS%20Surveys/lastSuccessfulBuild/artifact/*zip*/archive.zip && \
     unzip archive.zip && \
-    mv archive mobsos-surveys && \
+	cd archive && \
+	rm -rf etc doc && \
+	mv ./* ../mobsos-surveys && \
+	cd .. && \
+	rm -rf archive archive.zip && \
     cd mobsos-surveys && \
-    dos2unix bin/start_network.sh && \
+	dos2unix bin/start_ServiceAgentGenerator.sh && \
+    chmod +x bin/start_ServiceAgentGenerator.sh && \
+	dos2unix bin/start_network.sh && \
     chmod +x bin/start_network.sh && \
-    bin/start_network.sh
+	
+    #bin/start_network.sh
+	while true; do echo hello world; sleep 1; done
 
 EXPOSE 8080
