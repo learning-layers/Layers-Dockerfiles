@@ -22,7 +22,7 @@ WORKDIR /usr/local/etc/openldap
 EXPOSE 389
 
 CMD /usr/local/libexec/slapd && \
-    sleep 5 && \ # sleep five seconds to give it enough time to start
+    sleep 5 && \
     ldapadd -x -w $LDAP_ROOT_PASSWORD -D "cn=LayersManager,dc=layersbox" -f /usr/local/etc/openldap/ldap-init.ldif && \
     pkill slapd && \
-    /usr/local/libexec/slapd -d 8 # that's the long-running process
+    /usr/local/libexec/slapd -d 8
