@@ -21,4 +21,5 @@ RUN wget ftp://gd.tuwien.ac.at/infosys/network/OpenLDAP/openldap-release/openlda
 WORKDIR /usr/local/etc/openldap
 EXPOSE 389
 
-CMD /usr/local/libexec/slapd -d 0
+CMD ldapadd -x -w $LDAP_ROOT_PASSWORD -D "cn=LayersManager,dc=layersbox" -f /usr/local/etc/openldap/ldap-init.ldif && \
+	/usr/local/libexec/slapd -d 8
