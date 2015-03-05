@@ -60,8 +60,6 @@ echo "Started MobSOS Surveys data volume"
 drenv -d -p 8081:8080 -e "MS_PASS=$MS_PASS" -e "MS_USER=$MM_USER" -e "MS_DB=$MM_DB" --link mysql:mysql --volumes-from mobsos-surveys-data --name mobsos-surveys nmaster/mobsos-surveys &&
 echo "Started MobSOS Surveys" &&
 
-docker logs -f mobsos-surveys
-
 # list all internal IP addresses of services to be added to Layers Adapter configuration
 MS_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} mobsos-surveys` &&
 MSF_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} mobsos-surveys-frontend` &&
