@@ -25,6 +25,7 @@ RUN  wget http://mirror.arcor-online.net/www.apache.org/tomcat/tomcat-7/v7.0.59/
 	     
 CMD	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql < /etc/sql/createdb.sql && \
 	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql OpenIDConnect < /etc/sql/schema.sql && \
+	 chmod +x /opt/tomcat/bin/startup.sh && \
 	 /opt/tomcat/bin/startup.sh
 
 EXPOSE 8080
