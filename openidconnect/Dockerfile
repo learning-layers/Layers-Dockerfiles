@@ -9,7 +9,8 @@ RUN apt-get install -y wget \
 					tar \
 					unzip \
 					 mysql-client \
-					 openjdk-7-jre 
+					 openjdk-7-jre \
+					 dos2unix
 					 
 WORKDIR /opt
 			
@@ -23,8 +24,9 @@ RUN  wget http://mirror.arcor-online.net/www.apache.org/tomcat/tomcat-7/v7.0.59/
 	 unzip target.zip && \
 	 mv /opt/archive/openidconnectldapoverlay/ldap-server-overlay/target/o#oauth2.war /opt/tomcat/webapps/o#oauth2.war
 	     
-CMD	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql < /etc/sql/createdb.sql && \
-	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql OpenIDConnect < /etc/sql/schema.sql && \
+CMD	 mysql -uroot -p$OIDC_MYSQL_PASSWORD -hmysql < /etc/sql/createdb.sql && \
+	 mysql -uroot -p$OIDC_MYSQL_PASSWORD -hmysql OpenIDConnect < /etc/sql/schema.sql && \
+	 dos2unix /opt/tomcat/bin/startup.sh && \
 	 chmod +x /opt/tomcat/bin/startup.sh && \
 	 /opt/tomcat/bin/startup.sh
 
