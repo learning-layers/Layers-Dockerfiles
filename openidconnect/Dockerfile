@@ -23,8 +23,8 @@ RUN  wget http://mirror.arcor-online.net/www.apache.org/tomcat/tomcat-7/v7.0.59/
 	 unzip target.zip && \
 	 mv /opt/archive/openidconnectldapoverlay/ldap-server-overlay/target/o#oauth2.war /opt/tomcat/webapps/o#oauth2.war
 	     
-CMD	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql < /etc/sql/schema.sql && \
-	 chmod +x /opt/tomcat/bin/startup.sh && \
+CMD	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql < /etc/sql/createdb.sql && \
+	 mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql OpenIDConnect < /etc/sql/schema.sql && \
 	 sh /opt/tomcat/bin/catalina.sh run
 
 EXPOSE 8080
