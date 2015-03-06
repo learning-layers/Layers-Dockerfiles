@@ -53,7 +53,7 @@
 	
 	<bean id="contextSource"
          class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-     <constructor-arg value="openldap:389/LDAP_DC"/> <!-- LDAP url goes here, format: ldap://url:port/root -->
+     <constructor-arg value="ldap://openldap:389/LDAP_DC"/> <!-- LDAP url goes here, format: ldap://url:port/root -->
 	 <property name="anonymousReadOnly" value="true"/>
    </bean>
 	
