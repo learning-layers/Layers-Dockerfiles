@@ -18,7 +18,7 @@
 -- Create schema OpenIDConnect
 --
 
---CREATE DATABASE IF NOT EXISTS OpenIDConnect;
+-- CREATE DATABASE IF NOT EXISTS OpenIDConnect;
 CREATE DATABASE IF NOT EXISTS OpenIDConnect;
 USE OpenIDConnect;
 
