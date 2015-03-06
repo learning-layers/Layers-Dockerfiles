@@ -2,6 +2,7 @@
 
 # A simple script to start a Layers Box as set of docker containers
 # Author: Dominik Renzel, RWTH Aachen University
+clear && 
 
 echo "== Layers Box Deployment Routine =="
 # set variables to be forwarded as environment variables to docker containers
@@ -40,7 +41,7 @@ drenv -d -p 80:80 --volumes-from adapter-data --name adapter learninglayers/adap
 echo "Started Layers Adapter" &&
 
 # start MobSOS Surveys frontend static content server
-docker run -d --name mobsos-surveys-frontend nmaster/mobsos-surveys-frontend &&
+docker run -d --name mobsos-surveys-frontend learninglayers/mobsos-surveys-frontend &&
 echo "Started MobSOS Surveys frontend static content server" &&
 
 echo "Please register MobSOS Surveys as OpenID Connect Client and enter client ID:" &&
@@ -57,7 +58,7 @@ drenv -e "MS_PASS=$MS_PASS" -e "MS_USER=$MS_USER" -e "MS_DB=$MS_DB" -e "MS_OIDC_
 echo "Started MobSOS Surveys data volume"
 
 # start MobSOS Surveys
-drenv -d -p 8081:8080 -e "MS_PASS=$MS_PASS" -e "MS_USER=$MM_USER" -e "MS_DB=$MM_DB" --link mysql:mysql --volumes-from mobsos-surveys-data --name mobsos-surveys nmaster/mobsos-surveys &&
+drenv -d -p 8082:8080 -e "MS_PASS=$MS_PASS" -e "MS_USER=$MS_USER" -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --link mysql:mysql --volumes-from mobsos-surveys-data --name mobsos-surveys nmaster/mobsos-surveys &&
 echo "Started MobSOS Surveys" &&
 
 # list all internal IP addresses of services to be added to Layers Adapter configuration
@@ -68,6 +69,10 @@ echo "Please add proxy pass directives for the following services in the Layers 
 echo "$MS_IP - MobSOS Surveys" &&
 echo "$MSF_IP - MobSOS Surveys (frontend static content server)" &&
 
-docker exec -it mobsos-surveys bash
+# if container starts as daemon, but terminates, inspect console output.
+docker logs -f mobsos-surveys 
+
+# if container runs through, exec into it.
+# docker exec -it mobsos-surveys bash
 # exec into adapter container to manually add services to configuration /usr/local/openresty/conf/nginx.conf
 #docker exec -it adapter /bin/bash -c 'vi /usr/local/openresty/conf/nginx.conf && /usr/local/openresty/nginx/sbin/nginx -s reload && echo "Layers Adapter configuration updated successfully"'

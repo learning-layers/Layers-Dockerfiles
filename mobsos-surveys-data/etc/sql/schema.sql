@@ -2,8 +2,8 @@ drop schema if exists MS_DB;
 create schema if not exists MS_DB default character set utf8 collate utf8_general_ci;
 use MS_DB;
 
-grant usage on *.* to MS_USER@'%' identified by 'MS_PASS'; 
-grant all privileges on .* to MS_USER@'%';
+grant all on MS_DB.* to 'MS_USER'@'%'; -- identified by 'MS_PASS'; 
+grant all privileges on MS_DB.* to 'MS_USER'@'%' with grant option;
 
 -- -----------------------------------------------------
 -- Definition table 'questionnaire'
@@ -71,12 +71,14 @@ create table response (
 );
 
 create table feedback (
+	id bigint not null auto_increment,
     user_id varchar(128) not null,
     client_id varchar(128) not null,
     rating smallint not null,
     comment varchar(2048),
-    time datetime not null default current_timestamp,
-    constraint rating_pk primary key (user_id , client_id)
+    time datetime not null,
+    constraint rating_pk primary key (id),
+    constraint rating_uk unique key (user_id, client_id)
 );
 
 insert into feedback(client_id,user_id, rating, comment) values 
