@@ -74,7 +74,6 @@ dependencies {
 	compile	javax, jersey, google, mysql, swagger, hibernate, swagger, jersey
 	
 	providedCompile	'javax.servlet:javax.servlet-api:3.0.1'	//only for eclipse as tomcat7 already uses servlet-api 3.0
-	
 }
 
 test {

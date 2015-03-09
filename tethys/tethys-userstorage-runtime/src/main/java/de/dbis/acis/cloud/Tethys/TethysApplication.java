@@ -2,7 +2,9 @@ package de.dbis.acis.cloud.Tethys;
 
 import javax.ws.rs.ApplicationPath;
 
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 
 /**
  * Deployment class for a JAX-RS (Jersey) application with Servlet 3.0.
@@ -30,8 +32,8 @@ public class TethysApplication extends ResourceConfig {
 //		register(com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider.class);
 //		register(com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON.class);
 //		register(com.wordnik.swagger.jaxrs.listing.ResourceListingProvider.class);
-//		register(new LoggingFilter());
-//		property(ServerProperties.TRACING, "ALL");
+		register(new LoggingFilter());
+		property(ServerProperties.TRACING, "ALL");
 		System.out.println("Tethys started!");
 		System.out.println("");
 	}
