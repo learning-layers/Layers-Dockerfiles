@@ -17,7 +17,6 @@ public class TethysApplication extends ResourceConfig {
 	public TethysApplication() {
 		System.out.println("Tethys starts...");
 		packages("de.dbis.acis.cloud.Tethys.resource");
-		register(new TethysBinder());
 		register(de.dbis.acis.cloud.Tethys.util.GsonMessageBodyHandler.class);
 		register(de.dbis.acis.cloud.Tethys.util.CORSFilter.class);
 		register(de.dbis.acis.cloud.Tethys.util.ContainerContextClosedHandler.class);
@@ -28,10 +27,6 @@ public class TethysApplication extends ResourceConfig {
 		register(com.wordnik.swagger.jersey.listing.ApiListingResourceJSON.class);
 		register(com.wordnik.swagger.jersey.listing.JerseyResourceListingProvider.class);
 		
-//		register(com.wordnik.swagger.jaxrs.listing.ApiListingResource.class);
-//		register(com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider.class);
-//		register(com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON.class);
-//		register(com.wordnik.swagger.jaxrs.listing.ResourceListingProvider.class);
 		register(new LoggingFilter());
 		property(ServerProperties.TRACING, "ALL");
 		System.out.println("Tethys started!");
