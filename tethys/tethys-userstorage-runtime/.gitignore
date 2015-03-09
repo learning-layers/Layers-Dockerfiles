@@ -52,5 +52,3 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-/build.gradle
-/gradle.properties
