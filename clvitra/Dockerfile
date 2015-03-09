@@ -26,8 +26,7 @@ RUN ln -fs /usr/lib/jvm/java-7-openjdk-amd64/jre/bin/java /etc/alternatives/java
 	cp -r /usr/clvitra.war /home/docker/tomcat/webapps
 		
 # Start Tomcat Server
-CMD	sed -i "s/baseurl/${LAYERS_API_URI}/g" service.conf && \
-	sh /home/docker/tomcat/bin/catalina.sh run && \
+CMD	sh /home/docker/tomcat/bin/catalina.sh run && \
 	#rabbitmqctl start_app && \
 	#rabbitmq-server -detached && \
 
