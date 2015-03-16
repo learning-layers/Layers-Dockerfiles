@@ -87,11 +87,12 @@ echo "" &&
 echo "Creating OpenID Connect database and user..." &&
 OIDC_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $OIDC_MYSQL_DB --new-user $OIDC_MYSQL_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
 echo " -> done" &&
+echo "" &&
 
 # start OpenID Connect data volume (TODO: switch to DockerHub)
 echo "Starting Layers OpenID Connect data volume..." &&
 docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox" --name openidconnect-data learninglayers/openidconnect-data &&
-echo " -> done (not yet working)" &&
+echo " -> done" &&
 echo "" && 
 
 # start OpenID Connect
