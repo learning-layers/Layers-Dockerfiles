@@ -5,7 +5,7 @@ use MM_DB;
 grant usage on MM_DB.* to 'MM_USER'@'%' identified by 'MM_PASS'; 
 grant all privileges on MM_DB.* to 'MM_USER'@'%';
 grant all on MM_DB.* to 'MM_USER'@'%';
-grant select on openidconnect.* to 'MM_USER'@'%';
+grant select on OIDC_MYSQL_DB.* to 'MM_USER'@'%';
 
 create table log (
     id bigint not null auto_increment,
