@@ -10,12 +10,11 @@ echo "This script will deploy a Layers Box in a Docker-enabled environment step-
 echo && 
 
 # set variables to be forwarded as environment variables to docker containers
-LAYERS_API_URI="http://192.168.53.109/";
-LAYERS_APP_URI="http://192.168.53.109/";
+LAYERS_API_URI="http://192.168.59.103/";
+LAYERS_APP_URI="http://192.168.59.103/";
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
-
 MYSQL_ROOT_PASSWORD="pass";
 LDAP_ROOT_PASSWORD="pass";
 OIDC_MYSQL_DB="OpenIDConnect";
@@ -42,7 +41,7 @@ echo "" &&
 echo "To clean up the Layers Box host environment, all containers will be removed, including all data containers! Backup data before you continue! (Press enter to continue)" && 
 read # Comment interactive step for complete automation
 
-echo "Removing all containers..." &&
+echo "Removing all containers..." &
 docker rm -f $(docker ps -a -q);
 echo " -> done" &&
 echo "" && 
@@ -121,8 +120,19 @@ echo "" &&
 
 # TODO: add missing containers
 
-echo "Finished... Layers Box up and running." ;
-echo "" ;
-echo "Container IPs: ";
-OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect`;
-echo " - OpenID Connect Provider: $OIDC_IP";
+echo "Finished... Layers Box up and running." &&
+echo "" &&
+
+# now display info for manual work (for now)
+
+# service container IPs (to be entered into Layers Adapter config)
+echo "Service Container IPs: " &&
+OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
+echo " - OpenID Connect Provider: $OIDC_IP" &&
+echo "" &&
+
+# generated passwords (mainly for databases)
+echo "Generated Passwords: " &&
+echo "  OIDC_MYSQL_PASS: $OIDC_MYSQL_PASS" &&
+echo "  MM_PASS: $MM_PASS";
+
