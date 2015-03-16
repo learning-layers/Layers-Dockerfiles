@@ -4,7 +4,7 @@ MAINTAINER Aarij Siddiqui
 
 ADD clvitra/ /etc/clvitra
 
-CMD sed -i "s#LAYERS_API_URL#${LAYERS_API_URL}#g" /etc/clvitra/base.properties && \
+CMD sed -i "s#LAYERS_API_URI#${LAYERS_API_URI}#g" /etc/clvitra/base.properties && \
 
 	sed -i "s#DB_USERNAME#${DB_USERNAME}#g" /etc/clvitra/dbconnection.properties && \
 	sed -i "s#DB_PASS#${DB_PASS}#g" /etc/clvitra/dbconnection.properties && \
