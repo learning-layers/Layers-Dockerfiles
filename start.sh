@@ -22,8 +22,8 @@ OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
 
-# Please enter MobSOS Monitor IPInfoDB API key (used for IP geolocation; check http://ipinfodb.com/ip_location_api_json.php to get a free key)";
-MM_IPINFODB_KEY="12345-67890";
+# Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
+MM_IPINFODB_KEY="";
 
 # Define alias for docker run including all environment variables that must be available to containers.
 alias drenv='docker run -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LAYERS_APP_URI=$LAYERS_APP_URI"';
@@ -38,10 +38,10 @@ echo "****************" &&
 echo "** WARNING!!! **" &&
 echo "****************" &&
 echo "" &&
-echo "To clean up the Layers Box host environment, all containers will be removed, including all data containers! Backup data before you continue! (Press enter to continue)" && 
+echo "To clean up the Layers Box host environment, all containers will be removed, including all data containers! Use backup.sh for a simple backup of all Layers Box data volume containers before you continue! (Press enter to continue)" && 
 read # Comment interactive step for complete automation
-
-echo "Removing all containers..." &
+ 
+echo "Removing all containers..." &&
 docker rm -f $(docker ps -a -q);
 echo " -> done" &&
 echo "" && 
@@ -97,18 +97,26 @@ echo "" &&
 # start OpenID Connect
 echo "Starting Layers OpenID Connect provider..." &&
 docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
+
+OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
+SUBS="# add locations below" &&
+OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
+
+docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+docker kill --signal="HUP" adapter &&
 echo " -> done" &&
 echo "" && 
 
 # create MobSOS Monitor user & database
 echo "Creating MobSOS Monitor user & database..." &&
+#MM_PASS="123456" &&
 MM_PASS=`drenv --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $MM_DB --new-user $MM_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` && 
 echo " -> done" &&
 echo "" &&
 
 # start MobSOS Monitor data volume
 echo "Starting MobSOS Monitor data volume..." &&
-drenv -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "IPINFODB_KEY=$MM_IPINFODB_KEY" --name mobsos-monitor-data learninglayers/mobsos-monitor-data &&
+drenv -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "OIDC_MYSQL_DB=$OIDC_MYSQL_DB" -e "IPINFODB_KEY=$MM_IPINFODB_KEY" --name mobsos-monitor-data nmaster/mobsos-monitor-data &&
 echo " -> done" &&
 echo "" &&
 
@@ -119,20 +127,26 @@ echo " -> done" &&
 echo "" &&
 
 # TODO: add missing containers
+# Tethys
+# ClViTra
+# MobSOS Surveys
+# Requirements Bazaar
+# LTB APIs
+# SSS
 
 echo "Finished... Layers Box up and running." &&
 echo "" &&
 
-# now display info for manual work (for now)
+# now produce info for manual work (for now)
 
 # service container IPs (to be entered into Layers Adapter config)
-echo "Service Container IPs: " &&
+echo "Service Container IPs: " > deploy.txt &&
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
-echo " - OpenID Connect Provider: $OIDC_IP" &&
-echo "" &&
+echo " - OpenID Connect Provider: $OIDC_IP" >> deploy.txt &&
+echo "" >> deploy.txt &&
 
 # generated passwords (mainly for databases)
-echo "Generated Passwords: " &&
-echo "  OIDC_MYSQL_PASS: $OIDC_MYSQL_PASS" &&
-echo "  MM_PASS: $MM_PASS";
+echo "Generated Passwords: " >> deploy.txt &&
+echo "  OIDC_MYSQL_PASS: $OIDC_MYSQL_PASS" >> deploy.txt &&
+echo "  MM_PASS: $MM_PASS" >> deploy.txt
 
