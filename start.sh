@@ -97,7 +97,7 @@ echo "" &&
 
 # start OpenID Connect
 echo "Starting Layers OpenID Connect provider..." &&
-docker run -d -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
+docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
 echo " -> done" &&
 echo "" && 
 
@@ -121,4 +121,8 @@ echo "" &&
 
 # TODO: add missing containers
 
-echo "Finished... Layers Box up and running." 
+echo "Finished... Layers Box up and running." ;
+echo "" ;
+echo "Container IPs: ";
+OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect`;
+echo " - OpenID Connect Provider: $OIDC_IP";
