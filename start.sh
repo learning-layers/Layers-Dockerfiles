@@ -116,7 +116,7 @@ echo "" &&
 
 # start MobSOS Monitor data volume
 echo "Starting MobSOS Monitor data volume..." &&
-drenv -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "OIDC_MYSQL_DB=$OIDC_MYSQL_DB" -e "IPINFODB_KEY=$MM_IPINFODB_KEY" --name mobsos-monitor-data nmaster/mobsos-monitor-data &&
+drenv -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "OIDC_MYSQL_DB=$OIDC_MYSQL_DB" -e "IPINFODB_KEY=$MM_IPINFODB_KEY" --name mobsos-monitor-data learninglayers/mobsos-monitor-data &&
 echo " -> done" &&
 echo "" &&
 
