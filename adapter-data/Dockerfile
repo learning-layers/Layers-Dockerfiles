@@ -6,7 +6,6 @@ ADD logs/ /usr/local/openresty/logs/
 
 # take environment variable LAYERS_API_URI and replace in nginx config template
 CMD SERVER_NAME=`echo ${LAYERS_API_URI}| grep -oE '://[^/]+/' | cut -c4- | rev | cut -c2- | rev` && \
-	echo $SERVER_NAME && \
 	sed -i "s/SERVER_NAME/${SERVER_NAME}/g" /usr/local/openresty/conf/nginx.conf
 
 # provide directories conf and logs as volumes
