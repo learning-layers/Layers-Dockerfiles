@@ -24,10 +24,10 @@ RUN  wget http://mirror.arcor-online.net/www.apache.org/tomcat/tomcat-7/v7.0.59/
 	 unzip target.zip && \
 	 mv /opt/archive/openidconnectldapoverlay/ldap-server-overlay/target/o#oauth2.war /opt/tomcat/webapps/o#oauth2.war
 	     
-CMD	 mysql -uroot -p$OIDC_MYSQL_PASSWORD -hmysql < /etc/sql/createdb.sql && \
-	 mysql -uroot -p$OIDC_MYSQL_PASSWORD -hmysql OpenIDConnect < /etc/sql/schema.sql && \
+CMD	 echo "The MYSQL pass is $OIDC_MYSQL_PASSWORD and $OIDC_MYSQL_USER" && \
+	 mysql -u$OIDC_MYSQL_USER -p$OIDC_MYSQL_PASSWORD -hmysql OpenIDConnect < /etc/sql/schema.sql && \
 	 dos2unix /opt/tomcat/bin/startup.sh && \
 	 chmod +x /opt/tomcat/bin/startup.sh && \
-	 /opt/tomcat/bin/startup.sh
+	 /opt/tomcat/bin/catalina.sh run
 
 EXPOSE 8080
