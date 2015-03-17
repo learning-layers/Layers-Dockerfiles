@@ -19,9 +19,4 @@ echo "" &&
 echo "Backing up Layers MobSOS Monitor data volumes..." &&
 docker run --volumes-from mobsos-monitor-data -v $(pwd):/backup learninglayers/base tar cvf ./backup/${START}-backup-mobsos-monitor-data.tar /opt/mobsos-monitor/etc /opt/mobsos-monitor/log;
 echo " -> done" &&
-echo "" &&
- 
-echo "Removing all containers..." &&
-docker rm -f $(docker ps -a -q);
-echo " -> done" &&
-echo "" && 
+echo ""
