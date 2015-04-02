@@ -131,7 +131,8 @@ echo "" &&
 #The following needs to be modified; it is possible to run docker with a bind for every command, but editing Docker's config is more flexible
 #echo "Starting Shipyard..." &&
 #docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.sock shipyard/deploy start &&
-#docker -H tcp://0.0.0.0:7890 run -it shipyard/shipyard-cli &&
+#This should be run in a separate virtual window, otherwise no other instruction past the one below will get executed
+#docker -H tcp://0.0.0.0:7890 run -it shipyard/shipyard-cli && shipyard add-engine --id local --addr http://0.0.0.0:7890 --label local
 #echo " -> done" &&
 #echo "" &&
 
