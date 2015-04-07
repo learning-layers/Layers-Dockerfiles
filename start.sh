@@ -78,7 +78,7 @@ echo "" &&
 
 # start Layers OpenLDAP
 echo "Starting Layers OpenLDAP..." &&
-docker run -d -p 389:389 -e "LDAP_ROOT_PASSWORD=pass" --volumes-from openldap-data --name openldap learninglayers/openldap &&
+docker run -d -p 389:389 -e "LDAP_ROOT_PASSWORD=$LDAP_ROOT_PASSWORD" --volumes-from openldap-data --name openldap learninglayers/openldap &&
 echo " -> done" &&
 echo "" && 
 
