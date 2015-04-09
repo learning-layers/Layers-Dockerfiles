@@ -138,6 +138,9 @@ docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.so
 #Here, a default preconfiguration is done avoiding the CLI
 echo "Preparing custom configuration..." &&
 echo "Logging in Shipyard as admin ..." &&
+
+##### The following fails with curl error 56. I suppose some quotes need to be escaped first.
+
 SHIPYARD_ADMIN_AUTH_TOKEN=$(curl -H "content-Type: application/json" -X POST -d '{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS"}' http://localhost:8080/auth/login | jq '.auth_token') &&
 echo "... finished" &&
 echo "Changing admin password..." &&
