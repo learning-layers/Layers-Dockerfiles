@@ -21,7 +21,7 @@ OIDC_MYSQL_DB="OpenIDConnect";
 OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
-SHIPYARD_ADMIN_PASS="mrPresident"; 
+SHIPYARD_ADMIN_PASS="pass"; 
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
@@ -137,15 +137,15 @@ docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.so
 #docker -H tcp://0.0.0.0:7890 run -it shipyard/shipyard-cli && shipyard add-engine --id local --addr http://0.0.0.0:7890 --label local
 #Here, a default preconfiguration is done avoiding the CLI
 echo "Preparing custom configuration..." &&
-echo "Logging in Shipyard as admin ..."
-SHIPYARD_ADMIN_AUTH_TOKEN=$(curl -H "content-Type: application/json" -X POST -d \'{"username": "admin", "password": "shipyard"}\' http://localhost:8080/auth/login | jq \'.auth_token\')
-echo "... finished"
-echo "Changing admin password..."
-curl -H \'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN\' -X POST -d \'{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS", "role": {"name": "admin"}}\' http://localhost:8080/api/accounts
-echo "... finished"
-echo "Adding the Layers Box as the default Shipyard Engine..."
-curl -H \'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN\' -H \'Content-Type application/json\' -X POST -d \'{"id":"local", "ssl_cert": "", "ssl_key": "", "ca_cert": "", "engine": {"id": "local", "addr": "http://172.17.42.1:7890", "cpus": 3.0, "memory": 4096, "labels":["local"]}}\' http://localhost:8080/api/engines
-echo "... finished"
+echo "Logging in Shipyard as admin ..." &&
+SHIPYARD_ADMIN_AUTH_TOKEN=$(curl -H "content-Type: application/json" -X POST -d \'{"username": "admin", "password": "shipyard"}\' http://localhost:8080/auth/login | jq \'.auth_token\') &&
+echo "... finished" &&
+echo "Changing admin password..." &&
+curl -H \'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN\' -X POST -d \'{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS", "role": {"name": "admin"}}\' http://localhost:8080/api/accounts &&
+echo "... finished" &&
+echo "Adding the Layers Box as the default Shipyard Engine..." &&
+curl -H \'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN\' -H \'Content-Type application/json\' -X POST -d \'{"id":"local", "ssl_cert": "", "ssl_key": "", "ca_cert": "", "engine": {"id": "local", "addr": "http://172.17.42.1:7890", "cpus": 3.0, "memory": 4096, "labels":["local"]}}\' http://localhost:8080/api/engines &&
+echo "... finished" &&
 echo " -> done" &&
 echo "" &&
 ###
