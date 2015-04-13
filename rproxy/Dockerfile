@@ -5,7 +5,19 @@ MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 # First, install build dependencies
 # Refer to http://openresty.org/#Installation
 
-RUN apt-get install -qqy --no-install-recommends libreadline-dev libncurses5-dev libpcre3-dev libssl-dev perl make wget curl
+RUN apt-get update && apt-get -qqy --no-install-recommends install \
+#Package list is now complete
+binutils build-essential bzip2 cpp cpp-4.7 curl dpkg-dev g++ g++-4.7 gcc
+  gcc-4.7 libc-dev-bin libc6-dev libclass-isa-perl libcurl3 libdpkg-perl
+  libgcrypt11 libgdbm3 libgmp10 libgnutls26 libgomp1 libgpg-error0
+  libgssapi-krb5-2 libidn11 libitm1 libk5crypto3 libkeyutils1 libkrb5-3
+  libkrb5support0 libldap-2.4-2 libmpc2 libmpfr4 libncurses5-dev libncursesw5
+  libp11-kit0 libpcre3 libpcre3-dev libpcrecpp0 libprocps0 libquadmath0
+  libreadline-dev libreadline6-dev librtmp0 libsasl2-2 libssh2-1 libssl-dev
+  libssl1.0.0 libstdc++6-4.7-dev libswitch-perl libtasn1-3 libtimedate-perl
+  libtinfo-dev linux-libc-dev make patch perl perl-modules procps zlib1g-dev \
+    
+    && rm -r /var/lib/apt/lists/*
 
 # From ficusio / openresty:
 ENV OPENRESTY_VERSION 1.7.10.1
