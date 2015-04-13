@@ -17,6 +17,7 @@ ONBUILD RUN apt-get update -yq \
 	&& cd /opt
 	&& wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz -O  tomcat8.tar.gz \
 	&& tar -zxvf tomcat8.tar.gz \
+	&& ln tomcat tomcat8/
 
 ENV JAVA_HOME="/usr/lib/jvm/java-8-oracle/"
 ENV PATH=$JAVA_HOME/bin:$PATH
