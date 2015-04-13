@@ -21,6 +21,7 @@ OIDC_MYSQL_DB="OpenIDConnect";
 OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
+SHIPYARD_ADMIN_PASS="pass"; 
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
@@ -78,7 +79,7 @@ echo "" &&
 
 # start Layers OpenLDAP
 echo "Starting Layers OpenLDAP..." &&
-docker run -d -p 389:389 -e "LDAP_ROOT_PASSWORD=pass" --volumes-from openldap-data --name openldap learninglayers/openldap &&
+docker run -d -p 389:389 -e "LDAP_ROOT_PASSWORD=$LDAP_ROOT_PASSWORD" --volumes-from openldap-data --name openldap learninglayers/openldap &&
 echo " -> done" &&
 echo "" && 
 
@@ -126,15 +127,31 @@ drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL
 echo " -> done" &&
 echo "" &&
 
+###
 #This is the part which will start Shipyard.
 
 #The following needs to be modified; it is possible to run docker with a bind for every command, but editing Docker's config is more flexible
-#echo "Starting Shipyard..." &&
-#docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.sock shipyard/deploy start &&
-#This should be run in a separate virtual window, otherwise no other instruction past the one below will get executed
+echo "Starting Shipyard..." &&
+docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.sock shipyard/deploy start &&
+#The CLI should be run in a separate virtual window, otherwise no other instruction past the one below will get executed
 #docker -H tcp://0.0.0.0:7890 run -it shipyard/shipyard-cli && shipyard add-engine --id local --addr http://0.0.0.0:7890 --label local
-#echo " -> done" &&
-#echo "" &&
+#Here, a default preconfiguration is done avoiding the CLI
+echo "Preparing custom configuration..." &&
+echo "Logging in Shipyard as admin ..." &&
+
+##### The following fails with curl error 56. I suppose some quotes need to be escaped first.
+
+SHIPYARD_ADMIN_AUTH_TOKEN=$(curl -H "content-Type: application/json" -X POST -d '{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS"}' http://localhost:8080/auth/login | jq '.auth_token') &&
+echo "... finished" &&
+echo "Changing admin password..." &&
+curl -H 'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN' -X POST -d '{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS", "role": {"name": "admin"}}' http://localhost:8080/api/accounts &&
+echo "... finished" &&
+echo "Adding the Layers Box as the default Shipyard Engine..." &&
+curl -H 'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN' -H 'Content-Type application/json' -X POST -d '{"id":"local", "ssl_cert": "", "ssl_key": "", "ca_cert": "", "engine": {"id": "local", "addr": "http://172.17.42.1:7890", "cpus": 3.0, "memory": 4096, "labels":["local"]}}' http://localhost:8080/api/engines &&
+echo "... finished" &&
+echo " -> done" &&
+echo "" &&
+###
 
 # TODO: add missing containers
 # Tethys
