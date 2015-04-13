@@ -20,6 +20,7 @@ ONBUILD RUN apt-get update -yq \
 	&& ln tomcat tomcat8/
 
 ENV JAVA_HOME="/usr/lib/jvm/java-8-oracle/"
-ENV PATH=$JAVA_HOME/bin:$PATH
+ENV TOMCAT_HOME"/opt/tomcat/"
+ENV PATH=$JAVA_HOME/bin:$TOMCAT_HOME/bin:$PATH
 		
 
