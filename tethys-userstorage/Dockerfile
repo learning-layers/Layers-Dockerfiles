@@ -5,4 +5,4 @@ RUN	wget http://layers.dbis.rwth-aachen.de/jenkins/job/Tethys-UserStorage/lastSu
 
 EXPOSE 8080
 
-CMD /opt/tomcat/bin/startup.sh
+CMD /opt/tomcat/bin/startup.sh && tail -f /opt/tomcat/logs/catalina.out
