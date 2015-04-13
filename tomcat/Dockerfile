@@ -12,8 +12,8 @@ ONBUILD RUN apt-get update -yq \
 	&& apt-get install -yq oracle-java8-installer wget \
 	&& update-java-alternatives -s java-8-oracle \
 
-        && mkdir /opt/tomcat \
-        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz -O - | tar -zxv -C /opt/tomcat \
+        && mkdir /opt/tomcat8 \
+        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz -O - | tar -zxv -C /opt/tomcat8 \
         && ln tomcat tomcat8/
 
 ENV JAVA_HOME="/usr/lib/jvm/java-8-oracle"
