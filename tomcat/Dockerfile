@@ -19,4 +19,4 @@ ENV JAVA_HOME="/usr/lib/jvm/java-8-oracle"
 ENV TOMCAT_HOME="/opt/tomcat"
 ENV PATH=$JAVA_HOME/bin:$TOMCAT_HOME/bin:$PATH
 		
-
+EXPOSE 8080
