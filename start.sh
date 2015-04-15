@@ -6,7 +6,14 @@
 clear && 
 echo "***** Layers Box - Basic Deployment Script *****" &&
 echo "" &&
-echo "This script will deploy a Layers Box in a Docker-enabled environment step-by-step. After successful deployment, the Layers Box exposes its APIs and applications under the following URIs:" &&
+
+echo "It is mandatory to use BTRFS for the OpenStack Swift component. Checking Docker storage driver: " &&
+if [ docker info | grep Storage | awk '{print $3}' -ne btrfs ]; then
+ echo "The host system uses a FS different than BTRFS! Ceasing Layers Box deployment." && exit 1
+else 
+ echo "The host system uses BTRFS. Proceeding with the Layers Box set-up." 
+fi  &&
+echo "This script will now deploy a Layers Box in a Docker-enabled environment step-by-step. After successful deployment, the Layers Box exposes its APIs and applications under the following URIs:" &&
 echo && 
 
 # set variables to be forwarded as environment variables to docker containers
