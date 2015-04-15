@@ -9,10 +9,10 @@ SWIFT_PART_POWER=${SWIFT_PART_POWER:-10}
 SWIFT_PART_HOURS=${SWIFT_PART_HOURS:-1}
 SWIFT_REPLICAS=${SWIFT_REPLICAS:-1}
 
-if [ -e /srv/account.builder ]; then
+if [ -e /srv//backup/account.builder ]; then
 	echo "Ring files already exist in /srv, copying them to /etc/swift..."
-	cp /srv/*.builder /etc/swift/
-	cp /srv/*.gz /etc/swift/
+	cp /srv/backup/*.builder /etc/swift/
+	cp /srv/backup/*.gz /etc/swift/
 fi
 
 # This comes from a volume, so need to chown it here, not sure of a better way
@@ -40,8 +40,9 @@ if [ ! -e /etc/swift/account.builder ]; then
 
 	# Back these up for later use
 	echo "Copying ring files to /srv to save them if it's a docker volume..."
-	cp *.gz /srv
-	cp *.builder /srv
+	mkdir /srv/backup
+	cp *.gz /srv/backup/
+	cp *.builder /srv/backup/
 
 fi
 
