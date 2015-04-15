@@ -37,4 +37,4 @@ EXPOSE 80 443
 
 # CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf
 
-CMD ["nginx", "-g", "daemon off;"] 
+CMD ["nginx", "-g", "daemon off;", "-c", "/usr/local/openresty/conf/nginx.conf"] 
