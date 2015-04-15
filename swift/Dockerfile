@@ -5,7 +5,7 @@ MAINTAINER Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
 RUN apt-get install -y swift python-swiftclient rsync \
         swift-proxy swift-object memcached python-keystoneclient \
         python-swiftclient swift-plugin-s3 python-netifaces \
-        python-xattr python-memcache \
+        python-xattr python-memcache swift-object-expirer\
         swift-account swift-container swift-object pwgen
 
 #
@@ -21,7 +21,7 @@ ADD src/main/files/proxy-server.conf /etc/swift/proxy-server.conf
 ADD src/main/files/account-server.conf /etc/swift/account-server.conf
 ADD src/main/files/object-server.conf /etc/swift/object-server.conf
 ADD src/main/files/container-server.conf /etc/swift/container-server.conf
-ADD src/main/files/proxy-server.conf /etc/swift/proxy-server.conf
+ADD src/main/files/object-expirer.conf /etc/swift/object-expirer.conf
 ADD src/main/files/startmain.sh /opt/startmain.sh
 RUN chmod 755 /opt/startmain.sh
 
