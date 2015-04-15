@@ -5,7 +5,7 @@
 #
 
 # These can be set with docker run -e VARIABLE=X at runtime
-SWIFT_PART_POWER=${SWIFT_PART_POWER:-7}
+SWIFT_PART_POWER=${SWIFT_PART_POWER:-10}
 SWIFT_PART_HOURS=${SWIFT_PART_HOURS:-1}
 SWIFT_REPLICAS=${SWIFT_REPLICAS:-1}
 
@@ -65,13 +65,17 @@ if [ ! -z "${SWIFT_SET_PASSWORDS}" ]; then
 fi
 
 # start rsyslog
-#echo "start rsyslog"
+echo "start rsyslog"
 
-#service rsyslog start
+service rsyslog start
+
+# start memcached
+echo "start memcached"
+
+service memcached start
 
 # start swift
-
-echo"start swift"
+echo "start swift"
 
 swift-init all start
 
@@ -84,5 +88,5 @@ sleep 3
 
 echo "Starting to tail /var/log/syslog...(hit ctrl-c if you are starting the container in a bash shell)"
 
-touch /var/log/emptylog
-tail -n 0 -f /var/log/emptylog
+tail -n 0 -f /var/log/syslog
+
