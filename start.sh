@@ -8,7 +8,8 @@ echo "***** Layers Box - Basic Deployment Script *****" &&
 echo "" &&
 
 echo "It is mandatory to use BTRFS for the OpenStack Swift component. Checking Docker storage driver: " &&
-if [ docker info | grep Storage | awk '{print $3}' -ne btrfs ]; then
+HOST_FS=$(docker info | grep Storage | awk '{print $3}') &&
+if [ HOST_FS == btrfs ]; then
  echo "The host system uses a FS different than BTRFS! Ceasing Layers Box deployment." && exit 1
 else 
  echo "The host system uses BTRFS. Proceeding with the Layers Box set-up." 
@@ -131,6 +132,18 @@ echo "" &&
 # start MobSOS Monitor
 echo "Starting MobSOS Monitor..." &&
 drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --link mysql:mysql --volumes-from adapter-data --volumes-from mobsos-monitor-data --name mobsos-monitor learninglayers/mobsos-monitor &&
+echo " -> done" &&
+echo "" &&
+
+# start Tethys user storage data volume
+echo "Starting Tethys user storage data volume..." &&
+drenv -e --name tethys-data learninglayers/tethys-userstorage-data &&
+echo " -> done" &&
+echo "" &&
+
+# start Tethys user storage 
+echo "Starting Tethys user storage " &&
+drenv -e --name tethys ---volumes-from adapter-data -volumes-from tethys-data learninglayers/tethys-userstorage &&
 echo " -> done" &&
 echo "" &&
 
