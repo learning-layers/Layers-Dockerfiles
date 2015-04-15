@@ -1,6 +1,8 @@
 FROM learninglayers/base
+MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 
-RUN apt-get install -y wget \
+# Install build dependencies
+RUN apt-get install -qqy wget \
 					   tar \
 					   libreadline-dev \
 					   libncurses5-dev \
@@ -9,15 +11,30 @@ RUN apt-get install -y wget \
 					   perl \
 					   make
 
+# Set build dir
 WORKDIR /opt
-RUN wget http://openresty.org/download/ngx_openresty-1.7.7.2.tar.gz && \
-	tar xvzf ngx_openresty-1.7.7.2.tar.gz && \
-	cd ngx_openresty-1.7.7.2 && \
+ENV OPENRESTY_VERSION 1.7.10.1
+
+RUN wget http://openresty.org/download/ngx_openresty-${OPENRESTY_VERSION}.tar.gz && \
+	tar xvzf ngx_openresty-${OPENRESTY_VERSION}.tar.gz && \
+	cd ngx_openresty-* && \
 	./configure --with-pcre-jit --with-ipv6 && \
 	make && \
 	make install
 
 WORKDIR /usr/local/openresty
-EXPOSE 80
 
-CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf
+# Make sure the docker log collector has access to the openresty logs
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
+
+# Provide volume for debugging purposes
+VOLUME ["/var/cache/nginx"]
+
+# Container entrypoint modified according to instructions in the official
+# nginx Docker container, see https://registry.hub.docker.com/_/nginx/
+EXPOSE 80 443
+
+# CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf
+
+CMD ["nginx", "-g", "daemon off;"] 
