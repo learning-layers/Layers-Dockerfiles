@@ -1,0 +1,111 @@
+worker_processes  1;
+
+# very important for running within docker container! If not set to off, docker container immediately stops.
+daemon off;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    # Include health checker path:
+    lua_package_path ";;";
+
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main '"$time_iso8601","$remote_addr","$scheme","$host",'
+             '"$request_method","$uri","$status","$http_referer",'
+             '"$http_user_agent","$http_accept","$http_content_type",'
+             '"$sent_http_content_type","$request_length","$bytes_sent",'
+             '"$request_time","$http_x_oidc_client_id","$arg_access_token",'
+             '"$http_authorization","$headers","$args"';
+
+    access_log  /usr/local/openresty/logs/access.log  main;
+    error_log /usr/local/openresty/logs/error.log;
+	
+    sendfile        on;
+
+    keepalive_timeout  65;
+
+    # Health Checker,
+    # refer to https://github.com/openresty/lua-resty-upstream-healthcheck
+    
+    init_worker_by_lua '
+        local hc = require "resty.upstream.healthcheck"
+
+        local ok, err = hc.spawn_checker{
+            shm = "healthcheck",  -- defined by "lua_shared_dict"
+            upstream = "foo.com", -- defined by "upstream"
+            type = "http",
+
+            -- if you put this Lua snippet in separate .lua file,
+            -- then you should write this instead: http_req = "GET /status HTTP/1.0\r\nHost: foo.com\r\n\r\n",
+            http_req = "GET /status HTTP/1.0\\r\\nHost: foo.com\\r\\n\\r\\n",
+                    -- raw HTTP request for checking
+
+            interval = 2000,  -- run the check cycle every 2 sec
+            timeout = 1000,   -- 1 sec is the timeout for network operations
+            fall = 3,  -- # of successive failures before turning a peer down
+            rise = 2,  -- # of successive successes before turning a peer up
+            valid_statuses = {200, 302},  -- a list valid HTTP status code
+            concurrency = 10,  -- concurrency level for test requests
+        }
+        if not ok then
+            ngx.log(ngx.ERR, "failed to spawn health checker: ", err)
+            return
+        end
+
+        -- Just call hc.spawn_checker() for more times here if you have
+        -- more upstream groups to monitor. One call for one upstream group.
+        -- They can all share the same shm zone without conflicts but they
+        -- need a bigger shm zone for obvious reasons.
+    ';
+
+    upstream cluster {
+        # The IP adresses and ports of the backend containers come here, e.g.:
+        #server 127.0.0.1:12354;
+        #server 127.0.0.1:12355;
+        #server 127.0.0.1:12356 backup;
+    }
+
+    # HTTP server
+    server {
+        listen  80;
+        listen  [::]:80;
+        
+        server_name SERVER_NAME;
+		
+		more_set_headers 'Access-Control-Allow-Origin: *' 'Access-Control-Allow-Headers: Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,Keep-Alive,X-Requested-With,If-Modified-Since' 'Access-Control-Allow-Methods: GET,POST,PUT,DELETE,HEAD,OPTIONS';
+		
+        set $headers '';
+        access_by_lua 'ngx.var.headers = ngx.req.raw_header()';
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        # status page for all the peers:
+        location = /status {
+            access_log off;
+            allow 127.0.0.1;
+            deny all;
+
+            default_type text/plain;
+            content_by_lua '
+                local hc = require "resty.upstream.healthcheck"
+                ngx.say("Nginx Worker PID: ", ngx.worker.pid())
+                ngx.print(hc.status_page())
+            ';
+        }
+
+
+        # add locations below
+
+        error_page  404              /404.html;
+        error_page   500 502 503 504  /50x.html;
+        
+    }
+}
+# vim: set ts=4 sw=4 sts=4 expandtab :
