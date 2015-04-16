@@ -135,46 +135,51 @@ drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL
 echo " -> done" &&
 echo "" &&
 
-# start Tethys user storage data volume
-echo "Starting Tethys user storage data volume..." &&
-drenv -e --name tethys-data learninglayers/tethys-userstorage-data &&
-echo " -> done" &&
-echo "" &&
+## start Tethys user storage data volume
+#echo "Starting Tethys user storage data volume..." &&
+#drenv -e --name tethys-data learninglayers/tethys-userstorage-data &&
+#echo " -> done" &&
+#echo "" &&
+#
+## start Tethys user storage 
+#echo "Starting Tethys user storage " &&
+#drenv -e --name tethys ---volumes-from adapter-data -volumes-from tethys-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#echo " -> done" &&
+#echo "" &&
 
-# start Tethys user storage 
-echo "Starting Tethys user storage " &&
-drenv -e --name tethys ---volumes-from adapter-data -volumes-from tethys-data learninglayers/tethys-userstorage &&
-echo " -> done" &&
-echo "" &&
-
-###
-#This is the part which will start Shipyard.
-
-#The following needs to be modified; it is possible to run docker with a bind for every command, but editing Docker's config is more flexible
+####
+##This is the part which will start Shipyard.
+#
+##The following needs to be modified; it is possible to run docker with a bind for every command, but editing Docker's config is more flexible
 #echo "Starting Shipyard..." &&
 #docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.sock shipyard/deploy start &&
-#The CLI should be run in a separate virtual window, otherwise no other instruction past the one below will get executed
-#docker -H tcp://0.0.0.0:7890 run -it shipyard/shipyard-cli && shipyard add-engine --id local --addr http://0.0.0.0:7890 --label local
-#Here, a default preconfiguration is done avoiding the CLI
+#
+##The CLI should be run in a separate virtual window, otherwise no other instruction past the one below will get executed
+##docker -H tcp://0.0.0.0:7890 run -it shipyard/shipyard-cli && shipyard add-engine --id local --addr http://0.0.0.0:7890 --label local
+#
+##Here, a default preconfiguration is done avoiding the CLI
 #echo "Preparing custom configuration..." &&
-#echo "Logging in Shipyard as admin ..." &&
-
-##### The following fails with curl error 56. I suppose some quotes need to be escaped first.
-
+#echo "Step 1: Logging in Shipyard as admin ..." &&
+#
+###### The following fails with curl error 56. I suppose some quotes need to be escaped first.
+#
 #SHIPYARD_ADMIN_AUTH_TOKEN=$(curl -H "content-Type: application/json" -X POST -d '{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS"}' http://localhost:8080/auth/login | jq '.auth_token') &&
 #echo "... finished" &&
-#echo "Changing admin password..." &&
+#
+#echo "Step 2: Changing admin password..." &&
 #curl -H 'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN' -X POST -d '{"username": "admin", "password": "$SHIPYARD_ADMIN_PASS", "role": {"name": "admin"}}' http://localhost:8080/api/accounts &&
 #echo "... finished" &&
+#
 #echo "Adding the Layers Box as the default Shipyard Engine..." &&
 #curl -H 'X-Access-Token: admin:$SHIPYARD_ADMIN_AUTH_TOKEN' -H 'Content-Type application/json' -X POST -d '{"id":"local", "ssl_cert": "", "ssl_key": "", "ca_cert": "", "engine": {"id": "local", "addr": "http://172.17.42.1:7890", "cpus": 3.0, "memory": 4096, "labels":["local"]}}' http://localhost:8080/api/engines &&
 #echo "... finished" &&
+#
 #echo " -> done" &&
 #echo "" &&
-###
+####
 
 # TODO: add missing containers
-# Tethys
+# Tethys -> in progress
 # ClViTra
 # MobSOS Surveys
 # Requirements Bazaar
