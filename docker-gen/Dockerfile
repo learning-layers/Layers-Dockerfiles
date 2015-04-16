@@ -10,8 +10,8 @@ RUN apt-get install -qqy --no-install-recommends \
                     wget \
                     ca-certificates \ 
     && wget ${DLURL} \
-    && tar -C /usr/local/bin -xvzf docker-gen.tar.gz \
-    && rm docker-gen.tar.gz \
+    && tar -C /usr/local/bin -xvzf docker-gen* \
+    && rm docker-gen* \
     && rm -rf /var/lib/apt/lists/*
 
 # Start docker-gen
