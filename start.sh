@@ -137,13 +137,13 @@ echo "" &&
 
 ## start Tethys user storage data volume
 #echo "Starting Tethys user storage data volume..." &&
-#drenv -e --name tethys-data learninglayers/tethys-userstorage-data &&
+#drenv -e --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
 #echo " -> done" &&
 #echo "" &&
 #
 ## start Tethys user storage 
 #echo "Starting Tethys user storage " &&
-#drenv -e --name tethys ---volumes-from adapter-data -volumes-from tethys-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
 #echo " -> done" &&
 #echo "" &&
 
