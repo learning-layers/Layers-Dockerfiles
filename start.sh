@@ -67,6 +67,9 @@ drenv -d -p 3306:3306 -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --volumes-fr
 echo " -> done" &&
 echo "" && 
 
+echo "Waiting 4 seconds for MySql to start"
+sleep 4
+
 # start Layers Adapter data volume container
 echo "Starting Layers Adapter data volume..." &&
 drenv --name adapter-data learninglayers/adapter-data &&
