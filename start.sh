@@ -234,12 +234,13 @@ $SSS_LAS_USER="sss";
 #-p $SSS_PORT:8390 \
 #--link mysql:mysql \
 #--volumes-from sss.data
+#--volumes-from tomcat.data
 #--name sss.sss \
 #learninglayers/sss.sss &&
 #echo " -> done" &&
 #echo "" &&
 
-# create SSS container
+# create SSS rest container
 #echo "Creating SSS REST container..." &&
 #docker run \
 #-d \
