@@ -209,6 +209,8 @@ $SSS_LAS_USER="sss";
 
 # create SSS data volume
 #docker run \
+#-e "SSS_HOST=$LAYERS_HOST" \
+#-e "SSS_PORT=$SSS_PORT" \
 #-e "SSS_MYSQL_SCHEME=$SSS_MYSQL_SCHEME" \
 #-e "SSS_MYSQL_HOST=$LAYERS_HOST" \
 #-e "SSS_MYSQL_PORT=$LAYERS_MYSQL_PORT" \
@@ -222,6 +224,7 @@ $SSS_LAS_USER="sss";
 #-e "SSS_TETHYS_LAS_PASSWORD=$SSS_LAS_PASSWORD" \
 #-e "SSS_TETHYS_OIDC_CONF_URI=$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration" \
 #-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
+#--volumes-from tomcat.data
 #--name sss.data \
 #learninglayers/sss.data &&
 #echo " -> done" &&
@@ -234,21 +237,8 @@ $SSS_LAS_USER="sss";
 #-p $SSS_PORT:8390 \
 #--link mysql:mysql \
 #--volumes-from sss.data
-#--volumes-from tomcat.data
 #--name sss.sss \
 #learninglayers/sss.sss &&
-#echo " -> done" &&
-#echo "" &&
-
-# create SSS rest container
-#echo "Creating SSS REST container..." &&
-#docker run \
-#-d \
-#-e "SSS_HOST=$LAYERS_HOST" \
-#-e "SSS_PORT=$SSS_PORT" \
-#-p 8084:$LAYERS_TOMCAT_PORT \
-#--name sss.rest \
-#dtheiler/sss.rest &&
 #echo " -> done" &&
 #echo "" &&
 
