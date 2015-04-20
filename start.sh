@@ -187,7 +187,28 @@ echo "" &&
 # MobSOS Surveys
 # Requirements Bazaar
 # LTB APIs
-# SSS
+
+#echo start sss container...
+#docker stop sss.sss
+#docker rm sss.sss
+#docker run \
+#-d \
+#-e "SSS_MYSQL_HOST=kcs-evolution.know.know-center.at" \
+#-e "SSS_MYSQL_PORT=3333" \
+#-e "SSS_MYSQL_USERNAME=sss" \
+#-e "SSS_MYSQL_PASSWORD=sss" \
+#-e "SSS_MYSQL_SCHEME=sss" \
+#-e "SSS_AUTH_TYPE=csvFileAuth" \
+#-e "SSS_TETHYS_USER=SSSUser" \
+#-e "SSS_TETHYS_PASSSWORD=f74UH~X#WVQ" \
+#-e "SSS_TETHYS_LAS_USER=sss" \
+#-e "SSS_TETHYS_LAS_PASSWORD=ssstest" \
+#-e "SSS_TETHYS_OIDC_CONF_URI=$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration" \
+#-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
+#-p 8391:8390 \
+#--name sss.sss \
+#ssss/sss.sss
+#echo sss container started
 
 echo "Finished... Layers Box up and running." &&
 echo "" &&
