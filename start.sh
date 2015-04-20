@@ -187,6 +187,7 @@ echo "" &&
 # MobSOS Surveys
 # Requirements Bazaar
 # LTB APIs
+# Tomcat
 
 # env variables need for SSS
 $SSS_PORT=8391;
@@ -224,7 +225,7 @@ $SSS_LAS_USER="sss";
 #-e "SSS_TETHYS_LAS_PASSWORD=$SSS_LAS_PASSWORD" \
 #-e "SSS_TETHYS_OIDC_CONF_URI=$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration" \
 #-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
-#--volumes-from tomcat.data
+#--volumes-from tomcat
 #--name sss.data \
 #learninglayers/sss.data &&
 #echo " -> done" &&
