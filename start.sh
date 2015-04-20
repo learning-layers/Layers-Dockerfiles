@@ -188,6 +188,19 @@ echo "" &&
 # Requirements Bazaar
 # LTB APIs
 
+#echo start sss mysql container...
+#docker stop sss.mysql
+#docker rm sss.mysql
+#docker run \
+#-d \
+#-e "SSS_MYSQL_USERNAME=sss" \
+#-e "SSS_MYSQL_PASSWORD=sss" \
+#-e "SSS_MYSQL_SCHEME=sss" \
+#-p 3333:3306 \
+#--name sss.mysql \
+#dtheiler/sss.mysql
+#echo started sss mysql container
+
 #echo start sss container...
 #docker stop sss.sss
 #docker rm sss.sss
@@ -202,7 +215,7 @@ echo "" &&
 #-e "SSS_TETHYS_USER=SSSUser" \
 #-e "SSS_TETHYS_PASSSWORD=f74UH~X#WVQ" \
 #-e "SSS_TETHYS_LAS_USER=sss" \
-#-e "SSS_TETHYS_LAS_PASSWORD=ssstest" \
+#-e "SSS_TETHYS_LAS_PASSWORD=sss" \
 #-e "SSS_TETHYS_OIDC_CONF_URI=$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration" \
 #-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
 #-p 8391:8390 \
