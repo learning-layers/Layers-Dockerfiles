@@ -1,6 +1,7 @@
 FROM learninglayers/base
 
-RUN mkir $TOMCAT_HOME
+RUN mkir /opt/tomcat/conf
+RUN mkir /opt/tomcat/webapps
 
 ADD sss/ /opt/sss/
 
@@ -19,7 +20,7 @@ sed -i "s#SSS_TETHYS_OIDC_CONF_URI#${SSS_TETHYS_OIDC_CONF_URI}#g" /opt/sss/sss.c
 sed -i "s#SSS_TETHYS_OIDC_USER_END_POINT_URI#${SSS_TETHYS_OIDC_USER_END_POINT_URI}#g" /opt/sss/sss.conf.yaml &&
 sed -i "s#SSS_HOST#${SSS_HOST}#g" /opt/sss/sss.adapter.rest.v2.conf.yaml && \
 sed -i "s#SSS_PORT#${SSS_PORT}#g" /opt/sss/sss.adapter.rest.v2.conf.yaml && \
-mv /opt/sss/sss.adapter.rest.v2.conf.yaml /usr/local/tomcat/conf/ && \
-mv /opt/sss/sss.adapter.rest.v2.war /usr/local/tomcat/webapps/ && \
+mv /opt/sss/sss.adapter.rest.v2.conf.yaml /opt/tomcat/conf/ && \
+mv /opt/sss/sss.adapter.rest.v2.war /opt/tomcat/webapps/ && \
 
 VOLUME ["/opt/sss/"]
