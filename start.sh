@@ -193,7 +193,7 @@ echo "" &&
 #docker rm sss.sss
 #docker run \
 #-d \
-#-e "SSS_MYSQL_HOST=kcs-evolution.know.know-center.at" \
+#-e "SSS_MYSQL_HOST=mysql_host" \
 #-e "SSS_MYSQL_PORT=3333" \
 #-e "SSS_MYSQL_USERNAME=sss" \
 #-e "SSS_MYSQL_PASSWORD=sss" \
@@ -209,6 +209,18 @@ echo "" &&
 #--name sss.sss \
 #dtheiler/sss.sss
 #echo sss container started
+
+#echo start sss rest container...
+#docker stop sss.rest
+#docker rm sss.rest
+#docker run \
+#-d \
+#-e "SSS_HOST=sss_host" \
+#-e "SSS_PORT=8391" \
+#-p 8084:8080 \
+#--name sss.rest \
+#dtheiler/sss.rest
+#echo sss rest container started
 
 echo "Finished... Layers Box up and running." &&
 echo "" &&
