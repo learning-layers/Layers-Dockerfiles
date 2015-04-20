@@ -1,6 +1,6 @@
 FROM learninglayers/base
 
-RUN mkir /usr/local/tomcat/
+RUN mkir $TOMCAT_HOME
 
 ADD sss/ /opt/sss/
 
