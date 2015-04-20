@@ -207,7 +207,7 @@ echo "" &&
 #-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
 #-p 8391:8390 \
 #--name sss.sss \
-#ssss/sss.sss
+#dtheiler/sss.sss
 #echo sss container started
 
 echo "Finished... Layers Box up and running." &&
