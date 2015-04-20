@@ -27,8 +27,6 @@ MYSQL_ROOT_PASSWORD="pass";
 LDAP_ROOT_PASSWORD="pass";
 OIDC_MYSQL_DB="OpenIDConnect";
 OIDC_MYSQL_USER="oidc";
-SSS_MYSQL_DB="sss";
-SSS_MYSQL_USER="sss";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
 SHIPYARD_ADMIN_PASS="pass"; 
@@ -205,7 +203,7 @@ $SSS_LAS_USER="sss";
 
 # create SSS database and user
 #echo "Creating SSS database and user..." &&
-#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_DB --new-user $SSS_MYSQL_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
+#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_SCHEME --new-user $SSS_MYSQL_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
 #echo " -> done" &&
 #echo "" &&
 
