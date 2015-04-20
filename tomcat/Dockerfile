@@ -20,3 +20,5 @@ ENV TOMCAT_HOME="/opt/tomcat"
 ENV PATH=$JAVA_HOME/bin:$TOMCAT_HOME/bin:$PATH
 		
 EXPOSE 8080
+
+#VOLUME ["/opt/tomcat/conf", "/opt/tomcat/webapps"]
