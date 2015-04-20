@@ -190,45 +190,68 @@ echo "" &&
 # Requirements Bazaar
 # LTB APIs
 
-# create SSS database and user
-echo "Creating SSS database and user..." &&
-SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_DB --new-user $SSS_MYSQL_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
-echo " -> done" &&
-echo "" &&
+# env variables need for SSS
+$SSS_PORT=8391;
+$SSS_MYSQL_USER="sss";
+$SSS_MYSQL_SCHEME="sss";
+$SSS_TETHYS_USER="SSSUser";
+#$SSS_TETHYS_PASSWORD="?";
+$SSS_LAS_USER="sss";
+#$SSS_LAS_PASSWORD="?";
+#$SSS_MYSQL_PASSWORD will be created by mysql user creation below
+#$LAYERS_HOST="?";
+#$LAYERS_MYSQL_PORT=3306;
+#$LAYERS_TOMCAT_PORT="?";
 
-#echo start sss container...
-#docker stop sss.sss
-#docker rm sss.sss
+# create SSS database and user
+#echo "Creating SSS database and user..." &&
+#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_DB --new-user $SSS_MYSQL_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
+#echo " -> done" &&
+#echo "" &&
+
+# create SSS data volume
 #docker run \
-#-d \
-#-e "SSS_MYSQL_HOST=mysql_host" \
-#-e "SSS_MYSQL_PORT=3333" \
-#-e "SSS_MYSQL_USERNAME=sss" \
-#-e "SSS_MYSQL_PASSWORD=sss" \
-#-e "SSS_MYSQL_SCHEME=sss" \
-#-e "SSS_AUTH_TYPE=csvFileAuth" \
-#-e "SSS_TETHYS_USER=SSSUser" \
-#-e "SSS_TETHYS_PASSSWORD=f74UH~X#WVQ" \
-#-e "SSS_TETHYS_LAS_USER=sss" \
-#-e "SSS_TETHYS_LAS_PASSWORD=sss" \
+#-e "SSS_MYSQL_SCHEME=$SSS_MYSQL_SCHEME" \
+#-e "SSS_MYSQL_HOST=$LAYERS_HOST" \
+#-e "SSS_MYSQL_PORT=$LAYERS_MYSQL_PORT" \
+#-e "SSS_MYSQL_USERNAME=$SSS_MYSQL_USER" \
+#-e "SSS_MYSQL_PASSWORD=$SSS_MYSQL_PASSWORD" \
+#-e "SSS_MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" 
+#-e "SSS_AUTH_TYPE=oidc" \
+#-e "SSS_TETHYS_USER=$SSS_TETHYS_USER" \
+#-e "SSS_TETHYS_PASSSWORD=$SSS_TETHYS_PASSWORD" \
+#-e "SSS_TETHYS_LAS_USER=$SSS_LAS_USER" \
+#-e "SSS_TETHYS_LAS_PASSWORD=$SSS_LAS_PASSWORD" \
 #-e "SSS_TETHYS_OIDC_CONF_URI=$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration" \
 #-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
-#-p 8391:8390 \
-#--name sss.sss \
-#dtheiler/sss.sss
-#echo sss container started
+#--name sss.data \
+#learninglayers/sss.data &&
+#echo " -> done" &&
+#echo "" &&
 
-#echo start sss rest container...
-#docker stop sss.rest
-#docker rm sss.rest
+# create SSS container
+#echo "Creating SSS container..." &&
 #docker run \
 #-d \
-#-e "SSS_HOST=sss_host" \
-#-e "SSS_PORT=8391" \
-#-p 8084:8080 \
+#-p $SSS_PORT:8390 \
+#--link mysql:mysql \
+#--volumes-from sss.data
+#--name sss.sss \
+#learninglayers/sss.sss &&
+#echo " -> done" &&
+#echo "" &&
+
+# create SSS container
+#echo "Creating SSS REST container..." &&
+#docker run \
+#-d \
+#-e "SSS_HOST=$LAYERS_HOST" \
+#-e "SSS_PORT=$SSS_PORT" \
+#-p 8084:$LAYERS_TOMCAT_PORT \
 #--name sss.rest \
-#dtheiler/sss.rest
-#echo sss rest container started
+#dtheiler/sss.rest &&
+#echo " -> done" &&
+#echo "" &&
 
 echo "Finished... Layers Box up and running." &&
 echo "" &&
