@@ -4,6 +4,7 @@ cd /opt/sss/ && \
 unzip sss.package.zip && \ 
 cd sss.package/ && \
 sed -i "s#SSS_MYSQL_SCHEME#${SSS_MYSQL_SCHEME}#g" ./sss.app/docker.mysql/sss.schema.sql && \
+mv ./sss.app/docker.mysql/sss.schema.sql ./sss.app/ && \
 sed -i "s#SSS_MYSQL_HOST#${SSS_MYSQL_HOST}#g" ./sss.app/docker.sss/sss.conf.yaml && \
 sed -i "s#SSS_MYSQL_PORT#${SSS_MYSQL_PORT}#g" ./sss.app/docker.sss/sss.conf.yaml && \
 sed -i "s#SSS_MYSQL_USERNAME#${SSS_MYSQL_USERNAME}#g" ./sss.app/docker.sss/sss.conf.yaml && \
@@ -16,6 +17,7 @@ sed -i "s#SSS_TETHYS_LAS_USER#${SSS_TETHYS_LAS_USER}#g" ./sss.app/docker.sss/sss
 sed -i "s#SSS_TETHYS_LAS_PASSWORD#${SSS_TETHYS_LAS_PASSWORD}#g" ./sss.app/docker.sss/sss.conf.yaml && \
 sed -i "s#SSS_TETHYS_OIDC_CONF_URI#${SSS_TETHYS_OIDC_CONF_URI}#g" ./sss.app/docker.sss/sss.conf.yaml && \
 sed -i "s#SSS_TETHYS_OIDC_USER_END_POINT_URI#${SSS_TETHYS_OIDC_USER_END_POINT_URI}#g" ./sss.app/docker.sss/sss.conf.yaml && \
+mv ./sss.app/docker.sss/sss.conf.yaml ./sss.app/ && \
 sed -i "s#SSS_HOST#${SSS_HOST}#g" ./sss.rest/docker.rest/sss.adapter.rest.v2.conf.yaml && \
 sed -i "s#SSS_PORT#${SSS_PORT}#g" ./sss.rest/docker.rest/sss.adapter.rest.v2.conf.yaml && \
 mv ./sss.rest/docker.rest/sss.adapter.rest.v2.conf.yaml /opt/tomcat/conf/ && \
