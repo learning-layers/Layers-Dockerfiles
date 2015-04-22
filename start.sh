@@ -190,6 +190,8 @@ echo "" &&
 # Tomcat
 
 # env variables need for SSS
+$SSS_MYSQL_SCHEME = "sss";
+$SSS_MYSQL_USERNAME = "sss";
 
 # create SSS database and user
 #echo "Creating SSS database and user..." &&
