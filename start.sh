@@ -190,58 +190,39 @@ echo "" &&
 # Tomcat
 
 # env variables need for SSS
-$SSS_PORT=8391;
-$SSS_MYSQL_USER="sss";
-$SSS_MYSQL_SCHEME="sss";
-$SSS_TETHYS_USER="SSSUser";
-#$SSS_TETHYS_PASSWORD="?";
-$SSS_LAS_USER="sss";
-#$SSS_LAS_PASSWORD="?";
-#$SSS_MYSQL_PASSWORD will be created by mysql user creation below
-#$LAYERS_HOST="?";
-#$LAYERS_MYSQL_PORT=3306;
-#$LAYERS_TOMCAT_PORT="?";
 
 # create SSS database and user
 #echo "Creating SSS database and user..." &&
-#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_SCHEME --new-user $SSS_MYSQL_USER | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
+#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_SCHEME --new-user $SSS_MYSQL_USERNAME | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
 #echo " -> done" &&
 #echo "" &&
 
-# create SSS data volume
-#docker run \
-#-e "SSS_HOST=$LAYERS_HOST" \
-#-e "SSS_PORT=$SSS_PORT" \
-#-e "SSS_MYSQL_SCHEME=$SSS_MYSQL_SCHEME" \
-#-e "SSS_MYSQL_HOST=$LAYERS_HOST" \
-#-e "SSS_MYSQL_PORT=$LAYERS_MYSQL_PORT" \
-#-e "SSS_MYSQL_USERNAME=$SSS_MYSQL_USER" \
-#-e "SSS_MYSQL_PASSWORD=$SSS_MYSQL_PASSWORD" \
-#-e "SSS_MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" 
-#-e "SSS_AUTH_TYPE=oidc" \
-#-e "SSS_TETHYS_USER=$SSS_TETHYS_USER" \
-#-e "SSS_TETHYS_PASSSWORD=$SSS_TETHYS_PASSWORD" \
-#-e "SSS_TETHYS_LAS_USER=$SSS_LAS_USER" \
-#-e "SSS_TETHYS_LAS_PASSWORD=$SSS_LAS_PASSWORD" \
-#-e "SSS_TETHYS_OIDC_CONF_URI=$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration" \
-#-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$LAYERS_API_URI/o/oauth2/userinfo" \
-#--volumes-from tomcat
-#--name sss.data \
-#learninglayers/sss.data &&
-#echo " -> done" &&
-#echo "" &&
-
-# create SSS container
-#echo "Creating SSS container..." &&
+#echo "starting SSS container ..." &&
 #docker run \
 #-d \
-#-p $SSS_PORT:8390 \
+#-e "MYSQL_ROOT_USERNAME=root" \
+#-e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" \
+#-e "SSS_HOST=host_with_out_protocol" \
+#-e "SSS_PORT=8390" \
+#-e "SSS_PORT_FOR_TOMCAT=8391" \
+#-e "SSS_MYSQL_HOST=host_with_out_protocol" \
+#-e "SSS_MYSQL_PORT=3333" \
+#-e "SSS_MYSQL_USERNAME=$SSS_MYSQL_USERNAME" \
+#-e "SSS_MYSQL_PASSWORD=$SSS_MYSQL_PASSWORD" \
+#-e "SSS_MYSQL_SCHEME=$SSS_MYSQL_SCHEME" \
+#-e "SSS_AUTH_TYPE=oidc" \
+#-e "SSS_TETHYS_USER=sss_tethys_user" \
+#-e "SSS_TETHYS_PASSSWORD=sss_tethys_password" \
+#-e "SSS_TETHYS_LAS_USER=sss_las_user" \
+#-e "SSS_TETHYS_LAS_PASSWORD=sss_las_password" \
+#-e "SSS_TETHYS_OIDC_CONF_URI=https://api.learning-layers.eu/o/oauth2/.well-known/openid-configuration" \
+#-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=https://api.learning-layers.eu/o/oauth2/userinfo" \
+#-p 8391:8390 \
 #--link mysql:mysql \
-#--volumes-from sss.data
-#--name sss.sss \
-#learninglayers/sss.sss &&
-#echo " -> done" &&
-#echo "" &&
+#--volumes-from tomcat \
+#--name sss \
+#learninglayers/sss &&
+#echo "done --> starting SSS container ..."
 
 echo "Finished... Layers Box up and running." &&
 echo "" &&
