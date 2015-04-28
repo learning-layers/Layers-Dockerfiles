@@ -1,5 +1,5 @@
 FROM learninglayers/base
-MAINTAINER Yordan Manolov <yordan.manolov@dbis.rwth-aachen.de>
+MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 
 RUN apt-get -qqy --no-install-recommends install wget ca-certificates
 
