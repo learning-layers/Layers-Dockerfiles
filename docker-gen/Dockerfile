@@ -1,5 +1,5 @@
 FROM learninglayers/base
-MAINTAINER Yordan Manolov <yordan.manolov@dbis.rwth-aachen.de>
+MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 
 ENV DGEN_VER 0.3.7
 ENV DLURL https://github.com/jwilder/docker-gen/releases/download/$DGEN_VER/docker-gen-linux-amd64-$DGEN_VER.tar.gz
