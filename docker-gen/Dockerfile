@@ -26,4 +26,4 @@ RUN wget -P /usr/local/bin ${DLURLFG} \
 #ENTRYPOINT ["forego"]
 #CMD ["start", "-r"]
 
-CMD /usr/local/bin/forego start -r && /usr/local/bin/docker-gen # edit when move info from upstream dev available
+CMD /usr/local/bin/forego start -r && /usr/local/bin/docker-gen -notify-sighup adapter -watch -only-published # edit when move info from upstream dev available
