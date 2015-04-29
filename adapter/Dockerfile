@@ -48,6 +48,9 @@ RUN wget ${DLURLDG} \
 RUN wget -P /usr/local/bin ${DLURLFG} \
     && chmod 755 /usr/local/bin/forego
 
+## Generate config file
+#RUN docker-gen -notify-sighup nginx -watch --only-published /usr/local/docker-gen/templates/nginx.tmpl /usr/local/openresty/docker-gen-generated.conf 
+
 EXPOSE 80 443
 
-CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf -g daemon off && forego start -r
+CMD forego start -r && /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf -g daemon off 
