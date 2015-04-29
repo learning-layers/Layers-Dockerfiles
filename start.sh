@@ -138,17 +138,17 @@ drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL
 echo " -> done" &&
 echo "" &&
 
-## start Tethys user storage data volume
-#echo "Starting Tethys user storage data volume..." &&
-#drenv -e --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
-#echo " -> done" &&
-#echo "" &&
-#
-## start Tethys user storage 
-#echo "Starting Tethys user storage " &&
-#drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
-#echo " -> done" &&
-#echo "" &&
+# start Tethys user storage data volume
+echo "Starting Tethys user storage data volume..." &&
+drenv -e --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
+echo " -> done" &&
+echo "" &&
+
+# start Tethys user storage 
+echo "Starting Tethys user storage " &&
+drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+echo " -> done" &&
+echo "" &&
 
 ####
 ##This is the part which will start Shipyard.
