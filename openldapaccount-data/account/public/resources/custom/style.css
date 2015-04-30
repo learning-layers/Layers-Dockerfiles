@@ -1,0 +1,178 @@
+/*
+ * Password Management Servlets (PWM)
+ * http://code.google.com/p/pwm/
+ *
+ * Copyright (c) 2006-2009 Novell, Inc.
+ * Copyright (c) 2009-2012 The PWM Project
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+
+
+form {
+	text-align: center;
+}
+
+a {
+  color: #0088cc;
+  text-decoration: none;
+}
+
+
+.navbar .brand {
+	max-height: 20px ; 
+}
+
+.navbar .brand img {
+	max-height: 24px ;
+	width: auto;
+	position: relative;
+	top: -2px;
+	left: -6px;
+}
+
+
+
+.credit {
+	margin: 20px 0;
+}
+
+
+
+/* main body wrapper, all elements (except footer) should be within wrapper */
+
+
+/* main content section, all content should be inside a centerbody div */
+#centerbody {
+	padding-top: 60px;
+}
+
+/* all forms use a buttonbar div containing the action buttons */
+#buttonbar {
+    margin-top: 30px;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center
+}
+
+/* header stuff */
+
+
+
+
+
+
+/* customization stuff */
+#header-title {
+display:none
+}
+
+
+#header {
+    min-height: 40px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background-color: #fafafa;
+  background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
+  background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
+  background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
+  background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
+  background-repeat: repeat-x;
+  border: 1px solid #d4d4d4;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+  *zoom: 1;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+
+#header-page {
+	max-height:20px;
+	width:1170px;
+    display: block;
+  padding: 10px 20px 10px;
+  margin-left: auto;
+  margin-right:auto;
+  font-size: 20px;
+  font-weight: 200;
+  color: #777777;
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.menubutton{
+color:#0088cc;
+}
+
+p{
+ margin-top:10px !important;
+ }
+
+table {
+    border-collapse: collapse;
+    border: 2px solid #D4D4D4;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+	table-layout: fixed;
+	text-align: center;
+}
+ 
+table td {
+    padding-left: 5px;
+	word-wrap:break-word;
+}
+
+table td.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 150%;
+    padding-right: 10px;
+    background-color: #DDDDDD
+}
+
+table td.key {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 10px;
+    width: 40%;
+}
+
+@media (max-width: 979px){
+	#centerbody{
+		padding-top:0px;
+	}
+	.menubutton_key{
+		padding-bottom:10px;
+	}
+}
+
+#newUserForm ul{
+    list-style-type: none;
+}
+
+#newUserForm .changepasswordfield{
+	width:80% !important;
+}
+
+h1,h2,label{
+	font-weight:bold !important;
+}
+
+

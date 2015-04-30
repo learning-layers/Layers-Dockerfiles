@@ -1,0 +1,486 @@
+/*
+ * Password Management Servlets (PWM)
+ * http://code.google.com/p/pwm/
+ *
+ * Copyright (c) 2006-2009 Novell, Inc.
+ * Copyright (c) 2009-2012 The PWM Project
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333333;
+  background-color: #ffffff;
+}
+}
+
+a {
+    color: #2D2D2D;
+    text-decoration: underline;
+    font-weight: bold
+}
+
+p {
+    max-width: 100%;
+    color: #2D2D2D;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 13px;
+
+}
+
+hr {
+    float: none;
+    width: 100%;
+    position: relative;
+    margin-left: 5px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 16px;
+}
+
+h2 {
+    font-size: 14px;
+}
+
+h3 {
+    font-size: 12px;
+}
+
+#form {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-collapse: separate;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid #D4D4D4;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto
+}
+
+table td {
+    border: 1px solid #D4D4D4;
+    padding-left: 5px;
+}
+
+table td.title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 150%;
+    padding-right: 10px;
+    background-color: #DDDDDD
+}
+
+table td.key {
+    text-align: right;
+    font-weight: bold;
+    padding-right: 10px;
+    width: 40%;
+}
+
+.health-GOOD {
+    white-space:nowrap;
+    background-color: #8ced3f;
+    text-align: center;
+}
+
+.health-CAUTION {
+    white-space:nowrap;
+    background-color: #ffcd59;
+    text-align: center;
+}
+
+.health-CONFIG {
+    white-space:nowrap;
+    background-color: #ecd5d5;
+    text-align: center;
+}
+
+.health-WARN {
+    white-space:nowrap;
+    background-color: #d20734;
+    text-align: center;
+}
+
+.health-UNKNOWN {
+    white-space:nowrap;
+    background-color: red;
+    text-align: center;
+}
+
+.inputfield {
+    width: 60%;
+    margin: 5px;
+    height: 18px;
+}
+
+.changepasswordfield {
+    width: 90%;
+    margin-right: 5px;
+}
+
+.menubutton_key {
+    border: 0;
+    table-layout: fixed;
+}
+
+
+/* main body wrapper, all elements (except footer) should be within wrapper */
+#wrapper {
+    width: 100%;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -60px;
+    position: relative;
+}
+
+/* main content section, all content should be inside a centerbody div */
+#centerbody {
+    max-width: 600px;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+}
+
+/* all forms use a buttonbar div containing the action buttons */
+#buttonbar {
+    margin-top: 30px;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center
+}
+
+
+
+
+
+
+#WaitDialogBlank {
+    height: 46px;
+    width: 46px;
+    margin-left: auto;
+    margin-right: auto;
+    background-image: url('wait.gif');
+}
+
+/* used for password complexity meter */
+div.progress-container {
+    border: 1px solid #ccc;
+    width: 90px;
+    margin: 2px 5px 2px 0;
+    padding: 1px;
+    float: left;
+    background: white;
+}
+
+div.progress-container > div {
+    background-color: #ffffff;
+    height: 10px;
+}
+
+/* header stuff */
+#header {
+    width: 100%;
+    margin: 0;
+    z-index: 5;
+    position: relative;
+}
+
+
+#header-page {
+    width: 600px;
+    padding-top: 9px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 20px;
+    color: #FFFFFF;
+}
+
+#header-title {
+    width: 600px;
+    margin: auto;
+    font-family: Trebuchet MS, sans-serif;
+    font-size: 14px;
+    color: #FFFFFF;
+}
+
+#header-warning {
+    width: 100%;
+    background-color: #FFDC8B;
+    text-align: center;
+    padding-top: 4px;
+    padding-bottom: 4px
+}
+
+.clear {
+    clear: both;
+}
+
+.message {
+    display: block;
+    padding: 6px;
+    width: 90%;
+    background-color: inherit;
+    border-radius: 3px;
+}
+
+.message-info {
+    background-color: #DDDDDD;
+}
+
+.message-error {
+    background-color: #FFCD59;
+}
+
+.message-success {
+    background-color: #EFEFEF;
+}
+
+
+.push, #footer {
+    height: 60px;
+}
+
+#footer {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    color: #555555;
+    font-size: 11px;
+    margin: 0;
+}
+
+#footer-content {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  padding-bottom: 5px;
+}
+
+
+#footer .infotext {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333333;
+    font-size: 12px;
+}
+
+#capslockwarning {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 101;
+    height: 5em;
+    text-align: center;
+    padding: 0;
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    color: #ffffff;
+    font-weight: bold;
+    font-variant: small-caps;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    background-color: #d20734;
+    border-radius: 3px;
+}
+
+
+#dialogPopup_underlay {
+    background-color: #222222;
+}
+
+#idleDialog_underlay {
+    background-color: #111111;
+}
+
+#TopMenu {
+    width:620px;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    clear: both;
+}
+
+.agreementText {
+
+    border: 0;
+    background-color: #DDDDDD;
+    border-radius: 7px;
+    padding: 10px;
+    max-height: 300px;
+    overflow: auto;
+    font-family: monospace;
+}
+
+.icon-eye {
+    font-size: larger;
+}
+
+/* recaptcha section */
+#recaptcha_WaitDialogBlank {
+    background: url("wait.gif") no-repeat center center;
+    min-height: 150px;
+    min-width: 46px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.recaptcha_widget {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    max-width: 300px;
+    margin-right: auto;
+    margin-left: auto;
+    border: 4px solid #000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    background: #000000;
+}
+
+#recaptcha_image {
+    width: 100% !important;
+    height: auto !important
+}
+
+#recaptcha_image img {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    background: #FFFFFF;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    border: 3px solid #FFFFFF;
+}
+
+.recaptcha_is_showing_audio embed {
+    height: 0;
+    width: 0;
+    overflow: hidden
+}
+
+.recaptcha_is_showing_audio #recaptcha_image {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 60px;
+    background: #FFFFFF;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    border: 3px solid #FFFFFF;
+}
+
+.recaptcha_is_showing_audio #recaptcha_image br {
+    display: none;
+}
+
+.recaptcha_is_showing_audio #recaptcha_image #recaptcha_audio_download {
+    display: block;
+}
+
+.recaptcha_input {
+    background: #DBDBDB;
+    margin: 4px 0 0;
+    padding: 0 4px 4px;
+    border: 4px solid #DBDBDB;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.recaptcha_input label {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #000000;
+    font-size: 13px;
+    margin: 0 0 6px;
+}
+
+.recaptcha_input input {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 4px 0 0;
+}
+
+.recaptcha_options {
+    list-style: none;
+    margin: 4px 0 4px;
+    padding-left: 4px;
+    height: 16px
+}
+
+.recaptcha_options li {
+    float: left;
+    margin: 0 4px 0 0
+}
+
+.recaptcha_options li a {
+    text-decoration: none;
+    text-shadow: 0 1px 1px #000000;
+    font-size: 16px;
+    color: #FFFFFF;
+    display: block;
+    width: 20px;
+    height: 16px
+}
+
+.recaptcha_options li a:active {
+    position: relative;
+    top: 1px;
+    text-shadow: none
+}
+
+.captcha_hide {
+    display: none
+}
+
+/* hide recaptcha iframe near footer */
+body > iframe[src="about:blank"] {
+    display:none !important;
+}
