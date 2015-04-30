@@ -1,0 +1,135 @@
+<!--
+  ~ Password Management Servlets (PWM)
+  ~ http://code.google.com/p/pwm/
+  ~
+  ~ Copyright (c) 2006-2009 Novell, Inc.
+  ~ Copyright (c) 2009-2012 The PWM Project
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  -->
+
+<p>Macros can be used at various places in the configuration.</p>
+
+<p>The following macros are available:</p>
+
+<table>
+    <tr>
+        <td class="key">
+            @LDAP:&lt;name&gt;@
+        </td>
+        <td>
+            Replace with LDAP value of &lt;name&gt;
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @LDAP:DN@
+        </td>
+        <td>
+            Replace with LDAP value of user's Distinguished Name
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @User:PwExpireTime@
+        </td>
+        <td>
+            Time user's password will expire in PWM default format.
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @User:PwExpireTime:&lt;pattern&gt;@
+        </td>
+        <td>
+            Time user's password will expire where &lt;pattern&gt; is a <a onclick="window.open('http://docs.oracle.com/javase/6/docs/api/java/text/SimpleDateFormat.html')" href="#">SimpleDateFormat</a> pattern
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @User:DaysUntilPwExpire@
+        </td>
+        <td>
+            Number of days until the user's password will expire
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @User:ID@
+        </td>
+        <td>
+            User's UserID (if authenticated)
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @User:Password@
+        </td>
+        <td>
+            User's current password (if authenticated)
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @InstanceID@
+        </td>
+        <td>
+            Instance ID of the application
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @CurrentTime@
+        </td>
+        <td>
+            Current time in default format.
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @CurrentTime:&lt;pattern&gt;@
+        </td>
+        <td>
+            Current time where &lt;pattern&gt; is a <a onclick="window.open('http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html')" href="#">SimpleDateFormat</a> pattern
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @SiteURL@
+        </td>
+        <td>
+            URL of the site (<span style="font-style: italic;">http://www.example.com/pwm</span>)
+        </td>
+    </tr>
+    <tr>
+        <td class="key">
+            @SiteHost@
+        </td>
+        <td>
+            Hostname of the site (<span style="font-style: italic;">www.example.com</span>)
+        </td>
+    </tr>
+</table>
+<p>To use a macro, just place the macro into the configuration value such as:
+    <br/>
+        <span style="font-family: Courrier">
+            Dear, @LDAP:givenName@, Thank you for your activity today, @CurrentTime:EEE, MMM d, yyyy@.
+        </span>
+        </p>
+<p>This macro will then be expanded to:
+    <br/>
+<span style="font-family: Courrier">    Dear, John, Thank you for your activity today, Wed, Jul 4, 2001.
+</span>
+</p>
