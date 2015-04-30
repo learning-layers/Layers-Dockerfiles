@@ -1,3 +1,1 @@
-The Dockerfiles in these subdirectories should create a whole runtime for the Object Storage Swift (Openstack).
-
-They are not ready to run yet.
+Dockerfiles which creates a All-In-One Runtime for Swift.
