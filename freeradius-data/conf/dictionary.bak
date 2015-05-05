@@ -42,3 +42,15 @@ $INCLUDE	/usr/share/freeradius/dictionary
 #ATTRIBUTE	My-Local-String		3000	string
 #ATTRIBUTE	My-Local-IPAddr		3001	ipaddr
 #ATTRIBUTE	My-Local-Integer	3002	integer
+
+##
+##       Non-Protocol Integer Translations
+##
+#
+#VALUE           Auth-Type               Local                   0
+#VALUE           Auth-Type               System                  1
+#VALUE           Auth-Type               SecurID                 2
+#VALUE           Auth-Type               Crypt-Local             3
+#VALUE           Auth-Type               Reject                  4
+#VALUE           Auth-Type               ActivCard               5
+#VALUE           Auth-Type               LDAP                    6
