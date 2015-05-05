@@ -106,9 +106,22 @@ docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_M
 echo " -> done" &&
 echo "" && 
 
+##updated to support default admin users
+#docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
+#"OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e
+#"LAYERS_API_URI=http://192.168.59.103:8080" -e "LDAP_DC=dc=layersbox"
+#"LDAP_ADMINS=LDAP_ADMIN_1;LDAP_ADMIN_2" --name openidconnect-data learninglayers/openidconnect-data
+
 # start OpenID Connect
 echo "Starting Layers OpenID Connect provider..." &&
 docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
+
+##updated to support default admin users
+#docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
+#"OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e
+#"LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox"
+#"LDAP_ADMINS=LDAP_ADMIN_1;LDAP_ADMIN_2" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
+
 
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
 SUBS="# add locations below" &&
