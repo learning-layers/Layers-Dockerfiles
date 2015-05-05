@@ -30,6 +30,9 @@ OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
 SHIPYARD_ADMIN_PASS="pass"; 
+SWIFT_TENANT_NAME="tethysTenant";
+SWIFT_USER_NAME="tethysUserStorage";
+SWIFT_KEY="pass";
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
@@ -162,6 +165,13 @@ echo "Starting Tethys user storage " &&
 drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
 echo " -> done" &&
 echo "" &&
+
+##updated to support default user credentials
+#echo "Starting Tethys user storage " &&
+#drenv -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY_NAME=$SWIFT_KEY_NAME" --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#echo " -> done" &&
+#echo "" &&
+#
 
 ####
 ##This is the part which will start Shipyard.
