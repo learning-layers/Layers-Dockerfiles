@@ -32,7 +32,7 @@ ldap {
 	#  server certificate, if you're using ldaps.
 	server = "IPofOpenLDAP"
 	identity = "cn=LayersManager,o=Layers Box LDAP Server" #,c=UA"
-	password = LDAP_ROOT_PASSWORD
+	password = ldap_root_pass
 	basedn = "o=Layers Box LDAP Server"
 	filter = "(uid=%{%{Stripped-User-Name}:-%{User-Name}})"
 	#base_filter = "(objectclass=radiusprofile)"
