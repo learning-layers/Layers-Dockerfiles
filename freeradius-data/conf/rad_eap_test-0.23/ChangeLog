@@ -1,0 +1,120 @@
+2009-11-02  Pavel Polacek <pavel.polacek@ujep.cz>
+	    * Version: 0.23
+	    * Code from David Worth.
+	    * added a command-line option (-2 <type>) to change the phase-2
+	      authentication type so the user may specify PAP/CHAP/MSCHAPv2.
+	      I made sure that if this option is omitted the code still
+	      defaults to MSCHAPv2.
+	    * added a command-line option (-N) to not delete the generated
+	      configuration files and let the user know where they are.
+	      This is helpful in debugging or setting up permanent configuration
+	      files if you need them. I then changed the garbage function
+	      to check the -N option above. I also removed the explicit
+	      deletion of the temp files in several places and called
+	      the garbage function instead.
+
+2009-08-03  Pavel Polacek <polish@pf.ujep.cz>
+	    * Version: 0.22
+	    * Support for EAP-TLS        
+	
+2006-11-29  Pavel Polacek <polish@pf.ujep.cz>
+            * Version: 0.21
+	    * Added man page.
+
+2006-11-29  Pavel Polacek <polish@pf.ujep.cz>
+	    * Version: 0.20
+	    * rad_eap_test:
+	        - added -A switch for annymous = external identity
+	    * README:
+	        - added note on patches
+	
+2006-07-21  Jan Tomasek  <jan@tomasek.cz>
+	    * Version: 0.19
+	    * rad_eap_test:
+	        - EAP is better to write in upcase, same with RADIUS.
+		- Space after opening ( or before closing ) is UGLY!
+	        - Added support for TTLS, don't forget to recompile
+	          eapol_test with new config (see README).  Bit more
+	          usefull message when "Probably configuration error"
+	          raise.
+	        - Fixed eapol_test program checks. Script is now able to
+	          work with exact path to program, program mentioned only by
+	          it's name (and being on $PATH) or with program in actual
+	          directory.
+	        - Removed debug message.
+	    * README:
+	        - Added TTLS to config example.
+  	        - Added url to wpa_supplicant.
+   	    * Makefile:
+	        - Fixed permisions in distribution package. 
+
+2006-07-21  Jan Tomasek  <jan@tomasek.cz>
+	    * Version: 0.18
+	    * Makefile: Publish files into directory rad_eap_test-<version> and
+	      publish also ChangeLog file.
+
+2006-07-21  Jan Tomasek  <jan@tomasek.cz>
+	    * Version: 0.17
+	    * rad_eap_test: Changed return code 5 and 10 to 3 to be nagios
+	      compatible.
+   	    * README: Added URL to publish place.
+
+2006-07-17  polish  <polish@pf.ujep.cz>
+	    * Version: 0.16
+	    * rad_eap_test: Script test if certificate authority file
+	      exist.  Solve bug of previous version, where tests if user
+	      certificate files exist was negated.
+	    * rad_eap_test: Scripts test existency of certificate files
+	      when tls eap method is used.
+	    * rad_eap_test: EAP TLS method is added.
+
+2006-07-12  Jan Tomasek  <jan@tomasek.cz>
+	    * Version: 0.15
+	    * patches/README: Added note about version which accept patches.
+	    * rad_eap_test: Housekeping in coments at begining of file.
+	    * rad_eap_test: Default EAPOL_PROG changed from ./eapol_test
+	      to eapol_test which should work for everybody who have it on
+	      PATH.
+	    * README: New README file based on mail to tf-mobility.
+
+2006-05-05 Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.14
+	   * new parametr -d is added for status directory, where
+	     identifier of packet to particular destination is held
+
+2006-xx-xx Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.13
+	   * patch for eapol_test.c was accepted, only compilation of cvs
+	     version of eapol_test (connect info parametr was changed from
+	     -i to -C in eapol_test)
+
+2006-xx-xx Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.12
+	   * to eapol_test and rad_eap_test is added -i parametr for
+	     addition connection info
+
+2006-04-11 Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.11
+	   * rad_eap_test now uses source from CVS
+	   * bug in verbose mode is got out
+	   * parametr -M was added, you can specify source MAC address
+
+2006-xx-xx Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.09
+	   * return codes from awk was changed, because default awk return
+	     code is 0, which was SUCCESS too
+	   * LEAP EAP method is added (return strings from eapol_test is
+	     different)
+
+2006-xx-xx Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.08
+	   * rad_eap_test checks existence of eapol_test program
+	   * temporary directory is renamed to rad_eap_test.XXXXXX, where
+	     X is something random
+	   * dig is used for name resolve instead of host
+
+2006-xx-xx Pavel Polacek <polish@pf.ujep.cz>
+	   * Version: 0.07
+	   * Ctrl-C runs garbage procedure
+	   * mktemp command is used for creating temporary directory
+	   * script accepts TMPDIR variable
