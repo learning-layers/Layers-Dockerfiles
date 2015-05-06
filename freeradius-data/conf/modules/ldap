@@ -30,7 +30,7 @@ ldap {
 	#
 	#  Note that this needs to match the name in the LDAP
 	#  server certificate, if you're using ldaps.
-	server = "OIDC_IP"
+	server = "IPofOpenLDAP"
 	identity = "cn=LayersManager,o=Layers Box LDAP Server" #,c=UA"
 	password = LDAP_ROOT_PASSWORD
 	basedn = "o=Layers Box LDAP Server"
