@@ -168,7 +168,7 @@ authorize {
         # http://confluence.diamond.ac.uk/display/PAAUTH/Using+LDAP+as+authentication+source
         if (User-Password) {
            update control {
-        Auth-Type := ldap
+             Auth-Type := ldap
            }
         }
 }
