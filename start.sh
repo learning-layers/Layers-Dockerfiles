@@ -125,7 +125,6 @@ docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_
 #"LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox"
 #"LDAP_ADMINS=LDAP_ADMIN_1;LDAP_ADMIN_2" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
 
-
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
 SUBS="# add locations below" &&
 OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
@@ -154,17 +153,17 @@ drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL
 echo " -> done" &&
 echo "" &&
 
-# start Tethys user storage data volume
-echo "Starting Tethys user storage data volume..." &&
-drenv -e --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
-echo " -> done" &&
-echo "" &&
-
-# start Tethys user storage 
-echo "Starting Tethys user storage " &&
-drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
-echo " -> done" &&
-echo "" &&
+## start Tethys user storage data volume
+#echo "Starting Tethys user storage data volume..." &&
+#drenv -e --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
+#echo " -> done" &&
+#echo "" &&
+#
+## start Tethys user storage 
+#echo "Starting Tethys user storage " &&
+#drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#echo " -> done" &&
+#echo "" &&
 
 ##updated to support default user credentials
 #echo "Starting Tethys user storage " &&
@@ -211,6 +210,17 @@ echo "" &&
 # Requirements Bazaar
 # LTB APIs
 # Tomcat
+# Freeradius -> in progress
+
+# start PWM data volume:
+echo "Starting Layers OpenLDAP Account data volume..." &&
+docker run --name openldapaccount-data learninglayers/openldapaccount-data &&
+echo " -> done" &&
+echo "" && 
+
+# start PWM
+echo "Starting Layers OpenLDAP Account..." &&
+docker run -d --volumes-from openldapaccount-data --link openldap:openldap --name openldapaccount learninglayers/openldapaccount &&
 
 # env variables need for SSS
 $SSS_MYSQL_SCHEME = "sss";
