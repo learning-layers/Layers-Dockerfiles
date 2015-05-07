@@ -1,8 +1,15 @@
 FROM learninglayers/base
 MAINTAINER Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
 
+ONBUILD ADD https://raw.githubusercontent.com/learning-layers/Layers-Dockerfiles/master/tomcat/src/main/files/init.sh		/opt/init.sh
+ONBUILD ADD https://raw.githubusercontent.com/learning-layers/Layers-Dockerfiles/master/tomcat/src/main/files/init/50_tomcat.sh	/opt/init/50_tomcat.sh
+ONBUILD ADD https://raw.githubusercontent.com/learning-layers/Layers-Dockerfiles/master/tomcat/src/main/files/init/99_log.sh	/opt/init/99_log.sh
+
 # Install build tools
 ONBUILD RUN apt-get update -yq \
+
+	&& chmod +x /opt/init.sh \
+	&& chmod -R +x /opt/init \
 
 	&& apt-get install -yq software-properties-common \
 	&& add-apt-repository -y ppa:webupd8team/java \
@@ -20,5 +27,6 @@ ENV TOMCAT_HOME="/opt/tomcat"
 ENV PATH=$JAVA_HOME/bin:$TOMCAT_HOME/bin:$PATH
 		
 EXPOSE 8080
+CMD /opt/init.sh
 
 #VOLUME ["/opt/tomcat/conf", "/opt/tomcat/webapps"]
