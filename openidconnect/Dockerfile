@@ -1,4 +1,4 @@
-FROM learninglayers/base
+FROM learninglayers/tomcat
 MAINTAINER Petru Nicolaescu
 
 # Add the war from Jenkins
