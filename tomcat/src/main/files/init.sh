@@ -12,7 +12,7 @@ fi
 # Check if INIT_DIR exists or is empty. If yes return error code 1.
 if [ ! `ls -A ${INIT_DIR}` ]
 then
-	echo "empty (or does not exist)"
+	echo "${INIT_DIR} is empty or does not exist! Exiting!!!"
 	return 1
 fi
 
@@ -29,5 +29,5 @@ do
 done
 
 # Return exit code 2 because we don't want our container to reach this line or it will stop!
-echo "Docker container finished processing scripts. Please contact maintainer as this container shouldn't finish!!!"
+echo "Docker container finished processing scripts. Please contact maintainer as this container shouldn't finish!!! Exiting!!!"
 return 2
