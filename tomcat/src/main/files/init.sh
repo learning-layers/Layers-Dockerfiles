@@ -3,7 +3,7 @@
 echo "Docker container started!"
 echo ""
 
-# Directory containing all init scripts. Those scripts need to be in a lexicographic order!
+# Directory containing all init scripts. Those scripts need to be in a lexicographical order!
 if [ -z "${INIT_DIR}"]
 then
 	echo "INIT_DIR not set! Trying to use ${PWD}/init as INIT_DIR"
