@@ -20,6 +20,7 @@ fi
 chmod +x ${INIT_DIR}/*.sh 
 
 # Execute every executable file in INIT_DIR.
+echo "Processing Scripts in ${INIT_DIR}"
 for SCRIPT in ${INIT_DIR}/*
 do
 	if [ -f ${SCRIPT} -a -x ${SCRIPT} ]
