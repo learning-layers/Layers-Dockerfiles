@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/opt/tomcat/bin/startup.sh 
+${TOMCAT_HOME}/bin/startup.sh 
