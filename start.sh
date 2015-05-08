@@ -33,6 +33,7 @@ SHIPYARD_ADMIN_PASS="pass";
 SWIFT_TENANT_NAME="tethysTenant";
 SWIFT_USER_NAME="tethysUserStorage";
 SWIFT_KEY="pass";
+PWM_LDAP_ADMINS="koren;nicolaescu";
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
@@ -220,7 +221,7 @@ echo "" &&
 
 # start PWM
 echo "Starting Layers OpenLDAP Account..." &&
-docker run -d --volumes-from openldapaccount-data --link openldap:openldap --name openldapaccount learninglayers/openldapaccount &&
+docker run -d --volumes-from openldapaccount-data --link openldap:openldap --name openldapaccount -e "LDAP_DC=$LDAP_DC" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS"  learninglayers/openldapaccount &&
 
 # env variables need for SSS
 $SSS_MYSQL_SCHEME = "sss";
