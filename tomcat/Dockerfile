@@ -8,9 +8,8 @@ ADD src/main/files/init		/opt/init
 # Install Java 8 & Tomcat 8
 ONBUILD RUN apt-get update -yq \
 
-	# make initscripts runable
+	# make initscript runable
 	&& chmod +x /opt/init.sh \
-	&& chmod -R +x /opt/init \
 
 	# add Java 8 repository
 	&& apt-get install -yq software-properties-common \
