@@ -1,3 +1,3 @@
 #!/bin/bash
 
-tail -f /opt/tomcat/logs/catalina.out
+tail -f ${TOMCAT_HOME}/logs/catalina.out
