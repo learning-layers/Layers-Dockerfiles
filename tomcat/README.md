@@ -1,5 +1,9 @@
 # Tomcat Docker Base Image
+#### What is it's use
 This repo contains the Tomcat Dockerfile of the Learning Layers project that should be used by all Java-based Web application containers.
+
+#### How to use it
+Just place your war file inside ${TOMCAT_HOME}/webapps and run the container.
 
 This base image also introduces an automatic way of initialising a container with src/main/files/init.sh.
 This script executes all scripts in a given directory. As default you need to place them into /opt/init.
