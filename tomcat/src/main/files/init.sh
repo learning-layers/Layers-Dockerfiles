@@ -14,7 +14,7 @@ fi
 if [ ! "$(ls -A ${INIT_DIR})" ]
 then
 	echo "${INIT_DIR} is empty or does not exist! Exiting!!!"
-	return 1
+	exit 1
 fi
 
 # Make every *.sh script executable. Doing this here prevents us of doing it in every Dockerfile based on this base image!
@@ -34,4 +34,4 @@ done
 
 # Return exit code 2 because we don't want our container to reach this line or it will stop!
 echo "Docker container finished processing scripts. Please contact maintainer as this container shouldn't finish!!! Exiting!!!"
-return 2
+exit 2
