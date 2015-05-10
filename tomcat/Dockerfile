@@ -3,9 +3,9 @@ MAINTAINER Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
 
 # Environment variables
 ENV INSTALL_DIR="/opt"
-ENV INIT_SH="${INSTALL_DIR}/init.sh"
-	INIT_DIR="${INSTALL_DIR}/init"
-	JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+ENV INIT_SH="${INSTALL_DIR}/init.sh" \
+	INIT_DIR="${INSTALL_DIR}/init" \
+	JAVA_HOME="/usr/lib/jvm/java-8-oracle" \
 	TOMCAT_HOME="${INSTALL_DIR}/tomcat"
 ENV PATH=$JAVA_HOME/bin:$PATH
 
