@@ -1,1 +1,11 @@
-Policy dictates that /src/main/files/init/*.sh scripts must work properly when executed!
+Policy dictates that:
+
+1. /src/main/files/init/*.sh scripts must work properly when executed!
+2. /src/main/files/init/*.sh should be in a logical working order! This order should be represented by a lexicographical order of naming scripts!
+  Examplia gratia: Script A starts Service X. Script B starts Service Y. Y depends on X running. So A should be executed before B.
+  To achieve this A could be named "00_startX.sh" and B could be named "01_startY.sh"
+3. To let the container staying in a running state we need to have a script which never exits. This script should also be the last one in the lexicographical order.
+  We decided to use number 99 for this.
+  Examplia gratia: The last script is named "99_neverEndingStory.sh" and executes "tail -f /var/log/storyOfLife.log"
+4. ##_script.sh.skeleton is a skeleton to create new scripts according to our best practise. ## should be replaced by a two digit number.
+  Note: 0 can also be the first digit. 99 Should be the last scripts. See Rule 3 for more information about script 99.

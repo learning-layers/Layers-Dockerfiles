@@ -1,15 +1,23 @@
 FROM learninglayers/base
 MAINTAINER Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
 
+# Environment variables
+ENV INSTALL_DIR="/opt"
+ENV INIT_SH="${INSTALL_DIR}/init.sh"
+	INIT_DIR="${INSTALL_DIR}/init"
+	JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+	TOMCAT_HOME="${INSTALL_DIR}/tomcat"
+ENV PATH=$JAVA_HOME/bin:$PATH
+
 # Add startscripts
-ADD src/main/files/init.sh	/opt/init.sh
-ADD src/main/files/init		/opt/init
+ADD src/main/files/init.sh	${INIT_SH}
+ADD src/main/files/init		${INIT_DIR}
 
 # Install Java 8 & Tomcat 8
 ONBUILD RUN apt-get update -yq \
 
 	# make initscript runable
-	&& chmod +x /opt/init.sh \
+	&& chmod +x ${INIT_SH} \
 
 	# add Java 8 repository
 	&& apt-get install -yq software-properties-common \
@@ -22,16 +30,10 @@ ONBUILD RUN apt-get update -yq \
 	&& update-java-alternatives -s java-8-oracle \
 	
 	# install Tomcat 8 
-        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz -O - | tar -zxv -C /opt/ \
-        && ln -s /opt/apache-tomcat-8.0.21/ /opt/tomcat 
+        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz -O - | tar -zxv -C ${INSTALL_DIR}/ \
+        && ln -s ${INSTALL_DIR}/apache-tomcat-8.0.21/ ${TOMCAT_HOME}
 
-# Add Environment variables
-ENV JAVA_HOME="/usr/lib/jvm/java-8-oracle"
-ENV TOMCAT_HOME="/opt/tomcat"
-ENV PATH=$JAVA_HOME/bin:$TOMCAT_HOME/bin:$PATH
 
 # Expose Tomcat at port 8080 & start our initscripts		
 EXPOSE 8080
-CMD /opt/init.sh
-
-#VOLUME ["/opt/tomcat/conf", "/opt/tomcat/webapps"]
+CMD ${INIT_SH}

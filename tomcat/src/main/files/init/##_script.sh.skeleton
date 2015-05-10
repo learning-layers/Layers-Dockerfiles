@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# This is a skeleton for a bash script executed by our loop in INIT_SH
+echo "Processing $0"
+echo "Tell here what the script does:"
+
+function
+
+echo ""
