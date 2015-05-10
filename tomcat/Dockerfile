@@ -36,4 +36,4 @@ ONBUILD RUN apt-get update -yq \
 
 # Expose Tomcat at port 8080 & start our initscripts		
 EXPOSE 8080
-CMD ${INIT_SH}
+CMD /bin/bash ${INIT_SH}
