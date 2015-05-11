@@ -18,7 +18,8 @@ then
 fi
 
 # Make every *.sh script executable. Doing this here prevents us of doing it in every Dockerfile based on this base image!
-chmod +x ${INIT_DIR}/*.sh 
+chmod +x ${INIT_DIR}/*.sh
+sleep 1 
 
 echo "Processing Scripts in ${INIT_DIR}"
 echo ""
