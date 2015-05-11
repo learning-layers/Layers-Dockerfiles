@@ -1,8 +1,8 @@
 FROM learninglayers/tomcat
 MAINTAINER Gordon Lawrenz <lawrenz@dbis.rwth-aachen.de>
 
-ENV	TUS="${TOMCAT_HOME}/webapps/TethysUserStorage" \
-	TUS_WAR="${TOMCAT_HOME}/webapps/TethysUserStorage.war"
+ENV	TUS="${TOMCAT_HOME}/webapps/Tethys-UserStorage" \
+	TUS_WAR="${TOMCAT_HOME}/webapps/Tethys-UserStorage.war"
 
 # Add to the other startscripts
 ADD src/main/files/init		${INIT_DIR}

@@ -8,8 +8,9 @@ echo ""
 # Print every properties file in ${TETHYS_US}/WEB-INF/classes
 for CONFIG in ${TUS}/WEB-INF/classes/*.properties
 do
-	echo "File ${CONFIG}: "
+	echo "   File ${CONFIG}: "
 	cat ${CONFIG}
 	echo ""
 done
 
+echo ""

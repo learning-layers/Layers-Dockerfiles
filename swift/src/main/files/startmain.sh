@@ -55,14 +55,8 @@ if [ ! -z "${SWIFT_STORAGE_URL_SCHEME}" ]; then
 	grep "storage_url_scheme" /etc/swift/proxy-server.conf
 fi
 
-if [ ! -z "${SWIFT_SET_PASSWORDS}" ]; then
-	echo "Setting passwords in /etc/swift/proxy-server.conf"
-	PASS=`pwgen 12 1`
-	sed -i -e "s/user_admin_admin = admin .admin .reseller_admin/user_admin_admin = $PASS .admin .reseller_admin/g" /etc/swift/proxy-server.conf
-	sed -i -e "s/user_test_tester = testing .admin/user_test_tester = $PASS .admin/g" /etc/swift/proxy-server.conf
-	sed -i -e "s/user_test2_tester2 = testing2 .admin/user_test2_tester2 = $PASS .admin/g" /etc/swift/proxy-server.conf
-	sed -i -e "s/user_test_tester3 = testing3/user_test_tester3 = $PASS/g" /etc/swift/proxy-server.conf
-	grep "user_test" /etc/swift/proxy-server.conf
+if [ ! -z "${SWIFT_TENANT}" ]; then
+	sed -i -e "s/user_test_tester = testing .admin/user_${SWIFT_TENANT}_${SWIFT_USER} = ${SWIFT_KEY} .admin/g" /etc/swift/proxy-server.conf
 fi
 
 # start rsyslog
