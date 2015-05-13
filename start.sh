@@ -262,6 +262,8 @@ $SSS_MYSQL_USERNAME = "sss";
 
 # register SSS REST API in OIDC
 #echo "Registering SSS REST API in OIDC..." &&
+#docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+#docker kill --signal="HUP" adapter &&
 #echo " -> done" &&
 #echo "" &&
 
