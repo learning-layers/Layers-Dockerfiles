@@ -54,4 +54,4 @@ VOLUME ["/var/cache/nginx"]
 EXPOSE 80 443
 
 # CMD forego start -r && /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf -g daemon off 
-CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf -g daemon off
+CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf #-g daemon off
