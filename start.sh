@@ -260,6 +260,11 @@ $SSS_MYSQL_USERNAME = "sss";
 #learninglayers/sss &&
 #echo "done --> starting SSS container ..."
 
+# register SSS REST API in OIDC
+#echo "Registering SSS REST API in OIDC..." &&
+#echo " -> done" &&
+#echo "" &&
+
 echo "Finished... Layers Box up and running." &&
 echo "" &&
 
