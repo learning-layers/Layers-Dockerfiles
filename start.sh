@@ -33,7 +33,7 @@ SHIPYARD_ADMIN_PASS="pass";
 SWIFT_TENANT_NAME="tethysTenant";
 SWIFT_USER_NAME="tethysUserStorage";
 SWIFT_KEY="pass";
-PWM_LDAP_ADMINS="koren;nicolaescu";
+LDAP_ADMINS="koren;nicolaescu";
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
@@ -114,7 +114,7 @@ echo "" &&
 #docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
 #"OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e
 #"LAYERS_API_URI=http://192.168.59.103:8080" -e "LDAP_DC=dc=layersbox"
-#"LDAP_ADMINS=LDAP_ADMIN_1;LDAP_ADMIN_2" --name openidconnect-data learninglayers/openidconnect-data
+#"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect-data learninglayers/openidconnect-data
 
 # start OpenID Connect
 echo "Starting Layers OpenID Connect provider..." &&
@@ -124,16 +124,35 @@ docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_
 #docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
 #"OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e
 #"LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox"
-#"LDAP_ADMINS=LDAP_ADMIN_1;LDAP_ADMIN_2" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
+#"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
 
+# start OpenStack Swift
+echo "Starting OpenStack Swift..." &&
+docker run --name swift -d -e SWIFT_TENANT=tenant -e  \
+SWIFT_USER=user -e SWIFT_KEY=key learninglayers/swift &&
+echo " -> done" &&
+echo "" &&
+
+# write OpenID Connect's container IP adress to nginx.conf
+# write Swift's container IP adress to nginx.conf
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
+SWIFT_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} swift` &&
 SUBS="# add locations below" &&
 OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
 
-docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+# -e "SWIFT_IP=$SWIFT_IP" "s%${SUBS}%${OIDC_LOC}%${SWIFT_IP}%g"
+docker run -d -e "SWIFT_IP=$SWIFT_IP" -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%${SWIFT_IP}%g" /usr/local/openresty/conf/nginx.conf' &&
 docker kill --signal="HUP" adapter &&
 echo " -> done" &&
 echo "" && 
+
+# start Tethys User Storage
+echo "Starting Tethys user storage..." &&
+docker run --name tethys-userstorage -d -e TUS_PASS=pass -e \
+ADAPTER_URL_SWIFT=$(docker inspect -f {{.NetworkSettings.IPAddress}} adapter)/swift -e SWIFT_TENANT=tenant -e \
+SWIFT_USER=user -e SWIFT_KEY=key learninglayers/tethys-userstorage  &&
+echo " -> done" &&
+echo "" &&
 
 # create MobSOS Monitor user & database
 echo "Creating MobSOS Monitor user & database..." &&
@@ -156,22 +175,16 @@ echo "" &&
 
 ## start Tethys user storage data volume
 #echo "Starting Tethys user storage data volume..." &&
-#drenv -e --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
-#echo " -> done" &&
-#echo "" &&
-#
-## start Tethys user storage 
-#echo "Starting Tethys user storage " &&
-#drenv -e --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#docker run --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
 #echo " -> done" &&
 #echo "" &&
 
 ##updated to support default user credentials
+# start Tethys user storage 
 #echo "Starting Tethys user storage " &&
-#drenv -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY_NAME=$SWIFT_KEY_NAME" --name tethys-userstorage ---volumes-from adapter-data -volumes-from tethys-userstorage-data -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#docker run --name tethys-userstorage --volumes-from tethys-userstorage-data -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY_NAME=$SWIFT_KEY_NAME" -d -p 8888:8080 learninglayers/tethys-userstorage &&
 #echo " -> done" &&
 #echo "" &&
-#
 
 ####
 ##This is the part which will start Shipyard.
