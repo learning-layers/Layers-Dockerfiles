@@ -119,6 +119,8 @@ echo "" &&
 # start OpenID Connect
 echo "Starting Layers OpenID Connect provider..." &&
 docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
+echo " -> done" &&
+echo "" &&
 
 ##updated to support default admin users
 #docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
@@ -127,32 +129,49 @@ docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_
 #"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
 
 # start OpenStack Swift
+# TODO: update env vars to match the initially defined
 echo "Starting OpenStack Swift..." &&
-docker run --name swift -d -e SWIFT_TENANT=tenant -e  \
-SWIFT_USER=user -e SWIFT_KEY=key learninglayers/swift &&
+docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT=tenant" -e  \
+"SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/swift &&
+echo " -> done" &&
+echo "" &&
+
+# start Tethys User Storage
+# TODO: update env vars to match the initially defined
+echo "Starting Tethys user storage..." &&
+docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e \
+"ADAPTER_URL_SWIFT=$ADAPTER_URL_SWIFT" -e "SWIFT_TENANT=tenant" -e \
+"SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/tethys-userstorage  &&
 echo " -> done" &&
 echo "" &&
 
 # write OpenID Connect's container IP adress to nginx.conf
-# write Swift's container IP adress to nginx.conf
+# write Swift's container IP adress and port to nginx.conf
+# write Tethys' container IP adress and port to nginx.conf
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
 SWIFT_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} swift` &&
+TETHYS_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} tethys-userstorage` &&
+ADAPTER_URL_SWIFT=$SWIFT_IP:`docker inspect -f {{.NetworkSettings.Ports}} swift | cut -c 43-46` &&
+ADAPTER_URL_TETHYS=$TETHYS_IP:`docker inspect -f {{.NetworkSettings.Ports}} tethys-userstorage | cut -c 43-46` &&
 SUBS="# add locations below" &&
 OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
+SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$ADAPTER_URL_SWIFT;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
+TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$ADAPTER_URL_TETHYS;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
 
-# -e "SWIFT_IP=$SWIFT_IP" "s%${SUBS}%${OIDC_LOC}%${SWIFT_IP}%g"
-docker run -d -e "SWIFT_IP=$SWIFT_IP" -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%${SWIFT_IP}%g" /usr/local/openresty/conf/nginx.conf' &&
+docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
 docker kill --signal="HUP" adapter &&
-echo " -> done" &&
-echo "" && 
 
-# start Tethys User Storage
-echo "Starting Tethys user storage..." &&
-docker run --name tethys-userstorage -d -e TUS_PASS=pass -e \
-ADAPTER_URL_SWIFT=$(docker inspect -f {{.NetworkSettings.IPAddress}} adapter)/swift -e SWIFT_TENANT=tenant -e \
-SWIFT_USER=user -e SWIFT_KEY=key learninglayers/tethys-userstorage  &&
-echo " -> done" &&
-echo "" &&
+##TODO: make sure the locations for tethys and swift get written in nginx.conf 
+#docker run -d -e "SWIFT_LOC=$SWIFT_LOC" -e "ADAPTER_URL_SWIFT=$ADAPTER_URL_SWIFT" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${SWIF_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+#docker kill --signal="HUP" adapter &&
+#
+#docker run -d -e "TETHYS_LOC=$SWIFT_LOC" -e "ADAPTER_URL_TETHYS=$ADAPTER_URL_TETHYS" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${TETHYS_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+#docker kill --signal="HUP" adapter &&
+# 
+#docker run -d -e "OIDC_IP=$OIDC_IP" -e "ADAPTER_URL_SWIFT=$ADAPTER_URL_SWIFT" -e "ADAPTER_URL_TETHYS=$ADAPTER_URL_TETHYS" -e "OIDC_LOC=$OIDC_LOC" -e "SWIFT_LOC=$SWIFT_LOC" -e "TETHYS_LOC=$TETHYS_LOC" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%${SWIFT_LOC}%${$TETHYS_LOC}g" /usr/local/openresty/conf/nginx.conf' &&
+#docker kill --signal="HUP" adapter &&
+#echo " -> done" &&
+#echo "" && 
 
 # create MobSOS Monitor user & database
 echo "Creating MobSOS Monitor user & database..." &&
@@ -182,14 +201,14 @@ echo "" &&
 ##updated to support default user credentials
 # start Tethys user storage 
 #echo "Starting Tethys user storage " &&
-#docker run --name tethys-userstorage --volumes-from tethys-userstorage-data -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY_NAME=$SWIFT_KEY_NAME" -d -p 8888:8080 learninglayers/tethys-userstorage &&
+#docker run --name tethys-userstorage --volumes-from tethys-userstorage-data -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY_NAME=$SWIFT_KEY_NAME" -d -p 8080:8080 learninglayers/tethys-userstorage &&
 #echo " -> done" &&
 #echo "" &&
 
 ####
 ##This is the part which will start Shipyard.
 #
-##The following needs to be modified; it is possible to run docker with a bind for every command, but editing Docker's config is more flexible
+##TODO:The following needs to be modified; it is possible to run docker with a bind for every command, but editing Docker's config is more flexible
 #echo "Starting Shipyard..." &&
 #docker -H tcp://0.0.0.0:7890 run --rm -v /var/run/docker.sock:/var/run/docker.sock shipyard/deploy start &&
 #
@@ -225,6 +244,7 @@ echo "" &&
 # LTB APIs
 # Tomcat
 # Freeradius -> in progress
+# TODO: change order of started containers: 1) adapter 2)backend containers not requiring the adapter 3) containers communicating via the adapter 4) update nginx.conf
 
 # start PWM data volume:
 echo "Starting Layers OpenLDAP Account data volume..." &&
@@ -234,7 +254,7 @@ echo "" &&
 
 # start PWM
 echo "Starting Layers OpenLDAP Account..." &&
-docker run -d --volumes-from openldapaccount-data --link openldap:openldap --name openldapaccount -e "LDAP_DC=$LDAP_DC" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS"  learninglayers/openldapaccount &&
+docker run --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "LDAP_DC=$LDAP_DC" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
 
 # env variables need for SSS
 $SSS_MYSQL_SCHEME = "sss";
