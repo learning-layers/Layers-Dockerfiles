@@ -1,4 +1,4 @@
-FROM learninglayers/tomcat
+FROM learninglayers/tomcat:7
 MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
  
 RUN chmod 766 -R /opt 
