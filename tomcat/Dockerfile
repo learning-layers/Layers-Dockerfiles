@@ -6,7 +6,7 @@ ADD src/main/files/init.sh	/opt/init.sh
 ADD src/main/files/init		/opt/init
 
 # Use most current Tomcat ver 7
-TCVER 7.0.62
+ENV TCVER 7.0.62
 
 # Install Java 7 & Tomcat 7
 ONBUILD RUN apt-get update -yq \
