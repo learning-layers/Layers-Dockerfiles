@@ -131,17 +131,16 @@ echo "" &&
 # start OpenStack Swift
 # TODO: update env vars to match the initially defined
 echo "Starting OpenStack Swift..." &&
-docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT=tenant" -e  \
-"SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/swift &&
+docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT=tenant" -e "SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/swift &&
 echo " -> done" &&
 echo "" &&
 
 # start Tethys User Storage
 # TODO: update env vars to match the initially defined
+ADAPTER_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} adapter`
+ADAPTER_PORT=`docker inspect -f {{.NetworkSettings.Ports}} adapter | cut -c 55-56`
 echo "Starting Tethys user storage..." &&
-docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e \
-"ADAPTER_URL_SWIFT=$ADAPTER_URL_SWIFT" -e "SWIFT_TENANT=tenant" -e \
-"SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/tethys-userstorage  &&
+docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=$ADAPTER_IP:$ADAPTER_PORT/swift" -e "SWIFT_TENANT=tenant" -e "SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/tethys-userstorage  &&
 echo " -> done" &&
 echo "" &&
 
@@ -151,27 +150,21 @@ echo "" &&
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
 SWIFT_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} swift` &&
 TETHYS_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} tethys-userstorage` &&
-ADAPTER_URL_SWIFT=$SWIFT_IP:`docker inspect -f {{.NetworkSettings.Ports}} swift | cut -c 43-46` &&
-ADAPTER_URL_TETHYS=$TETHYS_IP:`docker inspect -f {{.NetworkSettings.Ports}} tethys-userstorage | cut -c 43-46` &&
-SUBS="# add locations below" &&
-OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
-SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$ADAPTER_URL_SWIFT;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
-TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$ADAPTER_URL_TETHYS;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n$SUBS" &&
+SUBS="# add oidc location below" &&
+SUBS2="# add swift location below" &&
+SUBS3="# add tethys location below" &&
+OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
+SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$SWIFT_IP:8082;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
+TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$TETHYS_IP:8081;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
 
 docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
 docker kill --signal="HUP" adapter &&
 
-##TODO: make sure the locations for tethys and swift get written in nginx.conf 
-#docker run -d -e "SWIFT_LOC=$SWIFT_LOC" -e "ADAPTER_URL_SWIFT=$ADAPTER_URL_SWIFT" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${SWIF_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
-#docker kill --signal="HUP" adapter &&
-#
-#docker run -d -e "TETHYS_LOC=$SWIFT_LOC" -e "ADAPTER_URL_TETHYS=$ADAPTER_URL_TETHYS" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${TETHYS_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
-#docker kill --signal="HUP" adapter &&
-# 
-#docker run -d -e "OIDC_IP=$OIDC_IP" -e "ADAPTER_URL_SWIFT=$ADAPTER_URL_SWIFT" -e "ADAPTER_URL_TETHYS=$ADAPTER_URL_TETHYS" -e "OIDC_LOC=$OIDC_LOC" -e "SWIFT_LOC=$SWIFT_LOC" -e "TETHYS_LOC=$TETHYS_LOC" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%${SWIFT_LOC}%${$TETHYS_LOC}g" /usr/local/openresty/conf/nginx.conf' &&
-#docker kill --signal="HUP" adapter &&
-#echo " -> done" &&
-#echo "" && 
+docker run -d -e "SWIFT_LOC=$SWIFT_LOC" -e "SWIFT_IP=$SWIFT_IP" -e "SUBS2=$SUBS2" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS2}%${SWIFT_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+docker kill --signal="HUP" adapter &&
+
+docker run -d -e "TETHYS_LOC=$TETHYS_LOC" -e "TETHYS_IP=$TETHYS_IP" -e "SUBS3=$SUBS3" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS3}%${TETHYS_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+docker kill --signal="HUP" adapter &&
 
 # create MobSOS Monitor user & database
 echo "Creating MobSOS Monitor user & database..." &&
