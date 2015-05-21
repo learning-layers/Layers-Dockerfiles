@@ -9,10 +9,10 @@ echo "" &&
 
 echo "It is mandatory to use BTRFS for the OpenStack Swift component. Checking Docker storage driver: " &&
 HOST_FS=$(docker info | grep Storage | awk '{print $3}') &&
-if [ HOST_FS == btrfs ]; then
- echo "The host system uses a FS different than BTRFS! Ceasing Layers Box deployment." && exit 1
-else 
- echo "The host system uses BTRFS. Proceeding with the Layers Box set-up." 
+if [ HOST_FS==btrfs ]; then
+  echo "The host system uses BTRFS. Proceeding with the Layers Box set-up." 
+else
+  echo "The host system uses a FS different than BTRFS! Ceasing Layers Box deployment." && exit 1
 fi  &&
 echo "This script will now deploy a Layers Box in a Docker-enabled environment step-by-step. After successful deployment, the Layers Box exposes its APIs and applications under the following URIs:" &&
 echo && 
@@ -30,8 +30,8 @@ OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
 SHIPYARD_ADMIN_PASS="pass"; 
-SWIFT_TENANT_NAME="tethysTenant";
-SWIFT_USER_NAME="tethysUserStorage";
+SWIFT_TENANT_NAME_NAME="tethysTenant";
+SWIFT_USER_NAME_NAME="tethysUserStorage";
 SWIFT_KEY="pass";
 LDAP_ADMINS="koren;nicolaescu";
 
@@ -129,18 +129,16 @@ echo "" &&
 #"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
 
 # start OpenStack Swift
-# TODO: update env vars to match the initially defined
 echo "Starting OpenStack Swift..." &&
-docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT=tenant" -e "SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/swift &&
+docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/swift &&
 echo " -> done" &&
 echo "" &&
 
 # start Tethys User Storage
-# TODO: update env vars to match the initially defined
 ADAPTER_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} adapter`
 ADAPTER_PORT=`docker inspect -f {{.NetworkSettings.Ports}} adapter | cut -c 55-56`
 echo "Starting Tethys user storage..." &&
-docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=$ADAPTER_IP:$ADAPTER_PORT/swift" -e "SWIFT_TENANT=tenant" -e "SWIFT_USER=user" -e "SWIFT_KEY=key" learninglayers/tethys-userstorage  &&
+docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=$ADAPTER_IP:$ADAPTER_PORT/swift" -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/tethys-userstorage  &&
 echo " -> done" &&
 echo "" &&
 
@@ -184,19 +182,6 @@ echo "Starting MobSOS Monitor..." &&
 drenv -d -e "MM_PASS=$MM_PASS" -e "MM_USER=$MM_USER" -e "MM_DB=$MM_DB" -e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" --link mysql:mysql --volumes-from adapter-data --volumes-from mobsos-monitor-data --name mobsos-monitor learninglayers/mobsos-monitor &&
 echo " -> done" &&
 echo "" &&
-
-## start Tethys user storage data volume
-#echo "Starting Tethys user storage data volume..." &&
-#docker run --name tethys-userstorage-data learninglayers/tethys-userstorage-data &&
-#echo " -> done" &&
-#echo "" &&
-
-##updated to support default user credentials
-# start Tethys user storage 
-#echo "Starting Tethys user storage " &&
-#docker run --name tethys-userstorage --volumes-from tethys-userstorage-data -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY_NAME=$SWIFT_KEY_NAME" -d -p 8080:8080 learninglayers/tethys-userstorage &&
-#echo " -> done" &&
-#echo "" &&
 
 ####
 ##This is the part which will start Shipyard.
