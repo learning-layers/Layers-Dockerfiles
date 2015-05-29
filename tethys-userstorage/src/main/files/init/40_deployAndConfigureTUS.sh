@@ -27,7 +27,7 @@ swiftKey=${SWIFT_KEY}
 EOF
 
 cat > ${TUS}/WEB-INF/classes/swagger.properties << EOF
-swaggerWebApplicationName=Tethys-UserStorage
+swaggerWebApplicationName=TethysUserStorage
 swaggerWebApplicationHost=$(hostname --ip-address)
 swaggerWebApplicationPort=8080
 EOF
