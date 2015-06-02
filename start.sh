@@ -24,6 +24,7 @@ LAYERS_APP_URI="http://192.168.59.103/";
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
 MYSQL_ROOT_PASSWORD="pass";
+LDAP_URI="192.168.59.103";
 LDAP_ROOT_PASSWORD="pass";
 OIDC_MYSQL_DB="OpenIDConnect";
 OIDC_MYSQL_USER="oidc";
@@ -232,7 +233,7 @@ echo "" &&
 
 # start PWM
 echo "Starting Layers OpenLDAP Account..." &&
-drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "LDAP_DC=$LDAP_DC" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
+drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "LDAP_URI=$LDAP_URI" -e "LDAP_DC=dc=layersbox" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
 
 # env variables need for SSS
 $SSS_MYSQL_SCHEME = "sss";

@@ -209,7 +209,7 @@
       <label>LDAP Proxy Password</label>
       <!--Note: This value is encrypted and can not be edited directly.-->
       <!--Please use the Configuration Manager GUI to modify this value.-->
-      <value>zRdb+5gKq8+5sDKAbgFlw4juybo32Wr8TiqfSrdE+0k=</value>
+      <value>Ix1XLCI7qFudF8j/i6lHbQ==</value>
     </setting>
     <setting key="ldap.rootContexts" syntax="STRING_ARRAY">
       <label>LDAP Contextless Login Roots</label>
@@ -985,8 +985,8 @@
     </setting>
     <setting key="newUser.writeAttributes" syntax="ACTION">
       <label>New User Actions</label>
-      <value>{"name":"MITREid Wrapper","description":"MITREid userinfo Wrapper","type":"webservice","method":"post","url":"LAYERS_API_URI/o/oauth2/updateuser/new","body":"@LDAP:uid@"}</value>
-      <value>{"name":"Tethys Wrapper","description":"Tethys user storage Wrapper","type":"webservice","method":"post","headers":{"pw":"useanotherpw"},"url":"http://10.255.255.23:8081/TethysLDAPConnector/mount.json/@LDAP:uid@"}</value>
+      <value>{"name":"MITREid Wrapper","description":"MITREid userinfo Wrapper","type":"webservice","method":"post","url":"LAYERS_API_URIo/oauth2/updateuser/new","body":"@LDAP:uid@"}</value>
+<!-- >      <value>{"name":"Tethys Wrapper","description":"Tethys user storage Wrapper","type":"webservice","method":"post","headers":{"pw":"useanotherpw"},"url":"http://10.255.255.23:8081/TethysLDAPConnector/mount.json/@LDAP:uid@"}</value> <-->
     </setting>
     <setting key="newUser.deleteOnFail" syntax="BOOLEAN">
       <label>Delete On Creation Failure</label>
@@ -1110,7 +1110,7 @@
     </setting>
     <setting key="updateAttributes.writeAttributes" syntax="ACTION">
       <label>Update Write Actions</label>
-      <value>{"name":"MITREid Wrapper","description":"MITREid userinfo Wrapper","type":"webservice","method":"post","url":"LAYERS_API_URI/o/oauth2/updateuser/update","body":"@LDAP:uid@"}</value>
+      <value>{"name":"MITREid Wrapper","description":"MITREid userinfo Wrapper","type":"webservice","method":"post","url":"LAYERS_API_URIo/oauth2/updateuser/update","body":"@LDAP:uid@"}</value>
     </setting>
     <setting key="updateAttributes.form" syntax="FORM">
       <label>Update Profile Form</label>
