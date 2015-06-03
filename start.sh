@@ -20,6 +20,7 @@ echo &&
 # set variables to be forwarded as environment variables to docker containers
 LAYERS_API_URI="http://192.168.59.103/";
 LAYERS_APP_URI="http://192.168.59.103/";
+LAYERS_API_URL="http://192.168.59.103";
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
@@ -107,7 +108,7 @@ echo "" &&
 
 # start OpenID Connect data volume (TODO: switch to DockerHub)
 echo "Starting Layers OpenID Connect data volume..." &&
-docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox" --name openidconnect-data learninglayers/openidconnect-data &&
+docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URL" -e "LDAP_DC=dc=layersbox" --name openidconnect-data learninglayers/openidconnect-data &&
 echo " -> done" &&
 echo "" && 
 
