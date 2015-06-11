@@ -98,7 +98,9 @@ echo "" &&
 echo "Starting Layers OpenLDAP..." &&
 docker run -d -p 389:389 -e "LDAP_ROOT_PASSWORD=$LDAP_ROOT_PASSWORD" --volumes-from openldap-data --name openldap learninglayers/openldap &&
 echo " -> done" &&
-echo "" && 
+echo "" &&
+
+LDAP_URI=`docker inspect -f {{.NetworkSettings.IPAddress}} openldap`
 
 # create OpenID Connect database and user
 echo "Creating OpenID Connect database and user..." &&
