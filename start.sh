@@ -32,9 +32,9 @@ OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
 MM_USER="mobsos_monitor"; 
 SHIPYARD_ADMIN_PASS="pass"; 
-SWIFT_TENANT_NAME_NAME="tethysTenant";
-SWIFT_USER_NAME_NAME="tethysUserStorage";
-SWIFT_KEY="pass";
+SWIFT_TENANT="tenant"  #"tethysTenant";
+SWIFT_USER="user" #"tethysUserStorage";
+SWIFT_KEY="key" #"pass";
 LDAP_ADMINS="koren;nicolaescu";
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
@@ -134,7 +134,7 @@ echo "" &&
 
 # start OpenStack Swift
 echo "Starting OpenStack Swift..." &&
-docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/swift &&
+docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT=$SWIFT_TENANT" -e "SWIFT_USER=$SWIFT_USER" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/swift &&
 echo " -> done" &&
 echo "" &&
 
@@ -142,7 +142,7 @@ echo "" &&
 ADAPTER_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} adapter`
 ADAPTER_PORT=`docker inspect -f {{.NetworkSettings.Ports}} adapter | cut -c 55-56`
 echo "Starting Tethys user storage..." &&
-docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=$ADAPTER_IP:$ADAPTER_PORT/swift" -e "SWIFT_TENANT_NAME=$SWIFT_TENANT_NAME" -e "SWIFT_USER_NAME=$SWIFT_USER_NAME" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/tethys-userstorage  &&
+docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=$ADAPTER_IP:$ADAPTER_PORT/swift" -e "SWIFT_TENANT=$SWIFT_TENANT" -e "SWIFT_USER=$SWIFT_USER" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/tethys-userstorage  &&
 echo " -> done" &&
 echo "" &&
 
