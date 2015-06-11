@@ -18,14 +18,14 @@ echo "This script will now deploy a Layers Box in a Docker-enabled environment s
 echo && 
 
 # set variables to be forwarded as environment variables to docker containers
-LAYERS_API_URI="http://192.168.59.103/";
-LAYERS_APP_URI="http://192.168.59.103/";
-LAYERS_API_URL="http://192.168.59.103";
+LAYERS_API_URI="http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103/";
+LAYERS_APP_URI="http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103/";
+LAYERS_API_URL="http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103";
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
 MYSQL_ROOT_PASSWORD="pass";
-LDAP_URI="192.168.59.103";
+#LDAP_URI="192.168.59.103";
 LDAP_ROOT_PASSWORD="pass";
 OIDC_MYSQL_DB="OpenIDConnect";
 OIDC_MYSQL_USER="oidc";
@@ -132,6 +132,17 @@ echo "" &&
 #"LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox"
 #"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
 
+# start PWM data volume:
+echo "Starting Layers OpenLDAP Account data volume..." &&
+docker run --name openldapaccount-data learninglayers/openldapaccount-data &&
+echo " -> done" &&
+echo "" && 
+
+# start PWM
+echo "Starting Layers OpenLDAP Account..." &&
+drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_URI=$LDAP_URI" -e "LDAP_DC=dc=layersbox" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
+
+
 # start OpenStack Swift
 echo "Starting OpenStack Swift..." &&
 docker run --name swift -d -p 8082:8080 -e "SWIFT_TENANT=$SWIFT_TENANT" -e "SWIFT_USER=$SWIFT_USER" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/swift &&
@@ -149,15 +160,18 @@ echo "" &&
 # write OpenID Connect's container IP adress to nginx.conf
 # write Swift's container IP adress and port to nginx.conf
 # write Tethys' container IP adress and port to nginx.conf
+OLAC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openldapaccount` &&
 OIDC_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} openidconnect` &&
 SWIFT_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} swift` &&
 TETHYS_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} tethys-userstorage` &&
 SUBS="# add oidc location below" &&
 SUBS2="# add swift location below" &&
 SUBS3="# add tethys location below" &&
+SUBS4="# add pwm location below" &&
 OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
-SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$SWIFT_IP:8082;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
-TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$TETHYS_IP:8081;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
+SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$SWIFT_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
+TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$TETHYS_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
+OLAC_LOC="location ~ /account {\n proxy_pass\thttp://$OLAC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
 
 docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
 docker kill --signal="HUP" adapter &&
@@ -167,6 +181,10 @@ docker kill --signal="HUP" adapter &&
 
 docker run -d -e "TETHYS_LOC=$TETHYS_LOC" -e "TETHYS_IP=$TETHYS_IP" -e "SUBS3=$SUBS3" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS3}%${TETHYS_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
 docker kill --signal="HUP" adapter &&
+
+docker run -d -e "OLAC_LOC=$OLAC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS4=$SUBS4" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS4}%${OLAC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
+docker kill --signal="HUP" adapter &&
+
 
 # create MobSOS Monitor user & database
 echo "Creating MobSOS Monitor user & database..." &&
@@ -227,16 +245,6 @@ echo "" &&
 # Tomcat
 # Freeradius -> in progress
 # TODO: change order of started containers: 1) adapter 2)backend containers not requiring the adapter 3) containers communicating via the adapter 4) update nginx.conf
-
-# start PWM data volume:
-echo "Starting Layers OpenLDAP Account data volume..." &&
-docker run --name openldapaccount-data learninglayers/openldapaccount-data &&
-echo " -> done" &&
-echo "" && 
-
-# start PWM
-echo "Starting Layers OpenLDAP Account..." &&
-drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "LDAP_URI=$LDAP_URI" -e "LDAP_DC=dc=layersbox" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
 
 # env variables need for SSS
 $SSS_MYSQL_SCHEME = "sss";
