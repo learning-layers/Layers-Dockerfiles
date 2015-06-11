@@ -20,6 +20,7 @@ echo &&
 # set variables to be forwarded as environment variables to docker containers
 LAYERS_API_URI="http://192.168.59.103/";
 LAYERS_APP_URI="http://192.168.59.103/";
+LAYERS_API_URL="http://192.168.59.103";
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
