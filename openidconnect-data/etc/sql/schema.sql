@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS access_token (
 	refresh_token_id BIGINT,
 	client_id VARCHAR(256),
 	auth_holder_id BIGINT,
-	id_token_id BIGINT,
-	approved_site_id BIGINT
+	id_token_id BIGINT
 );
 
 CREATE TABLE IF NOT EXISTS address (
@@ -26,12 +25,12 @@ CREATE TABLE IF NOT EXISTS address (
 
 CREATE TABLE IF NOT EXISTS approved_site (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	user_id VARCHAR(256),
-	client_id VARCHAR(256),
+	user_id VARCHAR(4096),
+	client_id VARCHAR(4096),
 	creation_date TIMESTAMP NULL,
 	access_date TIMESTAMP NULL,
 	timeout_date TIMESTAMP NULL,
-	whitelisted_site_id BIGINT
+	whitelisted_site_id VARCHAR(256)
 );
 
 CREATE TABLE IF NOT EXISTS approved_site_scope (
@@ -41,6 +40,7 @@ CREATE TABLE IF NOT EXISTS approved_site_scope (
 
 CREATE TABLE IF NOT EXISTS authentication_holder (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	owner_id BIGINT,
 	authentication LONGBLOB
 );
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS client_authority (
 CREATE TABLE IF NOT EXISTS authorization_code (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
 	code VARCHAR(256),
-	authentication LONGBLOB
+	authorization_request_holder LONGBLOB
 );
 
 CREATE TABLE IF NOT EXISTS client_grant_type (
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS client_details (
 	reuse_refresh_tokens BOOLEAN NOT NULL DEFAULT 1,
 	dynamically_registered BOOLEAN NOT NULL DEFAULT 0,
 	allow_introspection BOOLEAN NOT NULL DEFAULT 0,
-	id_token_validity_seconds BIGINT NOT NULL DEFAULT 600,
+	id_token_validity_seconds BIGINT,
 	
 	client_id VARCHAR(256),
 	client_secret VARCHAR(2048),
@@ -107,14 +107,11 @@ CREATE TABLE IF NOT EXISTS client_details (
 	id_token_encrypted_response_alg VARCHAR(256),
 	id_token_encrypted_response_enc VARCHAR(256),
 	
-	token_endpoint_auth_signing_alg VARCHAR(256),
-	
 	default_max_age BIGINT,
 	require_auth_time BOOLEAN,
 	created_at TIMESTAMP NULL,
 	initiate_login_uri VARCHAR(2048),
-	post_logout_redirect_uri VARCHAR(2048),
-	unique(client_id)
+	post_logout_redirect_uri VARCHAR(2048)
 );
 
 CREATE TABLE IF NOT EXISTS client_request_uri (
@@ -127,9 +124,23 @@ CREATE TABLE IF NOT EXISTS client_default_acr_value (
 	default_acr_value VARCHAR(2000)
 );
 
+CREATE TABLE IF NOT EXISTS client_nonce ( 
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	value VARCHAR(256),
+	client_id VARCHAR(256),
+	use_date TIMESTAMP NULL,
+	expire_date TIMESTAMP NULL
+);
+
 CREATE TABLE IF NOT EXISTS client_contact (
 	owner_id BIGINT,
 	contact VARCHAR(256)
+);
+
+CREATE TABLE IF NOT EXISTS event (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	type INT(3),
+	timestamp DATE
 );
 
 CREATE TABLE IF NOT EXISTS client_redirect_uri (
@@ -137,17 +148,12 @@ CREATE TABLE IF NOT EXISTS client_redirect_uri (
 	redirect_uri VARCHAR(2048) 
 );
 
-CREATE TABLE IF NOT EXISTS client_post_logout_redirect_uri (
-	owner_id BIGINT,
-	post_logout_redirect_uri VARCHAR(2000)
-);
-
 CREATE TABLE IF NOT EXISTS refresh_token (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
 	token_value VARCHAR(4096),
 	expiration TIMESTAMP NULL,
 	auth_holder_id BIGINT,
-	client_id BIGINT
+	client_id VARCHAR(256)
 );
 
 CREATE TABLE IF NOT EXISTS client_resource (
@@ -170,10 +176,8 @@ CREATE TABLE IF NOT EXISTS system_scope (
 	scope VARCHAR(256) NOT NULL,
 	description VARCHAR(4096),
 	icon VARCHAR(256),
-	restricted BOOLEAN NOT NULL DEFAULT 0,
+	allow_dyn_reg BOOLEAN NOT NULL DEFAULT 0,
 	default_scope BOOLEAN NOT NULL DEFAULT 0,
-	structured BOOLEAN NOT NULL DEFAULT 0,
-	structured_param_description VARCHAR(256),
 	unique(scope)
 );
 
@@ -195,7 +199,6 @@ CREATE TABLE IF NOT EXISTS user_info (
 	zone_info VARCHAR(256),
 	locale VARCHAR(256),
 	phone_number VARCHAR(256),
-	phone_number_verified BOOLEAN,
 	address_id VARCHAR(256),
 	updated_time VARCHAR(256),
 	birthdate VARCHAR(256)
@@ -210,11 +213,4 @@ CREATE TABLE IF NOT EXISTS whitelisted_site (
 CREATE TABLE IF NOT EXISTS whitelisted_site_scope (
 	owner_id BIGINT,
 	scope VARCHAR(256)
-);
-
-CREATE TABLE IF NOT EXISTS pairwise_identifier (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	identifier VARCHAR(256),
-	sub VARCHAR(256),
-	sector_identifier VARCHAR(2048)
 );
