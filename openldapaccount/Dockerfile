@@ -12,6 +12,7 @@ CMD cp -fR $PWMACC $TOMCAT_HOME/webapps \
     && sed -i "s#LAYERS_API_URI#${LAYERS_API_URI}#g" $PWMCONF/PwmConfiguration.xml \
     && sed -i "s#LDAP_DC#${LDAP_DC}#g" $PWMCONF/PwmConfiguration.xml \
     && sed -i "s#PWM_LDAP_ADMINS#${PWM_LDAP_ADMINS}#g" $PWMCONF/PwmConfiguration.xml \
+    && sed -i "s#TETHYS_IP#${TETHYS_IP}#g" $PWMCONF/PwmConfiguration.xml \
     && sed -i "s#openldap#${LDAP_URI}#g" $PWMCONF/PwmConfiguration.xml \
     && cp $PWMCONF/PwmConfiguration.xml $TOMCAT_HOME/webapps/account/WEB-INF \
     && . /opt/init.sh

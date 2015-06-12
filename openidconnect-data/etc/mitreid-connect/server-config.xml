@@ -29,7 +29,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
 	<bean id="configBean" class="org.mitre.openid.connect.config.ConfigurationPropertiesBean">
-		<property name="issuer" value="LAYERS_API_URI:8080/o/oauth2/" /> <!-- Issuer URL goes here -->
+		<property name="issuer" value="LAYERS_API_URIo/oauth2/" /> <!-- Issuer URL goes here -->
  		<property name="logoImageUrl" value="LAYERS_API_URIlogo.png" />
  		<property name="topbarTitle" value="Learning Layers OIDC" />
 	</bean>

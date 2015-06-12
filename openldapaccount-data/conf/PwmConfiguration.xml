@@ -986,7 +986,7 @@
     <setting key="newUser.writeAttributes" syntax="ACTION">
       <label>New User Actions</label>
       <value>{"name":"MITREid Wrapper","description":"MITREid userinfo Wrapper","type":"webservice","method":"post","url":"LAYERS_API_URIo/oauth2/updateuser/new","body":"@LDAP:uid@"}</value>
-<!-- >      <value>{"name":"Tethys Wrapper","description":"Tethys user storage Wrapper","type":"webservice","method":"post","headers":{"pw":"useanotherpw"},"url":"http://10.255.255.23:8081/TethysLDAPConnector/mount.json/@LDAP:uid@"}</value> <-->
+<!-- >      <value>{"name":"Tethys Wrapper","description":"Tethys user storage Wrapper","type":"webservice","method":"post","headers":{"pw":"useanotherpw"},"url":"http://TETHYS_IP/TethysLDAPConnector/mount.json/@LDAP:uid@"}</value> <-->
     </setting>
     <setting key="newUser.deleteOnFail" syntax="BOOLEAN">
       <label>Delete On Creation Failure</label>

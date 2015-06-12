@@ -1,326 +1,469 @@
+CREATE DATABASE  IF NOT EXISTS `OpenIDConnect` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `OpenIDConnect`;
+-- MySQL dump 10.13  Distrib 5.5.16, for Win32 (x86)
 --
--- Tables for OIDC Server functionality, MySQL
+-- Host: 137.226.232.222    Database: OpenIDConnect
+-- ------------------------------------------------------
+-- Server version	5.5.43-0ubuntu0.14.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `access_token`
 --
 
-CREATE TABLE IF NOT EXISTS access_token (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	token_value VARCHAR(4096),
-	expiration TIMESTAMP NULL,
-	token_type VARCHAR(256),
-	refresh_token_id BIGINT,
-	client_id BIGINT,
-	auth_holder_id BIGINT,
-	id_token_id BIGINT,
-	approved_site_id BIGINT
-);
+DROP TABLE IF EXISTS `access_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `access_token` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `token_value` varchar(4096) DEFAULT NULL,
+  `expiration` timestamp NULL DEFAULT NULL,
+  `token_type` varchar(256) DEFAULT NULL,
+  `refresh_token_id` bigint(20) DEFAULT NULL,
+  `client_id` varchar(256) DEFAULT NULL,
+  `auth_holder_id` bigint(20) DEFAULT NULL,
+  `id_token_id` bigint(20) DEFAULT NULL,
+  `approved_site_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12615 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS access_token_permissions (
-	access_token_id BIGINT NOT NULL,
-	permission_id BIGINT NOT NULL
-);
+--
+-- Table structure for table `address`
+--
 
-CREATE TABLE IF NOT EXISTS address (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	formatted VARCHAR(256),
-	street_address VARCHAR(256),
-	locality VARCHAR(256),
-	region VARCHAR(256),
-	postal_code VARCHAR(256),
-	country VARCHAR(256)
-);
+DROP TABLE IF EXISTS `address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `address` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `formatted` varchar(256) DEFAULT NULL,
+  `street_address` varchar(256) DEFAULT NULL,
+  `locality` varchar(256) DEFAULT NULL,
+  `region` varchar(256) DEFAULT NULL,
+  `postal_code` varchar(256) DEFAULT NULL,
+  `country` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS approved_site (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	user_id VARCHAR(256),
-	client_id VARCHAR(256),
-	creation_date TIMESTAMP NULL,
-	access_date TIMESTAMP NULL,
-	timeout_date TIMESTAMP NULL,
-	whitelisted_site_id BIGINT
-);
+--
+-- Table structure for table `approved_site`
+--
 
-CREATE TABLE IF NOT EXISTS approved_site_scope (
-	owner_id BIGINT,
-	scope VARCHAR(256)
-);
+DROP TABLE IF EXISTS `approved_site`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `approved_site` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(4096) DEFAULT NULL,
+  `client_id` varchar(4096) DEFAULT NULL,
+  `creation_date` timestamp NULL DEFAULT NULL,
+  `access_date` timestamp NULL DEFAULT NULL,
+  `timeout_date` timestamp NULL DEFAULT NULL,
+  `whitelisted_site_id` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=698 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS authentication_holder (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	user_auth_id BIGINT,
-	approved BOOLEAN,
-	redirect_uri VARCHAR(2048),
-	client_id VARCHAR(256),
-	
-);
+--
+-- Table structure for table `approved_site_scope`
+--
 
-CREATE TABLE IF NOT EXISTS authentication_holder_authority (
-	owner_id BIGINT,
-	authority VARCHAR(256)
-);
+DROP TABLE IF EXISTS `approved_site_scope`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `approved_site_scope` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `scope` varchar(256) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS authentication_holder_resource_id (
-	owner_id BIGINT,
-	resource_id VARCHAR(2048)
-);
+--
+-- Table structure for table `authentication_holder`
+--
 
-CREATE TABLE IF NOT EXISTS authentication_holder_response_type (
-	owner_id BIGINT,
-	response_type VARCHAR(2048)
-);
+DROP TABLE IF EXISTS `authentication_holder`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `authentication_holder` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `owner_id` bigint(20) DEFAULT NULL,
+  `authentication` longblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6324 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS authentication_holder_extension (
-	owner_id BIGINT,
-	extension VARCHAR(2048),
-	val VARCHAR(2048)
-);
+--
+-- Table structure for table `authorities`
+--
 
-CREATE TABLE IF NOT EXISTS authentication_holder_scope (
-	owner_id BIGINT,
-	scope VARCHAR(2048)
-);
+DROP TABLE IF EXISTS `authorities`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `authorities` (
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
+  UNIQUE KEY `ix_authority` (`username`,`authority`),
+  CONSTRAINT `fk_authorities_users` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS authentication_holder_request_parameter (
-	owner_id BIGINT,
-	param VARCHAR(2048),
-	val VARCHAR(2048)
-);
+--
+-- Table structure for table `authorization_code`
+--
 
-CREATE TABLE IF NOT EXISTS saved_user_auth (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(1024),
-	authenticated BOOLEAN,
-	source_class VARCHAR(2048)
-);
+DROP TABLE IF EXISTS `authorization_code`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `authorization_code` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `code` varchar(256) DEFAULT NULL,
+  `authentication` longblob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2742 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS saved_user_auth_authority (
-	owner_id BIGINT,
-	authority VARCHAR(256)
-);
+--
+-- Table structure for table `blacklisted_site`
+--
 
-CREATE TABLE IF NOT EXISTS client_authority (
-	owner_id BIGINT,
-	authority VARCHAR(256)
-);
+DROP TABLE IF EXISTS `blacklisted_site`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `blacklisted_site` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uri` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS authorization_code (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	code VARCHAR(256),
-	auth_holder_id BIGINT,
-	expiration TIMESTAMP NULL
-);
+--
+-- Table structure for table `client_authority`
+--
 
-CREATE TABLE IF NOT EXISTS client_grant_type (
-	owner_id BIGINT,
-	grant_type VARCHAR(2000)
-);
+DROP TABLE IF EXISTS `client_authority`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_authority` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `authority` longblob
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS client_response_type (
-	owner_id BIGINT,
-	response_type VARCHAR(2000)
-);
+--
+-- Table structure for table `client_contact`
+--
 
-CREATE TABLE IF NOT EXISTS blacklisted_site (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	uri VARCHAR(2048)
-);
+DROP TABLE IF EXISTS `client_contact`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_contact` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `contact` varchar(256) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS client_details (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	
-	client_description VARCHAR(1024),
-	reuse_refresh_tokens BOOLEAN NOT NULL DEFAULT 1,
-	dynamically_registered BOOLEAN NOT NULL DEFAULT 0,
-	allow_introspection BOOLEAN NOT NULL DEFAULT 0,
-	id_token_validity_seconds BIGINT NOT NULL DEFAULT 600,
-	
-	client_id VARCHAR(256),
-	client_secret VARCHAR(2048),
-	access_token_validity_seconds BIGINT,
-	refresh_token_validity_seconds BIGINT,
-	
-	application_type VARCHAR(256),
-	client_name VARCHAR(256),
-	token_endpoint_auth_method VARCHAR(256),
-	subject_type VARCHAR(256),
-	
-	logo_uri VARCHAR(2048),
-	policy_uri VARCHAR(2048),
-	client_uri VARCHAR(2048),
-	tos_uri VARCHAR(2048),
+--
+-- Table structure for table `client_default_acr_value`
+--
 
-	jwks_uri VARCHAR(2048),
-	sector_identifier_uri VARCHAR(2048),
-	
-	request_object_signing_alg VARCHAR(256),
-	
-	user_info_signed_response_alg VARCHAR(256),
-	user_info_encrypted_response_alg VARCHAR(256),
-	user_info_encrypted_response_enc VARCHAR(256),
-	
-	id_token_signed_response_alg VARCHAR(256),
-	id_token_encrypted_response_alg VARCHAR(256),
-	id_token_encrypted_response_enc VARCHAR(256),
-	
-	token_endpoint_auth_signing_alg VARCHAR(256),
-	
-	default_max_age BIGINT,
-	require_auth_time BOOLEAN,
-	created_at TIMESTAMP NULL,
-	initiate_login_uri VARCHAR(2048),
-	post_logout_redirect_uri VARCHAR(2048),
-	unique(client_id)
-);
+DROP TABLE IF EXISTS `client_default_acr_value`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_default_acr_value` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `default_acr_value` varchar(2000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS client_request_uri (
-	owner_id BIGINT,
-	request_uri VARCHAR(2000)
-);
+--
+-- Table structure for table `client_details`
+--
 
-CREATE TABLE IF NOT EXISTS client_post_logout_redirect_uri (
-	owner_id BIGINT,
-	post_logout_redirect_uri VARCHAR(2000)
-);
+DROP TABLE IF EXISTS `client_details`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_details` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `client_description` varchar(1024) DEFAULT NULL,
+  `reuse_refresh_tokens` tinyint(1) NOT NULL DEFAULT '1',
+  `dynamically_registered` tinyint(1) NOT NULL DEFAULT '0',
+  `allow_introspection` tinyint(1) NOT NULL DEFAULT '0',
+  `id_token_validity_seconds` bigint(20) NOT NULL DEFAULT '600',
+  `client_id` varchar(256) DEFAULT NULL,
+  `client_secret` varchar(2048) DEFAULT NULL,
+  `access_token_validity_seconds` bigint(20) DEFAULT NULL,
+  `refresh_token_validity_seconds` bigint(20) DEFAULT NULL,
+  `application_type` varchar(256) DEFAULT NULL,
+  `client_name` varchar(256) DEFAULT NULL,
+  `token_endpoint_auth_method` varchar(256) DEFAULT NULL,
+  `subject_type` varchar(256) DEFAULT NULL,
+  `logo_uri` varchar(2048) DEFAULT NULL,
+  `policy_uri` varchar(2048) DEFAULT NULL,
+  `client_uri` varchar(2048) DEFAULT NULL,
+  `tos_uri` varchar(2048) DEFAULT NULL,
+  `jwks_uri` varchar(2048) DEFAULT NULL,
+  `sector_identifier_uri` varchar(2048) DEFAULT NULL,
+  `request_object_signing_alg` varchar(256) DEFAULT NULL,
+  `user_info_signed_response_alg` varchar(256) DEFAULT NULL,
+  `user_info_encrypted_response_alg` varchar(256) DEFAULT NULL,
+  `user_info_encrypted_response_enc` varchar(256) DEFAULT NULL,
+  `id_token_signed_response_alg` varchar(256) DEFAULT NULL,
+  `id_token_encrypted_response_alg` varchar(256) DEFAULT NULL,
+  `id_token_encrypted_response_enc` varchar(256) DEFAULT NULL,
+  `token_endpoint_auth_signing_alg` varchar(256) DEFAULT NULL,
+  `default_max_age` bigint(20) DEFAULT NULL,
+  `require_auth_time` tinyint(1) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `initiate_login_uri` varchar(2048) DEFAULT NULL,
+  `post_logout_redirect_uri` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `client_id` (`client_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS client_default_acr_value (
-	owner_id BIGINT,
-	default_acr_value VARCHAR(2000)
-);
+--
+-- Table structure for table `client_grant_type`
+--
 
-CREATE TABLE IF NOT EXISTS client_contact (
-	owner_id BIGINT,
-	contact VARCHAR(256)
-);
+DROP TABLE IF EXISTS `client_grant_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_grant_type` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `grant_type` varchar(2000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS client_redirect_uri (
-	owner_id BIGINT, 
-	redirect_uri VARCHAR(2048) 
-);
+--
+-- Table structure for table `client_redirect_uri`
+--
 
-CREATE TABLE IF NOT EXISTS refresh_token (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	token_value VARCHAR(4096),
-	expiration TIMESTAMP NULL,
-	auth_holder_id BIGINT,
-	client_id BIGINT
-);
+DROP TABLE IF EXISTS `client_redirect_uri`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_redirect_uri` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `redirect_uri` varchar(2048) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS client_resource (
-	owner_id BIGINT, 
-	resource_id VARCHAR(256) 
-);
+--
+-- Table structure for table `client_request_uri`
+--
 
-CREATE TABLE IF NOT EXISTS client_scope (
-	owner_id BIGINT,
-	scope VARCHAR(2048)
-);
+DROP TABLE IF EXISTS `client_request_uri`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_request_uri` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `request_uri` varchar(2000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS token_scope (
-	owner_id BIGINT,
-	scope VARCHAR(2048)
-);
+--
+-- Table structure for table `client_resource`
+--
 
-CREATE TABLE IF NOT EXISTS system_scope (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	scope VARCHAR(256) NOT NULL,
-	description VARCHAR(4096),
-	icon VARCHAR(256),
-	restricted BOOLEAN NOT NULL DEFAULT 0,
-	default_scope BOOLEAN NOT NULL DEFAULT 0,
-	structured BOOLEAN NOT NULL DEFAULT 0,
-	structured_param_description VARCHAR(256),
-	unique(scope)
-);
+DROP TABLE IF EXISTS `client_resource`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_resource` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `resource_id` varchar(256) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS user_info (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	sub VARCHAR(256),
-	preferred_username VARCHAR(256),
-	name VARCHAR(256),
-	given_name VARCHAR(256),
-	family_name VARCHAR(256),
-	middle_name VARCHAR(256),
-	nickname VARCHAR(256),
-	profile VARCHAR(256),
-	picture VARCHAR(256),
-	website VARCHAR(256),
-	email VARCHAR(256),
-	email_verified BOOLEAN,
-	gender VARCHAR(256),
-	zone_info VARCHAR(256),
-	locale VARCHAR(256),
-	phone_number VARCHAR(256),
-	phone_number_verified BOOLEAN,
-	address_id VARCHAR(256),
-	updated_time VARCHAR(256),
-	birthdate VARCHAR(256)
-);
+--
+-- Table structure for table `client_response_type`
+--
 
-CREATE TABLE IF NOT EXISTS whitelisted_site (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	creator_user_id VARCHAR(256),
-	client_id VARCHAR(256)
-);
+DROP TABLE IF EXISTS `client_response_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_response_type` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `response_type` varchar(2000) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS whitelisted_site_scope (
-	owner_id BIGINT,
-	scope VARCHAR(256)
-);
+--
+-- Table structure for table `client_scope`
+--
 
-CREATE TABLE IF NOT EXISTS pairwise_identifier (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	identifier VARCHAR(256),
-	sub VARCHAR(256),
-	sector_identifier VARCHAR(2048)
-);
+DROP TABLE IF EXISTS `client_scope`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `client_scope` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `scope` varchar(2048) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS resource_set (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(1024) NOT NULL,
-	uri VARCHAR(1024),
-	icon_uri VARCHAR(1024),
-	rs_type VARCHAR(256),
-	owner VARCHAR(256) NOT NULL,
-	client_id VARCHAR(256)
-);
+--
+-- Table structure for table `pairwise_identifier`
+--
 
-CREATE TABLE IF NOT EXISTS resource_set_scope (
-	owner_id BIGINT NOT NULL,
-	scope VARCHAR(256) NOT NULL
-);
+DROP TABLE IF EXISTS `pairwise_identifier`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pairwise_identifier` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(256) DEFAULT NULL,
+  `sub` varchar(256) DEFAULT NULL,
+  `sector_identifier` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS permission_ticket (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	ticket VARCHAR(256) NOT NULL,
-	permission_id BIGINT NOT NULL,
-	expiration TIMESTAMP NULL
-);
+--
+-- Table structure for table `refresh_token`
+--
 
-CREATE TABLE IF NOT EXISTS permission (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	resource_set_id BIGINT NOT NULL
-);
+DROP TABLE IF EXISTS `refresh_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `refresh_token` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `token_value` varchar(4096) DEFAULT NULL,
+  `expiration` timestamp NULL DEFAULT NULL,
+  `auth_holder_id` bigint(20) DEFAULT NULL,
+  `client_id` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=451 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS permission_scope (
-	owner_id BIGINT NOT NULL,
-	scope VARCHAR(256) NOT NULL
-);
+--
+-- Table structure for table `system_scope`
+--
 
-CREATE TABLE IF NOT EXISTS claim (
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(256),
-	friendly_name VARCHAR(1024),
-	claim_type VARCHAR(1024),
-	claim_value VARCHAR(1024),
-	resource_set_id BIGINT,
-	permission_ticket_id BIGINT
-);
+DROP TABLE IF EXISTS `system_scope`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `system_scope` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `scope` varchar(256) NOT NULL,
+  `description` varchar(4096) DEFAULT NULL,
+  `icon` varchar(256) DEFAULT NULL,
+  `allow_dyn_reg` tinyint(1) NOT NULL DEFAULT '0',
+  `default_scope` tinyint(1) NOT NULL DEFAULT '0',
+  `structured` tinyint(1) NOT NULL DEFAULT '0',
+  `structured_param_description` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `scope` (`scope`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-CREATE TABLE IF NOT EXISTS claim_token_format (
-	owner_id BIGINT NOT NULL,
-	claim_token_format VARCHAR(1024)
-);
+--
+-- Table structure for table `token_scope`
+--
 
-CREATE TABLE IF NOT EXISTS claim_issuer (
-	owner_id BIGINT NOT NULL,
-	issuer VARCHAR(1024)
-);
+DROP TABLE IF EXISTS `token_scope`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `token_scope` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `scope` varchar(2048) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_info`
+--
+
+DROP TABLE IF EXISTS `user_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_info` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `sub` varchar(256) DEFAULT NULL,
+  `preferred_username` varchar(256) DEFAULT NULL,
+  `name` varchar(256) DEFAULT NULL,
+  `given_name` varchar(256) DEFAULT NULL,
+  `family_name` varchar(256) DEFAULT NULL,
+  `middle_name` varchar(256) DEFAULT NULL,
+  `nickname` varchar(256) DEFAULT NULL,
+  `profile` varchar(256) DEFAULT NULL,
+  `picture` varchar(256) DEFAULT NULL,
+  `website` varchar(256) DEFAULT NULL,
+  `email` varchar(256) DEFAULT NULL,
+  `email_verified` tinyint(1) DEFAULT NULL,
+  `gender` varchar(256) DEFAULT NULL,
+  `zone_info` varchar(256) DEFAULT NULL,
+  `locale` varchar(256) DEFAULT NULL,
+  `phone_number` varchar(256) DEFAULT NULL,
+  `phone_number_verified` tinyint(1) DEFAULT NULL,
+  `address_id` varchar(256) DEFAULT NULL,
+  `updated_time` varchar(256) DEFAULT NULL,
+  `birthdate` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=247 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `whitelisted_site`
+--
+
+DROP TABLE IF EXISTS `whitelisted_site`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `whitelisted_site` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `creator_user_id` varchar(256) DEFAULT NULL,
+  `client_id` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `whitelisted_site_scope`
+--
+
+DROP TABLE IF EXISTS `whitelisted_site_scope`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `whitelisted_site_scope` (
+  `owner_id` bigint(20) DEFAULT NULL,
+  `scope` varchar(256) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'OpenIDConnect'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
