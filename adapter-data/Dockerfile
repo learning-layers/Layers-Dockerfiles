@@ -11,6 +11,7 @@ RUN apt-get -qqy --no-install-recommends install \
 ADD conf/ /usr/local/openresty/conf/
 ADD logs/ /usr/local/openresty/logs/
 
+
 # install docker gen, pull most recent nginx template file
 ENV TEMPLDIR /usr/local/docker-gen/templates
 RUN mkdir -p $TEMPLDIR \

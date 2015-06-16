@@ -18,9 +18,9 @@ echo "This script will now deploy a Layers Box in a Docker-enabled environment s
 echo && 
 
 # set variables to be forwarded as environment variables to docker containers
-LAYERS_API_URI="http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103/";
-LAYERS_APP_URI="http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103/";
-LAYERS_API_URL="http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')"; #"http://192.168.59.103";
+LAYERS_API_URI="https://api.learning-layers.eu/" #"http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103/";
+LAYERS_APP_URI="https://api.learning-layers.eu/" #http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')/"; #"http://192.168.59.103/";
+LAYERS_API_URL="https://api.learning-layers.eu/" #"http://$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}')"; #"http://192.168.59.103";
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
@@ -34,7 +34,9 @@ SHIPYARD_ADMIN_PASS="pass";
 SWIFT_TENANT="tenant"  #"tethysTenant";
 SWIFT_USER="user" #"tethysUserStorage";
 SWIFT_KEY="key" #"pass";
-LDAP_ADMINS="koren;nicolaescu";
+OIDC_ADMINS="<value>koren</value><value>nicolaescu</value>";
+PWM_LDAP_ADMINS="koren,nicolaescu";
+LDAP_DC="dc=learning-layers,dc=eu";
 
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
@@ -82,8 +84,9 @@ echo " -> done" &&
 echo "" && 
 
 # start Layers Adapter
+# for sec reasons, take SSL cert from local dir
 echo "Starting Layers Adapter..." &&
-drenv -d -p 80:80 --volumes-from adapter-data --name adapter learninglayers/adapter &&
+drenv -d -p 80:80 -p 443:443 -v /root/html:/usr/local/openresty/nginx/html -v /root/certs:/usr/local/openresty/conf/ssl --volumes-from adapter-data --name adapter learninglayers/adapter &&
 echo " -> done" &&
 echo "" && 
 
@@ -109,26 +112,26 @@ echo "" &&
 
 # start OpenID Connect data volume (TODO: switch to DockerHub)
 echo "Starting Layers OpenID Connect data volume..." &&
-docker run -d -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox" --name openidconnect-data learninglayers/openidconnect-data &&
+docker run -d -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=$LDAP_DC" --name openidconnect-data learninglayers/openidconnect-data &&
 echo " -> done" &&
 echo "" && 
 
 ##updated to support default admin users
 #docker run -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
 #"OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e
-#"LAYERS_API_URI=http://192.168.59.103:8080" -e "LDAP_DC=dc=layersbox"
+#"LAYERS_API_URI=http://192.168.59.103:8080" -e "LDAP_DC=$LDAP_DC"
 #"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect-data learninglayers/openidconnect-data
 
 # start OpenID Connect
 echo "Starting Layers OpenID Connect provider..." &&
-docker run -d -p 8080:8080 -e "LAYERS_API_URI=LAYERS_API_URI" -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
+docker run -d -p 8080:8080 -e "LDAP_ADMINS=$LDAP_ADMINS" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" --volumes-from openidconnect-data --link mysql:mysql --link openldap:openldap --name openidconnect learninglayers/openidconnect &&
 echo " -> done" &&
 echo "" &&
 
 ##updated to support default admin users
 #docker run -d -p 8080:8080 -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e
 #"OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e
-#"LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=dc=layersbox"
+#"LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=LDAP_DC"
 #"LDAP_ADMINS=$LDAP_ADMINS" --name openidconnect --link mysql:mysql --link openldap:openldap learninglayers/openidconnect
 
 
@@ -157,7 +160,7 @@ echo "" &&
 
 # start PWM
 echo "Starting Layers OpenLDAP Account..." &&
-drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "TETHYS_IP=$TETHYS_IP" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_URI=$LDAP_URI" -e "LDAP_DC=dc=layersbox" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
+drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "TETHYS_IP=$TETHYS_IP" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_URI=$LDAP_URI" -e "LDAP_DC=$LDAP_DC" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
 
 
 # write OpenID Connect's container IP adress to nginx.conf
@@ -170,22 +173,22 @@ SUBS="# add oidc location below" &&
 SUBS2="# add swift location below" &&
 SUBS3="# add tethys location below" &&
 SUBS4="# add pwm location below" &&
-OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
-SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$SWIFT_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
-TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$TETHYS_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n}\n" &&
-OLAC_LOC="location /account {\n proxy_pass\thttp://$OLAC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$SWIFT_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$TETHYS_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+OLAC_LOC="location /account {\n proxy_pass\thttp://$OLAC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\nproxy_set_header\tX-Real-IP\t\$remote_addr;\nproxy_set_header\tX-SSL-Verified\t\$ssl_client_verify;\nproxy_set_header\tX-SSL-Cert-Serial\t\$ssl_client_serial;\n}\n" &&
 
 docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
-docker kill --signal="HUP" adapter &&
+# docker kill --signal="HUP" adapter &&
 
 docker run -d -e "SWIFT_LOC=$SWIFT_LOC" -e "SWIFT_IP=$SWIFT_IP" -e "SUBS2=$SUBS2" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS2}%${SWIFT_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
-docker kill --signal="HUP" adapter &&
+# docker kill --signal="HUP" adapter &&
 
 docker run -d -e "TETHYS_LOC=$TETHYS_LOC" -e "TETHYS_IP=$TETHYS_IP" -e "SUBS3=$SUBS3" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS3}%${TETHYS_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
-docker kill --signal="HUP" adapter &&
+# docker kill --signal="HUP" adapter &&
 
 docker run -d -e "OLAC_LOC=$OLAC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS4=$SUBS4" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS4}%${OLAC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
-docker kill --signal="HUP" adapter &&
+# docker kill --signal="HUP" adapter &&
 
 sleep 4 &&
 docker kill --signal="HUP" adapter &&
