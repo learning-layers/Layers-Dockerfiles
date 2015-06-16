@@ -1,6 +1,6 @@
 FROM learninglayers/base
 
-RUN apt-get install -y wget \
+RUN apt-get update && apt-get install -y wget \
 					   tar \
 					   gcc \
 					   make \
@@ -23,6 +23,6 @@ EXPOSE 389
 
 CMD /usr/local/libexec/slapd && \
     sleep 5 && \
-    ldapadd -x -w $LDAP_ROOT_PASSWORD -D "cn=LayersManager,dc=layersbox" -f /usr/local/etc/openldap/ldap-init.ldif && \
+    ldapadd -x -w $LDAP_ROOT_PASSWORD -D "cn=LayersManager,dc=learning-layers,dc=eu" -f /usr/local/etc/openldap/ldap-init.ldif && \
     pkill slapd && \
     /usr/local/libexec/slapd -d 8

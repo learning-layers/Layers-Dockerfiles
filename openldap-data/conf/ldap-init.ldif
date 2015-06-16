@@ -4,8 +4,8 @@
 ## dcObject is an AUXILIARY objectclass and MUST
 ## have a STRUCTURAL objectclass (organization in this case)
 
-dn: dc=layersbox
-dc: layersbox
+dn: dc=learning-layers,dc=eu
+dc: learning-layers
 o: Layers Box LDAP Server
 description: Root entry for the Layers Box
 objectClass: top
@@ -14,7 +14,7 @@ objectclass: organization
 
 ## FIRST Level hierarchy - People
 
-dn: ou=People,dc=layersbox
+dn: ou=People,dc=learning-layers,dc=eu
 ou: People
 description: All people in Layers Box
 objectClass: top
@@ -22,7 +22,7 @@ objectClass: organizationalUnit
 
 ## FIRST Level hierarchy - Group
 
-dn: ou=Group,dc=layersbox
+dn: ou=Group,dc=learning-layers,dc=eu
 ou: Group
 description: All groups in Layers Box
 objectClass: top
@@ -30,7 +30,7 @@ objectClass: organizationalUnit
 
 ## FIRST Level hierarchy - Hosts
 
-dn: ou=Hosts,dc=layersbox
+dn: ou=Hosts,dc=learning-layers,dc=eu
 ou: Hosts
 description: All hosts in Layers Box
 objectClass: top
@@ -38,7 +38,7 @@ objectClass: organizationalUnit
 
 ## FIRST Level hierarchy - Manager
 
-dn: cn=LayersManager,dc=layersbox
+dn: cn=LayersManager,dc=learning-layers,dc=eu
 cn: LayersManager
 description: Rootdn
 objectclass: organizationalRole

@@ -36,8 +36,8 @@ SWIFT_USER="user" #"tethysUserStorage";
 SWIFT_KEY="key" #"pass";
 OIDC_ADMINS="<value>koren</value><value>nicolaescu</value>";
 PWM_LDAP_ADMINS="koren,nicolaescu";
-LDAP_DC="dc=learning-layers,dc=eu";
-
+LDAP_ROOT_USER="cn=LayersManager,dc=learning-layers,dc=eu";
+LDAP_ROOT_DN="dc=learning-layers,dc=eu";
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
 MM_IPINFODB_KEY="";
 
@@ -112,7 +112,7 @@ echo "" &&
 
 # start OpenID Connect data volume (TODO: switch to DockerHub)
 echo "Starting Layers OpenID Connect data volume..." &&
-docker run -d -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_DC=$LDAP_DC" --name openidconnect-data learninglayers/openidconnect-data &&
+docker run -d -e "LDAP_URI=$LDAP_URI" -e "OIDC_MYSQL_USER=$OIDC_MYSQL_USER" -e "OIDC_MYSQL_PASSWORD=$OIDC_MYSQL_PASSWORD" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_ROOT_DN=$LDAP_ROOT_DN" --name openidconnect-data learninglayers/openidconnect-data &&
 echo " -> done" &&
 echo "" && 
 
@@ -160,7 +160,7 @@ echo "" &&
 
 # start PWM
 echo "Starting Layers OpenLDAP Account..." &&
-drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "TETHYS_IP=$TETHYS_IP" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_URI=$LDAP_URI" -e "LDAP_DC=$LDAP_DC" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
+drenv --name openldapaccount -d -p 8083:8080 --volumes-from openldapaccount-data --link openldap:openldap -e "TETHYS_IP=$TETHYS_IP" -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LDAP_URI=$LDAP_URI" -e "LDAP_ROOT_DN=$LDAP_ROOT_DN" -e "LDAP_ROOT_USER=$LDAP_ROOT_USER" -e "PWM_LDAP_ADMINS=$PWM_LDAP_ADMINS" learninglayers/openldapaccount &&
 
 
 # write OpenID Connect's container IP adress to nginx.conf

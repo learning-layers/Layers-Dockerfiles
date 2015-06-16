@@ -203,7 +203,7 @@
     </setting>
     <setting key="ldap.proxy.username" syntax="STRING">
       <label>LDAP Proxy User</label>
-      <value><![CDATA[cn=LayersManager,LDAP_DC]]></value>
+      <value><![CDATA[LDAP_ROOT_USER]]></value>
     </setting>
     <setting key="ldap.proxy.password" syntax="PASSWORD">
       <label>LDAP Proxy Password</label>
@@ -213,7 +213,7 @@
     </setting>
     <setting key="ldap.rootContexts" syntax="STRING_ARRAY">
       <label>LDAP Contextless Login Roots</label>
-      <value><![CDATA[ou=People,LDAP_DC]]></value>
+      <value><![CDATA[ou=People,LDAP_ROOT_DN]]></value>
     </setting>
     <setting key="ldap.selectableContexts" syntax="STRING_ARRAY">
       <label>User Selectable Login Contexts</label>
@@ -970,7 +970,7 @@
     </setting>
     <setting key="newUser.createContext" syntax="STRING">
       <label>Creation Context</label>
-      <value><![CDATA[ou=People,LDAP_DC]]></value>
+      <value><![CDATA[ou=People,LDAP_ROOT_DN]]></value>
     </setting>
     <setting key="display.newuser.agreement" syntax="LOCALIZED_TEXT_AREA">
       <label>New User Agreement Message</label>

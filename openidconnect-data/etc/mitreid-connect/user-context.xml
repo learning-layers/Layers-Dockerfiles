@@ -43,7 +43,7 @@
 	<!-- LDAP -->
 	
 	<!--<security:ldap-server url="${ldap.s	erver}" /> -->
-	<security:ldap-server url="ldap://openldap" port="389" root="LDAP_DC"/> <!-- LDAP connection data goes here -->
+	<security:ldap-server url="ldap://openldap" port="389" root="LDAP_ROOT_DN"/> <!-- LDAP connection data goes here -->
 	
 	<bean id="userSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
      <constructor-arg index="0" value=""/>
@@ -53,7 +53,7 @@
 	
 	<bean id="contextSource"
          class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
-     <constructor-arg value="ldap://openldap:389/LDAP_DC"/> <!-- LDAP url goes here, format: ldap://url:port/root -->
+     <constructor-arg value="ldap://openldap:389/LDAP_ROOT_DN"/> <!-- LDAP url goes here, format: ldap://url:port/root -->
 	 <property name="anonymousReadOnly" value="true"/>
    </bean>
 	
@@ -75,7 +75,6 @@
 				<property name="admins">
 					<set>
 					<!--	  list admin usernames here-->
-					LDAP_ADMINS
 						<!-- Format: <value> uid </value> -->
 					</set>
 				</property> 
