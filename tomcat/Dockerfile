@@ -30,8 +30,8 @@ ONBUILD RUN apt-get update -yq \
 	&& update-java-alternatives -s java-8-oracle \
 	
 	# install Tomcat 8 
-        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz -O - | tar -zxv -C ${INSTALL_DIR}/ \
-        && ln -s ${INSTALL_DIR}/apache-tomcat-8.0.21/ ${TOMCAT_HOME}
+        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.tar.gz -O - | tar -zxv -C ${INSTALL_DIR}/ \
+        && ln -s ${INSTALL_DIR}/apache-tomcat-8.0.23/ ${TOMCAT_HOME}
 
 
 # Expose Tomcat at port 8080 & start our initscripts		
