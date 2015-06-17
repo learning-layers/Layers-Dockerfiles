@@ -24,8 +24,11 @@ LAYERS_API_URL="https://api.learning-layers.eu/" #"http://$(ifconfig  eth0 | awk
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
-MYSQL_ROOT_PASSWORD="pass";
-LDAP_ROOT_PASSWORD="pass";
+# automatically generated strong passwords printed at the end of the script
+# if no secure password generator installed, use
+# date +%s | sha256sum | base64 | head -c 32 ; echo
+MYSQL_ROOT_PASSWORD=$(pwgen -1sB 32); # "pass";
+LDAP_ROOT_PASSWORD=$(pwgen -1sB 32); # "pass";
 OIDC_MYSQL_DB="OpenIDConnect";
 OIDC_MYSQL_USER="oidc";
 MM_DB="mobsos_logs";
@@ -35,7 +38,7 @@ SWIFT_TENANT="tenant"  #"tethysTenant";
 SWIFT_USER="user" #"tethysUserStorage";
 SWIFT_KEY="key" #"pass";
 OIDC_ADMINS="<value>koren</value><value>nicolaescu</value>";
-PWM_LDAP_ADMINS="koren,nicolaescu";
+PWM_LDAP_ADMINS=$OIDC_ADMINS #"koren,nicolaescu";
 LDAP_ROOT_USER="cn=LayersManager,dc=learning-layers,dc=eu";
 LDAP_ROOT_DN="dc=learning-layers,dc=eu";
 # Used for IP geolocation; get API key: http://ipinfodb.com/ip_location_api_json.php";
@@ -174,8 +177,8 @@ SUBS2="# add swift location below" &&
 SUBS3="# add tethys location below" &&
 SUBS4="# add pwm location below" &&
 OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
-SWIFT_LOC="location ~* /(swift|openstackswift) {\n proxy_pass\thttp://$SWIFT_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
-TETHYS_LOC="location ~* /(tethys|userstorage) {\n proxy_pass\thttp://$TETHYS_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+SWIFT_LOC="location /swift {\n proxy_pass\thttp://$SWIFT_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+TETHYS_LOC="location /tethys {\n proxy_pass\thttp://$TETHYS_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
 OLAC_LOC="location /account {\n proxy_pass\thttp://$OLAC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\nproxy_set_header\tX-Real-IP\t\$remote_addr;\nproxy_set_header\tX-SSL-Verified\t\$ssl_client_verify;\nproxy_set_header\tX-SSL-Cert-Serial\t\$ssl_client_serial;\n}\n" &&
 
 docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
@@ -310,5 +313,7 @@ echo "" >> deploy.txt &&
 # generated passwords (mainly for databases)
 echo "Generated Passwords: " >> deploy.txt &&
 echo "  OIDC_MYSQL_PASS: $OIDC_MYSQL_PASS" >> deploy.txt &&
-echo "  MM_PASS: $MM_PASS" >> deploy.txt
-
+echo "  MM_PASS: $MM_PASS" >> deploy.txt &&
+echo "  MM_PASS: $MM_PASS" >> deploy.txt &&
+echo "  MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD" >> deploy.txt &&
+echo "  LDAP_ROOT_PASSWORD: $LDAP_ROOT_PASSWORD" >> deploy.txt &&
