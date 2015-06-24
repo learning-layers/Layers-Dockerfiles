@@ -146,9 +146,9 @@ echo "" &&
 
 # start Tethys User Storage
 ADAPTER_IP=`docker inspect -f {{.NetworkSettings.IPAddress}} adapter`
-ADAPTER_PORT=`docker inspect -f {{.NetworkSettings.Ports}} adapter | cut -c 55-56`
+#ADAPTER_PORT=`docker inspect -f {{.NetworkSettings.Ports}} adapter | cut -c 55-56`
 echo "Starting Tethys user storage..." &&
-docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=$ADAPTER_IP:$ADAPTER_PORT/swift" -e "SWIFT_TENANT=$SWIFT_TENANT" -e "SWIFT_USER=$SWIFT_USER" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/tethys-userstorage  &&
+docker run --name tethys-userstorage -d -p 8081:8080 -e "TUS_PASS=pass" -e "ADAPTER_URL_SWIFT=http://$ADAPTER_IP:80/swift" -e "SWIFT_TENANT=$SWIFT_TENANT" -e "SWIFT_USER=$SWIFT_USER" -e "SWIFT_KEY=$SWIFT_KEY" learninglayers/tethys-userstorage  &&
 echo " -> done" &&
 echo "" &&
 
@@ -178,7 +178,7 @@ SUBS3="# add tethys location below" &&
 SUBS4="# add pwm location below" &&
 OIDC_LOC="location ~ /o/(oauth2|resources) {\n proxy_pass\thttp://$OIDC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
 SWIFT_LOC="location /swift {\n proxy_pass\thttp://$SWIFT_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
-TETHYS_LOC="location /tethys {\n proxy_pass\thttp://$TETHYS_IP:8080/TethysUserStorage;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
+TETHYS_LOC="location /TethysUserStorage {\n client_max_body_size \t 0;\n proxy_pass\thttp://$TETHYS_IP:8080/TethysUserStorage;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\n proxy_set_header\tX-Real-IP\t\$remote_addr;\n}\n" &&
 OLAC_LOC="location /account {\n proxy_pass\thttp://$OLAC_IP:8080;\n proxy_redirect\tdefault;\n proxy_set_header\tHost\t\$host;\nproxy_set_header\tX-Real-IP\t\$remote_addr;\nproxy_set_header\tX-SSL-Verified\t\$ssl_client_verify;\nproxy_set_header\tX-SSL-Cert-Serial\t\$ssl_client_serial;\n}\n" &&
 
 docker run -d -e "OIDC_LOC=$OIDC_LOC" -e "OIDC_IP=$OIDC_IP" -e "SUBS=$SUBS" --volumes-from adapter-data learninglayers/base bash -c 'sed -i "s%${SUBS}%${OIDC_LOC}%g" /usr/local/openresty/conf/nginx.conf' &&
