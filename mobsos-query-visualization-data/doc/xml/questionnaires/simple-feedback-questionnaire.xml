@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<qu:Questionnaire xmlns="http://dbis.rwth-aachen.de/mobsos/questionnaire.xsd" xmlns:qu="http://dbis.rwth-aachen.de/mobsos/questionnaire.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<qu:Page name="Overall Quality" 
+	      qid="SFQ.OQ"
+	      minval="1" 
+	      maxval="5"
+	      minlabel="low" 
+	      maxlabel="high" 
+		  required="false"
+	      xsi:type="qu:OrdinalScaleQuestionPageType">
+		<qu:Instructions>
+			Overall Quality of ${SURVEY.RESOURCE}
+		</qu:Instructions>
+	</qu:Page>
+	
+	<qu:Page name="Comments" 
+	      qid="SFQ.C"
+		  required="false"
+	      xsi:type="qu:FreeTextQuestionPageType">
+		<qu:Instructions>
+			Comments
+		</qu:Instructions>
+	</qu:Page>
+	
+</qu:Questionnaire>
