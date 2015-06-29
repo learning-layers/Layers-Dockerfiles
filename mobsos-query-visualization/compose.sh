@@ -2,6 +2,7 @@
 
 set -e
 
+mkdir -p mysql
 docker-compose stop
 # bash ./setup_databases.sh
 
