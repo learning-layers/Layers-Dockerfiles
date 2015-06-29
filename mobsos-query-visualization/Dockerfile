@@ -1,65 +1,30 @@
 FROM learninglayers/base
+MAINTAINER Andeas Guth <guth ÄT dbis.rwth-aachen.de>
 
-MAINTAINER Dominik Renzel
+# Let the container know that there is no tty
+ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
+# Update base image
+RUN sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list
 
-# Install build tools
-RUN apt-get install -y \
-                     wget \
-                     unzip \
-					 mysql-client \
-                     dos2unix
+run apt-get update -y && apt-get upgrade -y
+run apt-get install -y software-properties-common
 
-WORKDIR /opt
+# Install java8
+run add-apt-repository -y ppa:openjdk-r/ppa
+run apt-get update -y && apt-get install -y \
+        ant \
+        dos2unix \
+        mysql-client \
+        openjdk-8-jdk \
+        unzip \
+        wget
 
-RUN apt-get install -y software-properties-common
-#RUN add-apt-repository -y ppa:openjdk-r/ppa
-RUN add-apt-repository -y ppa:webupd8team/java
+# Set jdk8 as the default JDK
+RUN ln -fs /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java /etc/alternatives/java
 
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
-
-# install Java 8
-RUN apt-get update -yq
-# RUN apt-get install -yq openjdk-8-jre
-
-RUN apt-get install -yq oracle-java8-installer
-RUN apt-get install oracle-java8-unlimited-jce-policy
-
-# RUN update-java-alternatives -s java-8-oracle
-
-# Download, unzip and start newest build from CI server
-CMD wget -q http://layers.dbis.rwth-aachen.de/jenkins/job/MobSOS%20Query%20Visualization/lastSuccessfulBuild/artifact/*zip*/archive.zip && \
-	#mkdir mobsos-query-visualization && \
-	unzip archive.zip && \
-	cd archive && \
-	rm -rf etc doc && \
-	echo "Moving stuff..." && \
-	mv ./* ../mobsos-query-visualization && \
-	cd .. && \
-	rm -rf archive archive.zip && \
-    cd mobsos-query-visualization && \
-	echo "Getting here with user '$MS_USER' and pass '$MS_PASS'" &&\
-	java -version && \
-	which java && \
-	echo $JAVA_HOME && \
-	mysql -u$MS_USER -p$MS_PASS -hmysql < db.sql && \
-	echo "Configured MobSOS Query Visualization database" && \
-	dos2unix bin/start_ServiceAgentGenerator.sh && \
-    chmod +x bin/start_ServiceAgentGenerator.sh && \
-	#SERVICE_CLASS="i5.las2peer.services.queryVisualization.QueryVisualizationService" && \
-	#mkdir -p etc/startup && \
-	#echo "Generated startup directory" && \
-	#bin/start_ServiceAgentGenerator.sh $SERVICE_CLASS aaaaa > etc/startup/agent-service-mobsos-query-visualization.xml && \
-	#dos2unix etc/startup/agent-service-mobsos-query-visualization.xml && \
-	# cat etc/startup/agent-service-mobsos-query-visualization.xml && \ 
-	#echo "Created service agent" && \
-	#echo "agent-service-mobsos-query-visualization.xml;aaaaa" > etc/startup/passphrases.txt && \
-	ls etc/startup && \
-	dos2unix bin/start_network.sh && \
-    chmod +x bin/start_network.sh && \
-	sed -i "s/someNewPass/qvPass/g" bin/start_network.sh && \
-    bin/start_network.sh && \
-	while true; do echo hello world; sleep 1; done
+COPY qvs-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+CMD ["/entrypoint.sh"]
 
 EXPOSE 8080
