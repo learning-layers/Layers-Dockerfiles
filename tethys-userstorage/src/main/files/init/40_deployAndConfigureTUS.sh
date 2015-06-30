@@ -17,7 +17,7 @@ export AUTH_TYPE=${AUTH_TYPE:=MockOIDC}
 cat > ${TUS}/WEB-INF/classes/config.properties << EOF
 storageType=${STORAGE_TYPE}
 authType=${AUTH_TYPE}
-oidcURL=${ADAPTER_OIDC_URL}
+oidcURL=${ADAPTER_URL_OIDC}
 authToken=${TUS_PASS}
 adminToken=${TUS_PASS}
 EOF
