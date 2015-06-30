@@ -11,10 +11,13 @@ jar -xf ${TUS_WAR}
 rm ${TUS_WAR}
 cp -R ${TOMCAT_HOME}/webapps/WEB-INF ${TUS}/
 
+export STORAGE_TYPE=${STORAGE_TYPE:=LocalStorage}
+export AUTH_TYPE=${AUTH_TYPE:=MockOIDC}
 # configure properties files
 cat > ${TUS}/WEB-INF/classes/config.properties << EOF
-storageType=Swift
-authType=MockOIDC
+storageType=${STORAGE_TYPE}
+authType=${AUTH_TYPE}
+oidcURL=${ADAPTER_OIDC_URL}
 authToken=${TUS_PASS}
 adminToken=${TUS_PASS}
 EOF
