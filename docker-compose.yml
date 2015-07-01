@@ -1,47 +1,44 @@
-mysqlData:
+mysqldata:
     image: learninglayers/mysql-data
     env_file:
         - common.env
         - mysql/mysql.env
 mysql:
-    build: ./mysql/
+    build: mysql
     # image: mysql
     env_file:
         - common.env
         - mysql/mysql.env
     volumes_from:
-        - mysqlData
+        - mysqldata
     # volumes:
     #     - mysql/:/var/lib/mysql/
     ports:
         - "127.0.0.1:3307:3306"
-mysqlCreate:
-    build: ./mysql-create/
-    # image: mysql-create
+mysqlcreate:
+    build: mysql-create
     links:
         - mysql
     env_file:
         - common.env
         - mysql/mysql.env
         - secret.env
-adapterData:
-    build: ./adapter-data
-    # image: adapter-data
+adapterdata:
+    build: adapter-data
     env_file:
         - common.env
-adapterServices:
-    build: ./adapter-externals
-    # image: adapter-externals
+adapterservices:
+    build: adapter-externals
     volumes_from:
-        - surveysNginx
-        - qvsNginx
+        - surveysnginx
+        - qvsnginx
 adapter:
     image: learninglayers/adapter
     volumes_from:
-        - adapterData
-        - qvsFrontend
-        - surveysFrontend
-        - adapterServices
+        - adapterdata
+        - qvsfrontend
+        - surveysfrontend
+        - adapterservices
     volumes:
         - ssl/:/usr/local/openresty/conf/ssl/
     env_file:
@@ -51,88 +48,77 @@ adapter:
     links:
         - qvs
         - surveys
-qvsData:
-    build: ./mobsos-query-visualization-data
-    # image: mobsos-query-visualization-data
+qvsdata:
+    build: mobsos-query-visualization-data
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
-qvsFrontend:
-    build: ./mobsos-query-visualization-frontend
-    # image: mobsos-query-visualization-frontend
+qvsfrontend:
+    build: mobsos-query-visualization-frontend
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
 qvs:
-    build: ./mobsos-query-visualization
-    # image: mobsos-query-visualization
+    build: mobsos-query-visualization
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
     volumes_from:
-        - qvsData
+        - qvsdata
     links:
         - mysql
-qvsNginx:
-    build: ./mobsos-query-visualization-nginx
-    # image: mobsos-query-visualization-nginx
-openldapData:
+qvsnginx:
+    build: mobsos-query-visualization-nginx
+openldapdata:
     image: learninglayers/openldap-data
     env_file:
         - openldap/LDAP.env
 openldap:
-    build: ./openldap
-    # image: openldap
+    build: openldap
     env_file:
         - openldap/LDAP.env
     ports:
         - "127.0.0.1:389:389"
     volumes_from:
-        - openldapData
-oidcData:
-    build: ./openidconnect-data
-    # image: openidconnect-data
+        - openldapdata
+oidcdata:
+    build: openidconnect-data
     env_file:
         - common.env
         - openidconnect/OIDC.env
         - openldap/LDAP.env
 oidc:
-    build: ./openidconnect
-    # image: openidconnect
+    build: openidconnect
     env_file:
         - common.env
         - openidconnect/OIDC.env
         - openldap/LDAP.env
     volumes_from:
-        - oidcData
+        - oidcdata
     links:
         - mysql
         - openldap
     ports:
         - "127.0.0.1:8099:8080"
         # - "127.0.0.1:8080:8080"
-surveysData:
-    build: ./mobsos-surveys-data
-    # image: mobsos-surveys-data
+surveysdata:
+    build: mobsos-surveys-data
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
 surveys:
-    build: ./mobsos-surveys
-    # image: mobsos-surveys
+    build: mobsos-surveys
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
     links:
         - mysql
     volumes_from:
-        - surveysData
-surveysFrontend:
-    build: ./mobsos-surveys-frontend
-    # image: mobsos-surveys-frontend
+        - surveysdata
+surveysfrontend:
+    build: mobsos-surveys-frontend
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
-surveysNginx:
-    build: ./mobsos-surveys-nginx
-    # image: mobsos-surveys-nginx
+surveysnginx:
+    build: mobsos-surveys-nginx
