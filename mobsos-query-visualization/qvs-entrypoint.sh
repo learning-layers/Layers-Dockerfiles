@@ -15,9 +15,7 @@ rm -rf archive archive.zip
 cd /opt/mobsos-query-visualization
 echo "Getting here with user '${QVS_DB_USER}' and pass '${QVS_DB_PASS}'"
 echo "Configured MobSOS Query Visualization database"
-cat /opt/mobsos-query-visualization/etc/i5.las2peer.services.queryVisualization.QueryVisualizationService.properties
 sed -i -e "s#QVS_DB_USER#${QVS_DB_USER}#g" -e "s#QVS2_DB_USER#${QVS2_DB_USER}#g" -e "s#QVS_DB_PASS#${QVS_DB_PASS}#g" -e "s#QVS2_DB_PASS#${QVS2_DB_PASS}#g" /opt/mobsos-query-visualization/etc/i5.las2peer.services.queryVisualization.QueryVisualizationService.properties
-cat /opt/mobsos-query-visualization/etc/i5.las2peer.services.queryVisualization.QueryVisualizationService.properties
 dos2unix bin/start_ServiceAgentGenerator.sh
 chmod +x bin/start_ServiceAgentGenerator.sh
 dos2unix bin/start_network.sh
