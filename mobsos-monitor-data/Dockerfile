@@ -12,7 +12,7 @@ CMD sed -i "s#LAYERS_API_URI#${LAYERS_API_URI}#g" /opt/mobsos-monitor/etc/conf.p
 	sed -i "s#MM_DB_PASS#${MM_DB_PASS}#g" /opt/mobsos-monitor/etc/sql/schema.sql && \
 	sed -i "s#MM_DB_USER#${MM_DB_USER}#g" /opt/mobsos-monitor/etc/sql/schema.sql && \
 	sed -i "s#MM_DB_NAME#${MM_DB_NAME}#g" /opt/mobsos-monitor/etc/sql/schema.sql && \
-	sed -i "s#OIDC_MYSQL_DB#${OIDC_MYSQL_DB}#g" /opt/mobsos-monitor/etc/sql/schema.sql
+	sed -i "s#OIDC_DB_NAME#${OIDC_DB_NAME}#g" /opt/mobsos-monitor/etc/sql/schema.sql
 	
 # provide directories etc and log as volumes
 VOLUME ["/opt/mobsos-monitor/etc/","/opt/mobsos-monitor/log"]

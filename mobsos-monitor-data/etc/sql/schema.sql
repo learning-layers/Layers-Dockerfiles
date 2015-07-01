@@ -5,7 +5,7 @@ use MM_DB_NAME;
 grant usage on MM_DB_NAME.* to 'MM_DB_USER'@'%' identified by 'MM_DB_PASS'; 
 grant all privileges on MM_DB_NAME.* to 'MM_DB_USER'@'%';
 grant all on MM_DB_NAME.* to 'MM_DB_USER'@'%';
-grant select on OIDC_MYSQL_DB.* to 'MM_DB_USER'@'%';
+grant select on OIDC_DB_NAME.* to 'MM_DB_USER'@'%';
 
 create table log (
     id bigint not null auto_increment,
