@@ -27,8 +27,8 @@
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://mysql:3306/OpenIDConnect" /> <!-- MySQL url goes here -->
-		<property name="username" value="OIDC_MYSQL_USER" /> <!-- SQL Username -->
-		<property name="password" value="OIDC_MYSQL_PASSWORD" /> <!-- SQL password -->
+		<property name="username" value="OIDC_DB_USER" /> <!-- SQL Username -->
+		<property name="password" value="OIDC_DB_PASS" /> <!-- SQL password -->
 	</bean>
 
 	<bean id="jpaAdapter" class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">

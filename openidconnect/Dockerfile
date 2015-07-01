@@ -1,4 +1,4 @@
-FROM learninglayers/tomcat:7
+FROM tomcat
 MAINTAINER Petru Nicolaescu
 
 
