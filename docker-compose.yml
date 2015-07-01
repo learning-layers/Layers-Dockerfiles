@@ -4,7 +4,8 @@ mysqlData:
         - common.env
         - mysql/mysql.env
 mysql:
-    image: mysql
+    build: ./mysql/
+    # image: mysql
     env_file:
         - common.env
         - mysql/mysql.env
@@ -15,7 +16,8 @@ mysql:
     ports:
         - "127.0.0.1:3307:3306"
 mysqlCreate:
-    image: mysql-create
+    build: ./mysql-create/
+    # image: mysql-create
     links:
         - mysql
     env_file:
@@ -23,11 +25,13 @@ mysqlCreate:
         - mysql/mysql.env
         - secret.env
 adapterData:
-    image: adapter-data
+    build: ./adapter-data
+    # image: adapter-data
     env_file:
         - common.env
 adapterServices:
-    image: adapter-externals
+    build: ./adapter-externals
+    # image: adapter-externals
     volumes_from:
         - surveysNginx
         - qvsNginx
@@ -48,17 +52,20 @@ adapter:
         - qvs
         - surveys
 qvsData:
-    image: mobsos-query-visualization-data
+    build: ./mobsos-query-visualization-data
+    # image: mobsos-query-visualization-data
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
 qvsFrontend:
-    image: mobsos-query-visualization-frontend
+    build: ./mobsos-query-visualization-frontend
+    # image: mobsos-query-visualization-frontend
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
 qvs:
-    image: mobsos-query-visualization
+    build: ./mobsos-query-visualization
+    # image: mobsos-query-visualization
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
@@ -67,46 +74,52 @@ qvs:
     links:
         - mysql
 qvsNginx:
-    image: mobsos-query-visualization-nginx
-# openldapData:
-#     image: learninglayers/openldap-data
-#     env_file:
-#         - openldap/LDAP.env
-# openldap:
-#     image: openldap
-#     env_file:
-#         - openldap/LDAP.env
-#     ports:
-#         - "127.0.0.1:389:389"
-#     volumes_from:
-#         - openldapData
-# oidcData:
-#     image: openidconnect-data
-#     env_file:
-#         - common.env
-#         - openidconnect/OIDC.env
-#         - openldap/LDAP.env
-# oidc:
-#     image: openidconnect
-#     env_file:
-#         - common.env
-#         - openidconnect/OIDC.env
-#         - openldap/LDAP.env
-#     volumes_from:
-#         - oidcData
-#     links:
-#         - mysql
-#         - openldap
-#     ports:
-#         - "127.0.0.1:8099:8080"
-#         # - "127.0.0.1:8080:8080"
+    build: ./mobsos-query-visualization-nginx
+    # image: mobsos-query-visualization-nginx
+openldapData:
+    image: learninglayers/openldap-data
+    env_file:
+        - openldap/LDAP.env
+openldap:
+    build: ./openldap
+    # image: openldap
+    env_file:
+        - openldap/LDAP.env
+    ports:
+        - "127.0.0.1:389:389"
+    volumes_from:
+        - openldapData
+oidcData:
+    build: ./openidconnect-data
+    # image: openidconnect-data
+    env_file:
+        - common.env
+        - openidconnect/OIDC.env
+        - openldap/LDAP.env
+oidc:
+    build: ./openidconnect
+    # image: openidconnect
+    env_file:
+        - common.env
+        - openidconnect/OIDC.env
+        - openldap/LDAP.env
+    volumes_from:
+        - oidcData
+    links:
+        - mysql
+        - openldap
+    ports:
+        - "127.0.0.1:8099:8080"
+        # - "127.0.0.1:8080:8080"
 surveysData:
-    image: mobsos-surveys-data
+    build: ./mobsos-surveys-data
+    # image: mobsos-surveys-data
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
 surveys:
-    image: mobsos-surveys
+    build: ./mobsos-surveys
+    # image: mobsos-surveys
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
@@ -115,9 +128,11 @@ surveys:
     volumes_from:
         - surveysData
 surveysFrontend:
-    image: mobsos-surveys-frontend
+    build: ./mobsos-surveys-frontend
+    # image: mobsos-surveys-frontend
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
 surveysNginx:
-    image: mobsos-surveys-nginx
+    build: ./mobsos-surveys-nginx
+    # image: mobsos-surveys-nginx
