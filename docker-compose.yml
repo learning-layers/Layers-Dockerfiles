@@ -5,7 +5,6 @@ mysqldata:
         - mysql/mysql.env
 mysql:
     build: mysql
-    # image: mysql
     env_file:
         - common.env
         - mysql/mysql.env
@@ -32,6 +31,8 @@ adapterservices:
     volumes_from:
         - surveysnginx
         - qvsnginx
+        - oidcnginx
+        - swiftnginx
 adapter:
     image: learninglayers/adapter
     volumes_from:
@@ -44,7 +45,7 @@ adapter:
     env_file:
         - common.env
     ports:
-        - "127.0.0.1:8080:443"
+        - "127.0.0.1:8383:443"
     links:
         - qvs
         - surveys
@@ -81,6 +82,25 @@ openldap:
         - "127.0.0.1:389:389"
     volumes_from:
         - openldapdata
+openldapaccountdata:
+    image: learninglayers/openldapaccount-data
+openldapaccount:
+    image: learninglayers/openldapaccount
+    volumes_from:
+        - openldapaccountdata
+    ports:
+        - "127.0.0.1:8083:8080"
+    links:
+        - openldap
+        - tethysuserstorage
+    environment:
+        - TETHYS_IP=tethysuserstorage
+        - PWM_LDAP_ADMINS=<value>koren</value><value>nicolaescu</value>
+    env_file:
+        - common.env
+        - openldap/LDAP.env
+openldapaccountnginx:
+    build: openldapaccount-nginx
 oidcdata:
     build: openidconnect-data
     env_file:
@@ -99,8 +119,9 @@ oidc:
         - mysql
         - openldap
     ports:
-        - "127.0.0.1:8099:8080"
-        # - "127.0.0.1:8080:8080"
+        - "127.0.0.1:8080:8080"
+oidcnginx:
+    build: openidconnect-nginx
 surveysdata:
     build: mobsos-surveys-data
     env_file:
@@ -122,3 +143,41 @@ surveysfrontend:
         - mobsos-surveys/SURVEYS.env
 surveysnginx:
     build: mobsos-surveys-nginx
+# swift:
+#     image: learninglayers/swift
+#     ports:
+#         - "127.0.0.1:8082:8080"
+#     env_file:
+#         - common.env
+#         - swift/SWIFT.env
+swiftnginx:
+    build: swift-nginx
+tethysuserstorage:
+    image: learninglayers/tethys-userstorage
+    ports:
+        - "127.0.0.1:8081:8080"
+    env_file:
+        - common.env
+        - swift/SWIFT.env
+        - tethys-userstorage/TETHYS.env
+    links:
+        - adapter
+tethysuserstoragenginx:
+    build: swift-nginx
+mobsosmonitordata:
+    build: ./mobsos-monitor-data
+    env_file:
+        - common.env
+        - mobsos-monitor/MM.env
+        - openidconnect/OIDC.env
+mobsosmonitor:
+    build: ./mobsos-monitor
+    env_file:
+        - common.env
+        - mobsos-monitor/MM.env
+        - mysql/mysql.env
+    links:
+        - mysql
+    volumes_from:
+        - mobsosmonitordata
+        - adapterdata
