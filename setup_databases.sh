@@ -23,7 +23,7 @@ while read -u "$fd_num" servicevar; do
         SERVICE_DB_NAME=${!TMP_SERVICE_DB}
         echo "SERVICE_DB_USER=${SERVICE_DB_USER}" > secret.env
         echo "SERVICE_DB_NAME=${SERVICE_DB_NAME}" >> secret.env
-        SERVICE_PASS=$(docker-compose run mysqlCreate | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-)
+        SERVICE_PASS=$(docker-compose run mysqlcreate | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-)
         sed -i ${filename} -e "/${service}_DB_PASS/d"
         echo "${service}_DB_PASS=${SERVICE_PASS}" >> ${filename}
         echo Generated password ${SERVICE_PASS} for service $service
