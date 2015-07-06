@@ -7,7 +7,7 @@ echo "Backup start time: $START" &&
 echo "" &&
 
 echo "Backing up Layers Common Data Storage MySQL databases volumes..." &&
-docker exec mysql mysqldump -uroot -pbYLTCgtNgSk7EMcqzhSLx5FftcQpnmQV --all-databases > /opt/mysqlbackup/MySQLDump`date -Idate`.sql
+docker exec mysql mysqldump -uroot -pPASS --all-databases > /opt/mysqlbackup/MySQLDump`date -Idate`.sql
 #docker run --volumes-from mysql-data -v $(pwd):/backup learninglayers/base tar cvf ./backup/${START}-backup-mysql-data.tar /var/lib/mysql;
 echo " -> done" &&
 echo "" &&
