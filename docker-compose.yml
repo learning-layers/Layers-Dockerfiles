@@ -22,6 +22,8 @@ mysqlcreate:
         - common.env
         - mysql/mysql.env
         - secret.env
+    volumes:
+        - sqlfile/:/sqlfile/
 adapterdata:
     build: adapter-data
     env_file:
@@ -32,7 +34,9 @@ adapterservices:
         - surveysnginx
         - qvsnginx
         - oidcnginx
-        - swiftnginx
+        - tethysuserstoragenginx
+        - openldapaccountnginx
+        # - swiftnginx
 adapter:
     image: learninglayers/adapter
     volumes_from:
@@ -49,6 +53,9 @@ adapter:
     links:
         - qvs
         - surveys
+        - oidc
+        - openldapaccount
+        # - swift
 qvsdata:
     build: mobsos-query-visualization-data
     env_file:
@@ -99,6 +106,8 @@ openldapaccount:
     env_file:
         - common.env
         - openldap/LDAP.env
+    links:
+        - openldap
 openldapaccountnginx:
     build: openldapaccount-nginx
 oidcdata:
@@ -160,10 +169,8 @@ tethysuserstorage:
         - common.env
         - swift/SWIFT.env
         - tethys-userstorage/TETHYS.env
-    links:
-        - adapter
 tethysuserstoragenginx:
-    build: swift-nginx
+    build: tethys-userstorage-nginx
 mobsosmonitordata:
     build: ./mobsos-monitor-data
     env_file:
