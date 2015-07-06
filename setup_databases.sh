@@ -16,10 +16,10 @@ while read -u "$fd_num" servicevar; do
         service=${TMPSERV[$i]}
         TEST_SERVICE_PASS=${service}_DB_PASS
         TMP_SERVICE_EXISTS=${service}_DB_EXISTS
-        if [[ -n ${!TEST_SERVICE_PASS} && -n ${!TMP_SERVICE_EXISTS} ]]; then
-            continue
-            unset SERVICE_PASS SERVICE_USER SERVICE_DB_NAME TMP_SERVICE_DB TMP_SERVICE_USER
-        fi
+        # if [[ -n ${!TEST_SERVICE_PASS} && -n ${!TMP_SERVICE_EXISTS} ]]; then
+        #     continue
+        #     unset SERVICE_PASS SERVICE_USER SERVICE_DB_NAME TMP_SERVICE_DB TMP_SERVICE_USER
+        # fi
         echo Service: ${service}
         TMP_SERVICE_USER=${service}_DB_USER
         TMP_SERVICE_DB=${service}_DB_NAME
@@ -34,7 +34,9 @@ while read -u "$fd_num" servicevar; do
         echo "SERVICE_DB_USER=${SERVICE_DB_USER}" > secret.env
         echo "SERVICE_DB_NAME=${SERVICE_DB_NAME}" >> secret.env
         echo "SERVICE_DB_EXISTS=${SERVICE_DB_EXISTS}" >> secret.env
-        SERVICE_PASS=$(docker-compose run mysqlcreate | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-)
+        CREATE_OUTPUT="$(docker-compose run mysqlcreate)"
+        echo "$CREATE_OUTPUT"
+        SERVICE_PASS=$(echo "$CREATE_OUTPUT" | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-)
         rm -rf $TMP_SQLFILE
         sed -i ${filename} -e "/${service}_DB_PASS/d" -e "/${service}_DB_EXISTS/d"
         echo "${service}_DB_PASS=${SERVICE_PASS}" >> ${filename}
