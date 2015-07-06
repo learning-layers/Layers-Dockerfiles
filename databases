@@ -1,5 +1,4 @@
 ./mobsos-query-visualization/QVS.env QVS QVS2
 ./openidconnect/OIDC.env OIDC
-./openldap/LDAP.env LDAP
 ./mobsos-surveys/SURVEYS.env SURVEYS
 ./mobsos-monitor/MM.env MM
