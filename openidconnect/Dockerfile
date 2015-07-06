@@ -9,9 +9,3 @@ ADD http://layers.dbis.rwth-aachen.de/jenkins/job/OpenIDConnect%20Server/lastSuc
 
 # Add init script to create mysql-db
 ADD src/main/files/init /opt/init
-
-RUN sed -i 's/\r//' /opt/init/40_mysql.sh \
-	&& chmod +x /opt/init/40_mysql.sh
-
-
-

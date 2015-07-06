@@ -24,8 +24,9 @@ CMD wget http://layers.dbis.rwth-aachen.de/jenkins/job/MobSOS%20Monitor/lastSucc
 	cp -R archive/* mobsos-monitor && \
 	rm -rf archive.zip archive && \
     cd mobsos-monitor && \
-	mysql -uroot -p$MYSQL_ROOT_PASSWORD -hmysql < etc/sql/schema.sql && \
 	dos2unix bin/start.sh && \
     chmod +x bin/start.sh && \
+    echo "Testing mobsos monitor DB connection" && \
+    mysql -u$MM_DB_USER -p$MM_DB_PASS -hmysql -e "\q" && \
     bin/start.sh /usr/local/openresty/logs/access.log
 

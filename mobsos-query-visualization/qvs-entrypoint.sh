@@ -23,8 +23,8 @@ chmod +x bin/start_network.sh
 sed -i "s/someNewPass/qvPass/g" bin/start_network.sh
 while ! ping -c1 mysql &>/dev/null; do sleep 0.2; done
 while ! timeout 1 bash -c 'cat < /dev/null > /dev/tcp/mysql/3306' 2>/dev/null; do sleep 0.5; done
-echo Trying main database
-mysql -u$QVS_DB_USER -p$QVS_DB_PASS -hmysql < db.sql
-echo Trying secondary database with user $QVS2_DB_USER and pass $QVS2_DB_PASS
-mysql -u$QVS2_DB_USER -p$QVS2_DB_PASS -hmysql < mysqlsampledatabase.sql
+echo Testing secondary database connection with user $QVS2_DB_USER and pass $QVS2_DB_PASS
+mysql -u$QVS2_DB_USER -p$QVS2_DB_PASS -hmysql -e "\q"
+echo Testing main database connection
+mysql -u$QVS_DB_USER -p$QVS_DB_PASS -hmysql -e "\q" && \
 bin/start_network.sh

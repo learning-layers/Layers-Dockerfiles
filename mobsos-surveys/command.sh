@@ -23,5 +23,6 @@ chmod +x bin/start_network.sh
 sed -i "s/mobsosrules/$SURVEYS_PASS/g" bin/start_network.sh
 while ! ping -c1 mysql &>/dev/null; do sleep 0.2; done
 while ! timeout 1 bash -c 'cat < /dev/null > /dev/tcp/mysql/3306' 2>/dev/null; do sleep 0.5; done
-mysql -u$SURVEYS_DB_USER -p$SURVEYS_DB_PASS -hmysql < etc/sql/schema.sql
+echo Testing main database connection
+mysql -u$SURVEYS_DB_USER -p$SURVEYS_DB_PASS -hmysql -e "\q" && \
 bin/start_network.sh
