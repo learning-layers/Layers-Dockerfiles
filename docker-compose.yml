@@ -23,7 +23,7 @@ mysqlcreate:
         - mysql/mysql.env
         - secret.env
     volumes:
-        - sqlfile/:/sqlfile/
+        - mysql-create/sqlfile/:/sqlfile/
 adapterdata:
     build: adapter-data
     env_file:

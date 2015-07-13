@@ -27,7 +27,7 @@ mysql -p${MYSQL_ROOT_PASSWORD} -h mysql -Bse "CREATE DATABASE IF NOT EXISTS ${SE
 echo "You can now connect to the MySQL container from linked containers by using:"
 echo "mysql -u${SERVICE_DB_USER} -p$SERVICE_PASSWORD -hmysql"
 
-if [ -z ${SERVICE_DB_EXISTS+x} ]; then
+if [[ -z "$SERVICE_DB_EXISTS" ]]; then
     echo DB did not exist, importing sql file…
     mysql -uroot -p${MYSQL_ROOT_PASSWORD} -hmysql < /sqlfile/db.sql
 fi

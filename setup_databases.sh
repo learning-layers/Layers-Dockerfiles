@@ -16,10 +16,10 @@ while read -u "$fd_num" servicevar; do
         service=${TMPSERV[$i]}
         TEST_SERVICE_PASS=${service}_DB_PASS
         TMP_SERVICE_EXISTS=${service}_DB_EXISTS
-        # if [[ -n ${!TEST_SERVICE_PASS} && -n ${!TMP_SERVICE_EXISTS} ]]; then
-        #     continue
-        #     unset SERVICE_PASS SERVICE_USER SERVICE_DB_NAME TMP_SERVICE_DB TMP_SERVICE_USER
-        # fi
+        if [[ -n ${!TEST_SERVICE_PASS} && -n ${!TMP_SERVICE_EXISTS} ]]; then
+            continue
+            unset SERVICE_PASS SERVICE_USER SERVICE_DB_NAME TMP_SERVICE_DB TMP_SERVICE_USER
+        fi
         echo Service: ${service}
         TMP_SERVICE_USER=${service}_DB_USER
         TMP_SERVICE_DB=${service}_DB_NAME
@@ -28,8 +28,11 @@ while read -u "$fd_num" servicevar; do
         SERVICE_DB_EXISTS=${!TMP_SERVICE_EXISTS}
         # If DB has not been created, use an SQL file from the same directory as the .env file.
         # The file has to be called X.sql when the DB is called X
-        if [ -z ${SERVICE_DB_EXISTS+x} ]; then
+        if [[ -z "$SERVICE_DB_EXISTS" ]]; then
+            echo "Copying ${DB_DIR}/${service}.sql to ${TMP_SQLFILE}"
             cp ${DB_DIR}/${service}.sql ${TMP_SQLFILE}
+        else
+            echo "DB exists"
         fi
         echo "SERVICE_DB_USER=${SERVICE_DB_USER}" > secret.env
         echo "SERVICE_DB_NAME=${SERVICE_DB_NAME}" >> secret.env
@@ -48,4 +51,3 @@ while read -u "$fd_num" servicevar; do
 done {fd_num}<databases
 echo "" > secret.env
 echo " " > $TMP_SQLFILE
-docker-compose stop
