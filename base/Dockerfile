@@ -8,15 +8,17 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # Set the locale
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 # Perform updates
 RUN sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list
-ONBUILD RUN apt-get update \
+RUN apt-get update \
     && apt-get upgrade \ 
     -qqy \ 
     --no-install-recommends \ 
     --only-upgrade
+RUN apt-get install -qqy curl wget vim-nox zsh
+RUN wget -O /root/.zshrc http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc
