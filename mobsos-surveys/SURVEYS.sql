@@ -1,9 +1,9 @@
-drop schema if exists mobsos;
-create schema if not exists mobsos default character set utf8 collate utf8_general_ci;
-use mobsos;
+drop schema if exists mobsos_surveys;
+create schema if not exists mobsos_surveys default character set utf8 collate utf8_general_ci;
+use mobsos_surveys;
 
 grant usage on *.* to mobsos@localhost identified by 'mobsosrules'; 
-grant all privileges on mobsos.* to mobsos@localhost;
+grant all privileges on mobsos_surveys.* to mobsos@localhost;
 
 -- -----------------------------------------------------
 -- Definition table 'questionnaire'
@@ -75,7 +75,8 @@ create table feedback (
     client_id varchar(128) not null,
     rating smallint not null,
     comment varchar(2048),
-    time datetime not null default current_timestamp,
+    time datetime not null,
+    -- time datetime not null default current_timestamp,
     constraint rating_pk primary key (user_id , client_id)
 );
 
