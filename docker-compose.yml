@@ -73,6 +73,8 @@ qvs:
         - mobsos-query-visualization/QVS.env
     volumes_from:
         - qvsdata
+    volumes:
+        - /dev/urandom:/dev/random
     links:
         - mysql
 qvsnginx:
@@ -89,6 +91,8 @@ openldap:
         - "127.0.0.1:389:389"
     volumes_from:
         - openldapdata
+    volumes:
+        - /dev/urandom:/dev/random
 openldapaccountdata:
     image: learninglayers/openldapaccount-data
 openldapaccount:
@@ -108,6 +112,8 @@ openldapaccount:
         - openldap/LDAP.env
     links:
         - openldap
+    volumes:
+        - /dev/urandom:/dev/random
 openldapaccountnginx:
     build: openldapaccount-nginx
 oidcdata:
@@ -129,6 +135,8 @@ oidc:
         - openldap
     ports:
         - "127.0.0.1:8080:8080"
+    volumes:
+        - /dev/urandom:/dev/random
 oidcnginx:
     build: openidconnect-nginx
 surveysdata:
@@ -145,6 +153,8 @@ surveys:
         - mysql
     volumes_from:
         - surveysdata
+    volumes:
+        - /dev/urandom:/dev/random
 surveysfrontend:
     build: mobsos-surveys-frontend
     env_file:
@@ -169,6 +179,8 @@ tethysuserstorage:
         - common.env
         - swift/SWIFT.env
         - tethys-userstorage/TETHYS.env
+    volumes:
+        - /dev/urandom:/dev/random
 tethysuserstoragenginx:
     build: tethys-userstorage-nginx
 mobsosmonitordata:
