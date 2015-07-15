@@ -1,5 +1,12 @@
 #!/bin/bash
 
+bla='layersdockerfiles'
+
+docker run -v $(pwd)/mysql-data/backup/:/backup    --volumes-from ${bla}_mysqldata_1    gordin/backup /backup-scripts/backup.sh
+docker run -v $(pwd)/openldap-data/backup/:/backup --volumes-from ${bla}_openldapdata_1 gordin/backup /backup-scripts/backup.sh
+
+exit
+
 # do a simple data backup for all data volumes
 echo "Layers Box - Simple Data Backup" &&
 START=`date -Iseconds | sed -e "s/[-:]//g"` &&
