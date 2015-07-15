@@ -1,4 +1,4 @@
-FROM gordin/layers-box:base
+FROM gordinlearninglayers/base
 
 MAINTAINER Andreas Guth
 
