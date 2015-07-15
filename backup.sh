@@ -2,8 +2,8 @@
 
 bla='layersdockerfiles'
 
-docker run -v $(pwd)/mysql-data/backup/:/backup    --volumes-from ${bla}_mysqldata_1    gordin/backup /backup-scripts/backup.sh
-docker run -v $(pwd)/openldap-data/backup/:/backup --volumes-from ${bla}_openldapdata_1 gordin/backup /backup-scripts/backup.sh
+docker run -v $(pwd)/mysql-data/backup/:/backup    --volumes-from ${bla}_mysqldata_1    gordinlearninglayers/backup /backup-scripts/backup.sh
+docker run -v $(pwd)/openldap-data/backup/:/backup --volumes-from ${bla}_openldapdata_1 gordinlearninglayers/backup /backup-scripts/backup.sh
 
 exit
 
