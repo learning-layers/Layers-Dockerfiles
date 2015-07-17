@@ -1,8 +1,9 @@
 server {
         listen 80;
+	listen 443;
 
         # Path to the root of your installation
-        root /var/www/owncloud;
+        root /opt/owncloud;
 
         client_max_body_size 10G; # set max upload size
         fastcgi_buffers 64 4K;
