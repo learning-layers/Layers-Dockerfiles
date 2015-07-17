@@ -15,5 +15,13 @@ There are three defaults scripts:
 You can change any of those scripts or add new scripts with any image based on this image. To do this there is also a best-practise skeleton script named ##_script.sh.skeleton.
 Please just stick to the policy in src/main/files/init/README.
 
+#### ENV you can use with this Image
+
+INSTALL_DIR="/opt"
+INIT_SH="${INSTALL_DIR}/init.sh"
+INIT_DIR="${INSTALL_DIR}/init"
+JAVA_HOME="/usr/lib/jvm/java-8-oracle"
+TOMCAT_HOME="${INSTALL_DIR}/tomcat"
+
 #### Contact
 Gordon Lawrenz (lawrenz<ät>dbis.rwth-aachen.de)
