@@ -17,11 +17,13 @@ Please just stick to the policy in src/main/files/init/README.
 
 #### ENV you can use with this Image
 
-INSTALL_DIR="/opt"  
-INIT_SH="${INSTALL_DIR}/init.sh"  
-INIT_DIR="${INSTALL_DIR}/init"  
-JAVA_HOME="/usr/lib/jvm/java-8-oracle"  
-TOMCAT_HOME="${INSTALL_DIR}/tomcat"
+|ENV variable|value|absolute value
+|---|---|---|
+|INSTALL_DIR|/opt|/opt|  
+|INIT_SH=|${INSTALL_DIR}/init.sh|/opt/init.sh|  
+|INIT_DIR|${INSTALL_DIR}/init"|/opt/init|  
+|JAVA_HOME|/usr/lib/jvm/java-8-oracle|/usr/lib/jvm/java-8-oracle|  
+|TOMCAT_HOME|${INSTALL_DIR}/tomcat|/opt/tomcat|
 
 #### Contact
 Gordon Lawrenz (lawrenz<ät>dbis.rwth-aachen.de)
