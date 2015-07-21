@@ -51,7 +51,8 @@ adapter:
     env_file:
         - common.env
     ports:
-        - "127.0.0.1:8383:443"
+        - "80:80"
+        - "443:443"
     links:
         - qvs
         - surveys
@@ -100,9 +101,9 @@ openldap:
     volumes:
         - /dev/urandom:/dev/random
 openldapaccountdata:
-    image: learninglayers/openldapaccount-data
+    image: gordinlearninglayers/openldapaccount-data
 openldapaccount:
-    image: learninglayers/openldapaccount
+    image: gordinlearninglayers/openldapaccount
     volumes_from:
         - openldapaccountdata
     ports:
@@ -176,7 +177,7 @@ swift:
         - common.env
         - swift/SWIFT.env
 swiftnginx:
-    image: learninglayers/swift-nginx
+    image: gordinlearninglayers/swift-nginx
 tethysuserstorage:
     image: gordinlearninglayers/tethys-userstorage
     ports:
