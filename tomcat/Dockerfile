@@ -11,7 +11,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Environment variables - Tomcat 
 ENV TOMCAT_HOME="${INSTALL_DIR}/tomcat"
-ENV TOMCAT_MAJOR_VER="8"
+ENV TOMCAT_MAJOR_VER="7"
 
 # Add startscripts
 ADD src/main/files/init.sh	/opt/init.sh
