@@ -24,8 +24,9 @@ LAYERS_API_URL="https://api.learning-layers.eu/" #"http://$(ifconfig  eth0 | awk
 
 # block of environment variables set to Docker containers
 # use for configuration of Layers Box
+
 # automatically generated strong passwords printed at the end of the script
-# if no secure password generator installed, use
+# if no secure password generator (pwgen) installed, use
 # date +%s | sha256sum | base64 | head -c 32 ; echo
 MYSQL_ROOT_PASSWORD=$(pwgen -1sB 32); # "pass";
 LDAP_ROOT_PASSWORD=$(pwgen -1sB 32); # "pass";
@@ -45,6 +46,9 @@ LDAP_ROOT_DN="dc=learning-layers,dc=eu";
 MM_IPINFODB_KEY="";
 
 # Define alias for docker run including all environment variables that must be available to containers.
+
+# In OS X bash environment aliases are disabled by default inside shell scripts. Allow them:  
+shopt -s expand_aliases;
 alias drenv='docker run -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LAYERS_APP_URI=$LAYERS_APP_URI"';
 
 echo ""
@@ -256,8 +260,8 @@ echo "" &&
 # TODO: change order of started containers: 1) adapter 2)backend containers not requiring the adapter 3) containers communicating via the adapter 4) update nginx.conf
 
 # env variables need for SSS
-$SSS_MYSQL_SCHEME = "sss";
-$SSS_MYSQL_USERNAME = "sss";
+SSS_MYSQL_SCHEME="sss";
+SSS_MYSQL_USERNAME="sss";
 
 # create SSS database and user
 #echo "Creating SSS database and user..." &&
@@ -316,4 +320,6 @@ echo "  OIDC_MYSQL_PASS: $OIDC_MYSQL_PASS" >> deploy.txt &&
 echo "  MM_PASS: $MM_PASS" >> deploy.txt &&
 echo "  MM_PASS: $MM_PASS" >> deploy.txt &&
 echo "  MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD" >> deploy.txt &&
-echo "  LDAP_ROOT_PASSWORD: $LDAP_ROOT_PASSWORD" >> deploy.txt &&
+echo "  LDAP_ROOT_PASSWORD: $LDAP_ROOT_PASSWORD" >> deploy.txt 
+
+
