@@ -9,12 +9,16 @@ ENV INIT_SH="${INSTALL_DIR}/init.sh" \
 	TOMCAT_HOME="${INSTALL_DIR}/tomcat"
 ENV PATH=$JAVA_HOME/bin:$PATH
 
+# Environment variables - Tomcat 
+ENV TOMCAT_HOME="${INSTALL_DIR}/tomcat"
+ENV TOMCAT_MAJOR_VER="8"
+
 # Add startscripts
 ADD src/main/files/init.sh	${INIT_SH}
 ADD src/main/files/init		${INIT_DIR}
 
 # Install Java 8 & Tomcat 8
-ONBUILD RUN apt-get update -yq \
+RUN apt-get update -yq \
 
 	# make initscript runable
 	&& chmod +x ${INIT_SH} \
@@ -30,9 +34,14 @@ ONBUILD RUN apt-get update -yq \
 	&& update-java-alternatives -s java-8-oracle \
 	
 	# install Tomcat 8 
-        && wget http://mirror.netcologne.de/apache.org/tomcat/tomcat-8/v8.0.23/bin/apache-tomcat-8.0.23.tar.gz -O - | tar -zxv -C ${INSTALL_DIR}/ \
-        && ln -s ${INSTALL_DIR}/apache-tomcat-8.0.23/ ${TOMCAT_HOME}
+	&& TARB_PAR_LOC="ftp://ftp.halifax.rwth-aachen.de/apache/tomcat/tomcat-${TOMCAT_MAJOR_VER}" \
+	&& TOMCAT_MINOR_VER_VPREFIX=$(curl -l ${TARB_PAR_LOC}/ | tail -n 1) \
+	&& TOMCAT_MINOR_VER=$(echo ${TOMCAT_MINOR_VER_VPREFIX} | cut -c 2-) \
+	&& TARB_SUBLOC=${TARB_PAR_LOC}/${TOMCAT_MINOR_VER_VPREFIX}/ \
+	&& TARB_LOC=${TARB_SUBLOC}bin/apache-tomcat-${TOMCAT_MINOR_VER}.tar.gz  \
 
+        && wget ${TARB_LOC} -O - | tar -zxv -C ${INSTALL_DIR}/ \
+	&& ln -s ${INSTALL_DIR}/apache-tomcat-${TOMCAT_MINOR_VER}/ ${TOMCAT_HOME}
 
 # Expose Tomcat at port 8080 & start our initscripts		
 EXPOSE 8080
