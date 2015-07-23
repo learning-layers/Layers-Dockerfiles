@@ -18,7 +18,7 @@ ADD src/main/files/init.sh	${INIT_SH}
 ADD src/main/files/init		${INIT_DIR}
 
 # Install Java 8 & Tomcat 8
-RUN apt-get update -yq \
+ONBUILD RUN apt-get update -yq \
 
 	# make initscript runable
 	&& chmod +x ${INIT_SH} \
