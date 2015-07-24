@@ -24,7 +24,4 @@ RUN apt-get update \
 EXPOSE 1812/udp
 EXPOSE 1813/udp
 
-CMD sed -i "s%${ldap_root_pass}%${LDAP_ROOT_PASSWORD}%g" /etc/freeradius/modules/ldap' \
-    && sed -i "s%${IPofOpenLDAP}%${FR2OLDAP_PORT_389_TCP_ADDR}%g" /etc/freeradius/modules/ldap' \
-    && freeradius -X &
-#CMD ["/usr/sbin/freeradius", "-f", "-xx"]
+CMD ["/usr/sbin/freeradius", "-f", "-xx"]
