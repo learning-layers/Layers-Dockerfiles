@@ -26,32 +26,14 @@ RUN wget http://openresty.org/download/ngx_openresty-${OPENRESTY_VERSION}.tar.gz
 
 WORKDIR /usr/local/openresty
 
-## Make sure the docker log collector has access to the openresty logs
-#RUN ln -s /dev/stdout /var/log/nginx/access.log
-#RUN ln -s /dev/stderr /var/log/nginx/error.log
+# Make sure the docker log collector has access to the openresty logs
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Provide volume for debugging purposes
 VOLUME ["/var/cache/nginx"]
 
-## Install docker-gen
-#ENV DGEN_VER 0.3.9
-#ENV DLURLDG https://github.com/jwilder/docker-gen/releases/download/$DGEN_VER/docker-gen-linux-amd64-$DGEN_VER.tar.gz
-#ENV DLURLFG https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego
-#
-#RUN wget ${DLURLDG} \
-#    && tar -C /usr/local/bin -xvzf docker-gen* \
-#    && chmod 755 /usr/local/bin/docker-gen* \
-#    && rm docker-gen* \
-#    && rm -rf /var/lib/apt/lists/*
-#
-## Install Forego
-#RUN wget -P /usr/local/bin ${DLURLFG} \
-#    && chmod 755 /usr/local/bin/forego
-#
-## Generate config file
-#RUN docker-gen -notify-sighup nginx -watch --only-published /usr/local/docker-gen/templates/nginx.tmpl /usr/local/openresty/docker-gen-generated.conf 
 
 EXPOSE 80 443
 
-# CMD forego start -r && /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf -g daemon off 
 CMD /usr/local/openresty/nginx/sbin/nginx -c /usr/local/openresty/conf/nginx.conf #-g daemon off
