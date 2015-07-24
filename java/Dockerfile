@@ -2,8 +2,8 @@ FROM learninglayers/base
 MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 
 # Environment variables
-ENV	JAVA_HOME="/usr/lib/jvm/java-8-oracle" \
-ENV PATH=$JAVA_HOME/bin:$PATH
+ENV JAVA_HOME="/usr/lib/jvm/java-8-oracle" \
+ENV PATH $JAVA_HOME/bin:$PATH
 
 
 # Install Java 8
