@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Creating autoconfig.php"
 cat > ${OWNCLOUD_HOME}/config/autoconfig.php << EOF
 <?php
 \$AUTOCONFIG = array(
@@ -15,10 +16,18 @@ cat > ${OWNCLOUD_HOME}/config/autoconfig.php << EOF
 );
 EOF
 
+echo "Creating tethys.config.php"
+cat > ${OWNCLOUD_HOME}/config/tethys.config.php << EOF
+<?php
+\$CONFIG = array(
+  'overwriteprotocol' => 'http',
+);
+EOF
+
+echo "Start Database"
 service mysql start
 
-echo "Configurating Database"
-
+echo "Configuring Database"
 mysql -e "CREATE USER '${DBUSER}'@'localhost' IDENTIFIED BY '${DBPASS}'"
 mysql -e "CREATE DATABASE IF NOT EXISTS ${DBNAME}"
 mysql -D mysql -e "UPDATE user SET password=PASSWORD('root') WHERE User='${DBPASS}'"
@@ -27,5 +36,4 @@ mysql -e "GRANT ALL PRIVILEGES ON ${DBNAME}.* TO '${DBUSER}'@'localhost' IDENTIF
 
 
 echo "Starting php5-fpm & nginx"
-
 service php5-fpm start && nginx

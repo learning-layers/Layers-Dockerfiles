@@ -10,7 +10,8 @@ ENV OWNCLOUD_VERSION="owncloud_8.1.0.orig" \
 	ADMINLOGIN="pass" \
 	ADMINPASS="pass" 
 
-RUN apt-get update -q && apt-get install -yq php5 php5-cgi php5-common php5-gd php5-cli php5-fpm php-apc php5-mysql php5-curl openssl nginx tar mysql-server
+RUN apt-get update -q && apt-get install -yq php5 php5-cgi php5-common php5-gd php5-cli php5-fpm php-apc php5-mysql php5-curl openssl nginx tar \ 
+	mysql-server vim # TODO: MAKE THE IMAGE WORK WITHOUT THIS LINE
 
 ADD src/main/files/owncloud.sites	/etc/nginx/sites-enabled/owncloud.sites
 ADD src/main/files/nginx.conf		/etc/nginx/
