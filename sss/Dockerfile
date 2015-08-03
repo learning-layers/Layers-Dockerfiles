@@ -1,4 +1,4 @@
-FROM learninglayers/base
+FROM learninglayers/java
 
 MAINTAINER Dieter Theiler "dtheiler@tugraz.at"
 
