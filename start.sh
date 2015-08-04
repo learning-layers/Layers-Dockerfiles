@@ -255,42 +255,52 @@ echo "" &&
 # Freeradius -> in progress
 # TODO: change order of started containers: 1) adapter 2)backend containers not requiring the adapter 3) containers communicating via the adapter 4) update nginx.conf
 
-# env variables need for SSS
-$SSS_MYSQL_SCHEME = "sss";
-$SSS_MYSQL_USERNAME = "sss";
+#variables needed for SSS
+SSS_MYSQL_USERNAME="sss";
+SSS_MYSQL_SCHEME="sss";
+SSS_HOST=$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}');
+SSS_PORT="8390";
+SSS_PORT_FOR_TOMCAT="8390";
+SSS_MYSQL_HOST=$(ifconfig  eth0 | awk '/inet addr/{print substr($2,6)}');
+SSS_MYSQL_PORT="3306";
+SSS_AUTH_TYPE="oidc";
+SSS_TETHYS_USER="SSSUser";
+SSS_TETHYS_PASSSWORD=""; #sss tethys password
+SSS_TETHYS_LAS_USER="sss";
+SSS_TETHYS_LAS_PASSWORD=""; #sss las password
+SSS_TETHYS_OIDC_CONF_URI="$LAYERS_API_URI/o/oauth2/.well-known/openid-configuration";
+SSS_TETHYS_OIDC_USER_END_POINT_URI="$LAYERS_API_URI/o/oauth2/userinfo";
 
-# create SSS database and user
-#echo "Creating SSS database and user..." &&
-#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_SCHEME --new-user $SSS_MYSQL_USERNAME | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-` &&
+#echo "Start SSS Tomcat server" &&
+#docker run -d -p 8080:8080 --name sss.tomcat learninglayers/tomcat &&
 #echo " -> done" &&
 #echo "" &&
 
-#echo "starting SSS container ..." &&
-#docker run \
-#-d \
-#-e "MYSQL_ROOT_USERNAME=root" \
-#-e "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" \
-#-e "SSS_HOST=host_with_out_protocol" \
-#-e "SSS_PORT=8390" \
-#-e "SSS_PORT_FOR_TOMCAT=8391" \
-#-e "SSS_MYSQL_HOST=host_with_out_protocol" \
-#-e "SSS_MYSQL_PORT=3333" \
+#echo "Create SSS database and user"
+#SSS_MYSQL_PASSWORD=`docker run --link mysql:mysql learninglayers/mysql-create -p$MYSQL_ROOT_PASSWORD --new-database $SSS_MYSQL_SCHEME --new-user $SSS_MYSQL_USERNAME | grep "mysql" | awk '{split($0,a," "); print a[3]}' | cut -c3-`
+#echo " -> done"
+#echo ""
+
+#echo "Start SSS" &&
+#docker run -d \
+#-e "SSS_HOST=$SSS_HOST" \
+#-e "SSS_PORT=$SSS_PORT" \
+#-e "SSS_PORT_FOR_TOMCAT=$SSS_PORT_FOR_TOMCAT" \
+#-e "SSS_MYSQL_HOST=$SSS_MYSQL_HOST" \
+#-e "SSS_MYSQL_PORT=$SSS_MYSQL_PORT" \
 #-e "SSS_MYSQL_USERNAME=$SSS_MYSQL_USERNAME" \
 #-e "SSS_MYSQL_PASSWORD=$SSS_MYSQL_PASSWORD" \
 #-e "SSS_MYSQL_SCHEME=$SSS_MYSQL_SCHEME" \
-#-e "SSS_AUTH_TYPE=oidc" \
-#-e "SSS_TETHYS_USER=sss_tethys_user" \
-#-e "SSS_TETHYS_PASSSWORD=sss_tethys_password" \
-#-e "SSS_TETHYS_LAS_USER=sss_las_user" \
-#-e "SSS_TETHYS_LAS_PASSWORD=sss_las_password" \
-#-e "SSS_TETHYS_OIDC_CONF_URI=https://api.learning-layers.eu/o/oauth2/.well-known/openid-configuration" \
-#-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=https://api.learning-layers.eu/o/oauth2/userinfo" \
-#-p 8391:8390 \
-#--link mysql:mysql \
-#--volumes-from tomcat \
-#--name sss \
-#learninglayers/sss &&
-#echo "done --> starting SSS container ..."
+#-e "SSS_AUTH_TYPE=$SSS_AUTH_TYPE" \
+#-e "SSS_TETHYS_USER=$SSS_TETHYS_USER" \
+#-e "SSS_TETHYS_PASSSWORD=$SSS_TETHYS_PASSSWORD" \
+#-e "SSS_TETHYS_LAS_USER=$SSS_TETHYS_LAS_USER" \
+#-e "SSS_TETHYS_LAS_PASSWORD=$SSS_TETHYS_LAS_PASSWORD" \
+#-e "SSS_TETHYS_OIDC_CONF_URI=$SSS_TETHYS_OIDC_CONF_URI" \
+#-e "SSS_TETHYS_OIDC_USER_END_POINT_URI=$SSS_TETHYS_OIDC_USER_END_POINT_URI" \
+#-p $SSS_PORT_FOR_TOMCAT:$SSS_PORT --link mysql:mysql --volumes-from tomcat --volumes-from mysql-data --name sss learninglayers/sss &&
+#echo " -> done" &&
+#echo "" &&
 
 # register SSS REST API in OIDC
 #echo "Registering SSS REST API in OIDC..." &&
