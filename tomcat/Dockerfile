@@ -43,6 +43,10 @@ ONBUILD RUN apt-get update -yq \
         && wget ${TARB_LOC} -O - | tar -zxv -C ${INSTALL_DIR}/ \
 	&& ln -s ${INSTALL_DIR}/apache-tomcat-${TOMCAT_MINOR_VER}/ ${TOMCAT_HOME}
 
+# Expose tomcat conf and webapps folder
+VOLUME ["/opt/tomcat/conf/","/opt/tomcat/webapps/"]
+
 # Expose Tomcat at port 8080 & start our initscripts		
+
 EXPOSE 8080
 CMD /bin/bash ${INIT_SH}
