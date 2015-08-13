@@ -1,0 +1,4 @@
+./mobsos-query-visualization/QVS.env QVS QVS2
+./openidconnect/OIDC.env OIDC
+./mobsos-surveys/SURVEYS.env SURVEYS
+./mobsos-monitor/MM.env MM

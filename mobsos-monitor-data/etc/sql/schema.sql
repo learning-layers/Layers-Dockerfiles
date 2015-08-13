@@ -1,11 +1,11 @@
-drop schema if exists MM_DB;
-create schema if not exists MM_DB default character set utf8 collate utf8_general_ci;
-use MM_DB;
+drop schema if exists MM_DB_NAME;
+create schema if not exists MM_DB_NAME default character set utf8 collate utf8_general_ci;
+use MM_DB_NAME;
 
-grant usage on MM_DB.* to 'MM_USER'@'%' identified by 'MM_PASS'; 
-grant all privileges on MM_DB.* to 'MM_USER'@'%';
-grant all on MM_DB.* to 'MM_USER'@'%';
-grant select on OIDC_MYSQL_DB.* to 'MM_USER'@'%';
+grant usage on MM_DB_NAME.* to 'MM_DB_USER'@'%' identified by 'MM_DB_PASS'; 
+grant all privileges on MM_DB_NAME.* to 'MM_DB_USER'@'%';
+grant all on MM_DB_NAME.* to 'MM_DB_USER'@'%';
+grant select on OIDC_DB_NAME.* to 'MM_DB_USER'@'%';
 
 create table log (
     id bigint not null auto_increment,

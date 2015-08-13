@@ -1,4 +1,4 @@
-FROM java:8-jre
+FROM learninglayers/java
 
 MAINTAINER Dieter Theiler "dtheiler@tugraz.at"
 

@@ -1,0 +1,66 @@
+# mysqlData:
+#     image: learninglayers/mysql-data
+#     env_file:
+#         - common.env
+#         - mysql.env
+mysql:
+    image: mysql
+    env_file:
+        - common.env
+        - mysql.env
+    # volumes_from:
+    #     - mysqlData
+    volumes:
+        - mysql/:/var/lib/mysql/
+    ports:
+        - "127.0.0.1:3307:3306"
+mysqlCreate:
+    image: mysql-create
+    links:
+        - mysql
+    env_file:
+        - common.env
+        - mysql.env
+        - secret.env
+adapterData:
+    image: adapter-data
+    env_file:
+        - common.env
+adapterServices:
+    image: adapter-externals
+    volumes:
+        - nginx/:/usr/local/openresty/conf/services/qvs/
+adapter:
+    image: learninglayers/adapter
+    volumes_from:
+        - adapterData
+        - qvsFrontend
+        - adapterServices
+    volumes:
+        - ssl/:/usr/local/openresty/conf/ssl/
+    env_file:
+        - common.env
+    ports:
+        - "127.0.0.1:8080:443"
+    links:
+        - qvs
+qvsData:
+    image: mobsos-query-visualization-data
+    env_file:
+        - common.env
+        - QVS.env
+qvsFrontend:
+    image: mobsos-query-visualization-frontend
+    env_file:
+        - common.env
+        - QVS.env
+qvs:
+    image: mobsos-query-visualization
+    env_file:
+        - common.env
+        - QVS.env
+        - QVS2.env
+    volumes_from:
+        - qvsData
+    links:
+        - mysql

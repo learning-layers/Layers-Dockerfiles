@@ -1,9 +1,9 @@
-drop schema if exists MS_DB;
-create schema if not exists MS_DB default character set utf8 collate utf8_general_ci;
-use MS_DB;
+drop schema if exists SURVEYS_DB_NAME;
+create schema if not exists SURVEYS_DB_NAME default character set utf8 collate utf8_general_ci;
+use SURVEYS_DB_NAME;
 
-grant all on MS_DB.* to 'MS_USER'@'%'; -- identified by 'MS_PASS'; 
-grant all privileges on MS_DB.* to 'MS_USER'@'%' with grant option;
+-- grant all on SURVEYS_DB_NAME.* to 'SURVEYS_DB_USER'@'%'; -- identified by 'SURVEYS_DB_PASS'; 
+-- grant all privileges on SURVEYS_DB_NAME.* to 'SURVEYS_DB_USER'@'%' with grant option;
 
 -- -----------------------------------------------------
 -- Definition table 'questionnaire'

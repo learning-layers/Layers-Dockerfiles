@@ -209,7 +209,7 @@
       <label>LDAP Proxy Password</label>
       <!--Note: This value is encrypted and can not be edited directly.-->
       <!--Please use the Configuration Manager GUI to modify this value.-->
-      <value>Ix1XLCI7qFudF8j/i6lHbQ==</value>
+      <value>LDAP_PROXY_PASSWORD</value>
     </setting>
     <setting key="ldap.rootContexts" syntax="STRING_ARRAY">
       <label>LDAP Contextless Login Roots</label>

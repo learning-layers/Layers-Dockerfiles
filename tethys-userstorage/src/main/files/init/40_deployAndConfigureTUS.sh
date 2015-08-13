@@ -6,6 +6,7 @@ echo "Deploying and Configurating Tethys-UserStorage..."
 
 # deploy and delete .war
 cd ${TOMCAT_HOME}/webapps
+rm -rf ${TUS}
 mkdir ${TUS}
 jar -xf ${TUS_WAR}
 rm ${TUS_WAR}
