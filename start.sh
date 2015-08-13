@@ -45,6 +45,8 @@ LDAP_ROOT_DN="dc=learning-layers,dc=eu";
 MM_IPINFODB_KEY="";
 
 # Define alias for docker run including all environment variables that must be available to containers.
+# In OS X bash environment aliases are disabled by default inside shell scripts. Allow them:  
+shopt -s expand_aliases;
 alias drenv='docker run -e "LAYERS_API_URI=$LAYERS_API_URI" -e "LAYERS_APP_URI=$LAYERS_APP_URI"';
 
 echo ""
@@ -273,6 +275,7 @@ SSS_TETHYS_OIDC_USER_END_POINT_URI="$LAYERS_API_URI/o/oauth2/userinfo";
 
 #echo "Start SSS Tomcat server" &&
 #docker run -d -p 8080:8080 --name sss.tomcat learninglayers/tomcat &&
+
 #echo " -> done" &&
 #echo "" &&
 
@@ -326,4 +329,4 @@ echo "  OIDC_MYSQL_PASS: $OIDC_MYSQL_PASS" >> deploy.txt &&
 echo "  MM_PASS: $MM_PASS" >> deploy.txt &&
 echo "  MM_PASS: $MM_PASS" >> deploy.txt &&
 echo "  MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD" >> deploy.txt &&
-echo "  LDAP_ROOT_PASSWORD: $LDAP_ROOT_PASSWORD" >> deploy.txt &&
+echo "  LDAP_ROOT_PASSWORD: $LDAP_ROOT_PASSWORD" >> deploy.txt 
