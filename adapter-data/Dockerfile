@@ -7,12 +7,12 @@ RUN apt-get -qqy --no-install-recommends install \
                                          ca-certificates
 
 # add all files from conf subfolder to conf data volume 
-ADD conf/ /usr/local/openresty/nginx/conf/
-#ADD logs/ /usr/local/openresty/nginx/logs/
+ADD conf/ /usr/local/openresty/nginx/conf
+ADD logs/ /usr/local/openresty/nginx/logs
 
 # provide volumes: openresty config, logs, docker-gen template path
 ENV ORDIR /usr/local/openresty/nginx
-VOLUME ["$ORDIR/conf/","$ORDIR/logs","$TEMPLDIR"]
+VOLUME ["$ORDIR/conf","$ORDIR/logs"]
 
 # take environment variable LAYERS_API_URI and replace in nginx config template
 CMD SERVER_NAME=`echo ${LAYERS_API_URI}| grep -oE '://[^/]+/' | cut -c4- | rev | cut -c2- | rev` && \
