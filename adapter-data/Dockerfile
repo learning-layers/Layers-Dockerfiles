@@ -8,8 +8,8 @@ RUN apt-get -qqy --no-install-recommends install \
 
 
 # add all files from conf subfolder to conf data volume 
-ADD conf/ /usr/local/openresty/conf/
-ADD logs/ /usr/local/openresty/logs/
+ADD conf/ /usr/local/openresty/nginx/conf/
+#ADD logs/ /usr/local/openresty/nginx/logs/
 
 
 # install docker gen, pull most recent nginx template file
@@ -21,7 +21,7 @@ RUN mkdir -p $TEMPLDIR \
    
 
 # provide volumes: openresty config, logs, docker-gen template path
-ENV ORDIR /usr/local/openresty
+ENV ORDIR /usr/local/openresty/nginx
 VOLUME ["$ORDIR/conf/","$ORDIR/logs","$TEMPLDIR"]
 
 # take environment variable LAYERS_API_URI and replace in nginx config template
