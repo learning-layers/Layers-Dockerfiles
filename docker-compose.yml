@@ -58,7 +58,7 @@ adapter:
         - surveys
         - oidc
         - openldapaccount
-        - tethysuserstorage
+        # - tethysuserstorage
         # - swift
 qvsdata:
     image: gordinlearninglayers/mobsos-qvs-data
