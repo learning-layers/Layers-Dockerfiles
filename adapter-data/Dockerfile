@@ -1,17 +1,12 @@
 FROM learninglayers/base
 MAINTAINER Yordan Manolov <manolov@dbis.rwth-aachen.de>
 
-# install dependencies for docker-gen
-RUN apt-get -qqy --no-install-recommends install \
-                                         wget \
-                                         ca-certificates
-
 # add all files from conf subfolder to conf data volume 
-ADD conf/ /usr/local/openresty/nginx/conf
-ADD logs/ /usr/local/openresty/nginx/logs
+ADD conf/ /usr/local/openresty/conf
+ADD logs/ /usr/local/openresty/logs
 
 # provide volumes: openresty config, logs, docker-gen template path
-ENV ORDIR /usr/local/openresty/nginx
+ENV ORDIR /usr/local/openresty
 VOLUME ["$ORDIR/conf","$ORDIR/logs"]
 
 # take environment variable LAYERS_API_URI and replace in nginx config template
