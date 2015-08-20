@@ -8,8 +8,8 @@ ADD conf/ /usr/local/openresty/conf/
 ENV ORDIR /usr/local/openresty
 # here goes nginx.conf
 VOLUME ["$ORDIR/conf"]
-# here go the .conf files of all backend services
-VOLUME ["$ORDIR/conf/services"]
+## here go the .conf files of all backend services
+#VOLUME ["$ORDIR/conf/services"]
 
 # take environment variable LAYERS_API_URI and replace in nginx config template
 CMD SERVER_NAME=`echo ${LAYERS_API_URI}| grep -oE '://[^/]+/' | cut -c4- | rev | cut -c2- | rev` && \
