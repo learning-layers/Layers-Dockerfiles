@@ -26,7 +26,6 @@ RUN wget http://openresty.org/download/ngx_openresty-${OPENRESTY_VERSION}.tar.gz
 	&& make install
 
 WORKDIR /usr/local/openresty
-RUN ls -laR /usr/local/openresty/
 
 # Make sure the docker log collector has access to the openresty logs
 RUN ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log
