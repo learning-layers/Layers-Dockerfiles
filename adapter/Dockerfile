@@ -15,7 +15,7 @@ RUN apt-get install -qqy \
 
 # Set build dir
 WORKDIR /opt
-ENV OPENRESTY_VERSION 1.7.10.1
+ENV OPENRESTY_VERSION 1.9.3.1
 
 RUN wget http://openresty.org/download/ngx_openresty-${OPENRESTY_VERSION}.tar.gz \
 	&& readonly CPUTHR=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \ 
