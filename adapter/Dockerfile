@@ -17,22 +17,20 @@ RUN apt-get install -qqy \
 WORKDIR /opt
 ENV OPENRESTY_VERSION 1.7.10.1
 
-RUN wget http://openresty.org/download/ngx_openresty-${OPENRESTY_VERSION}.tar.gz && \
-	tar xvzf ngx_openresty-${OPENRESTY_VERSION}.tar.gz && \
-	cd ngx_openresty-* && \
-	./configure --with-pcre-jit --with-ipv6 && \
-	make && \
-	make install
+RUN wget http://openresty.org/download/ngx_openresty-${OPENRESTY_VERSION}.tar.gz \
+	&& readonly CPUTHR=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \ 
+	&& tar xvzf ngx_openresty-${OPENRESTY_VERSION}.tar.gz \
+	&& cd ngx_openresty-* \
+	&& ./configure --with-pcre-jit --with-ipv6 -j${CPUTHR}\
+	&& make -j${CPUTHR} \
+	&& make install
 
 WORKDIR /usr/local/openresty
+RUN ls -laR /usr/local/openresty/
 
 # Make sure the docker log collector has access to the openresty logs
-RUN ln -sf /dev/stdout /var/log/nginx/access.log
-RUN ln -sf /dev/stderr /var/log/nginx/error.log
-
-# Provide volume for debugging purposes
-VOLUME ["/var/cache/nginx"]
-
+RUN ln -sf /dev/stdout /usr/local/openresty/nginx/logs/access.log
+RUN ln -sf /dev/stderr /usr/local/openresty/nginx/logs/error.log
 
 EXPOSE 80 443
 
