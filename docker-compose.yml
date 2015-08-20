@@ -1,4 +1,9 @@
+#additionalservice:
+# extends:
+# file:ymlFileOfService
+# service:servicesForStarting
 mysqldata:
+    container_name: mysql-data
     image: gordinlearninglayers/mysql-data
     env_file:
         - common.env
@@ -6,7 +11,8 @@ mysqldata:
     volumes:
         - ./mysql-data/backup/:/backup
 mysql:
-    image: learninglayers/mysql
+   container_name: mysql
+   image: learninglayers/mysql
     env_file:
         - common.env
         - mysql/mysql.env
@@ -27,11 +33,13 @@ mysqlcreate:
     volumes:
         - ./mysql-create/sqlfile/:/sqlfile/
 adapterdata:
-    image: gordinlearninglayers/adapter-data
+   container_name: adapter-data
+   image: gordinlearninglayers/adapter-data
     env_file:
         - common.env
 adapterservices:
-    image: gordinlearninglayers/adapter-externals
+#   container_name: adapter-services
+   image: gordinlearninglayers/adapter-externals
     volumes_from:
         - surveysnginx
         - qvsnginx
@@ -40,7 +48,8 @@ adapterservices:
         - openldapaccountnginx
         # - swiftnginx
 adapter:
-    image: learninglayers/adapter
+   container_name: adapter
+   image: learninglayers/adapter
     volumes_from:
         - adapterdata
         - qvsfrontend
@@ -61,17 +70,20 @@ adapter:
         # - tethysuserstorage
         # - swift
 qvsdata:
+    container_name: mobsos-qvs-data 
     image: gordinlearninglayers/mobsos-qvs-data
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
 qvsfrontend:
+    container_name: mobsos-qvs-frontend 
     image: gordinlearninglayers/mobsos-qvs-frontend
     # build: mobsos-query-visualization-frontend
     env_file:
         - common.env
         - mobsos-query-visualization/QVS.env
 qvs:
+    container_name: mobsos-qvs 
     image: gordinlearninglayers/mobsos-qvs
     env_file:
         - common.env
@@ -85,12 +97,14 @@ qvs:
 qvsnginx:
     image: gordinlearninglayers/mobsos-qvs-nginx
 openldapdata:
+    container_name: openldap-data 
     image: gordinlearninglayers/openldap-data
     env_file:
         - openldap/LDAP.env
     volumes:
         - ./openldap-data/backup/:/backup
 openldap:
+    container_name: openldap 
     image: gordinlearninglayers/openldap
     env_file:
         - openldap/LDAP.env
@@ -101,8 +115,10 @@ openldap:
     volumes:
         - /dev/urandom:/dev/random
 openldapaccountdata:
+    container_name: openldapaccount 
     image: gordinlearninglayers/openldapaccount-data
 openldapaccount:
+    container_name: openldapaccount   
     image: gordinlearninglayers/openldapaccount
     volumes_from:
         - openldapaccountdata
@@ -124,13 +140,14 @@ openldapaccount:
 openldapaccountnginx:
     image: gordinlearninglayers/openldapaccount-nginx
 oidcdata:
+    container_name: oidc-data
     image: gordinlearninglayers/openidconnect-data
     env_file:
         - common.env
         - openidconnect/OIDC.env
         - openldap/LDAP.env
 oidc:
-    image: learninglayers/openidconnect
+    container_name: adapter   image: learninglayers/openidconnect
     env_file:
         - common.env
         - openidconnect/OIDC.env
@@ -147,11 +164,13 @@ oidc:
 oidcnginx:
     image: gordinlearninglayers/openidconnect-nginx
 surveysdata:
+    container_name: mobsos-surveys-data
     image: gordinlearninglayers/mobsos-surveys-data
     env_file:
         - common.env
         - mobsos-surveys/SURVEYS.env
 surveys:
+    container_name: mobsos-surveys
     image: gordinlearninglayers/mobsos-surveys
     env_file:
         - common.env
@@ -163,6 +182,7 @@ surveys:
     volumes:
         - /dev/urandom:/dev/random
 surveysfrontend:
+    container_name: mobsos-surveys-frontend 
     image: gordinlearninglayers/mobsos-surveys-frontend
     env_file:
         - common.env
@@ -170,6 +190,7 @@ surveysfrontend:
 surveysnginx:
     image: gordinlearninglayers/mobsos-surveys-nginx
 swift:
+    container_name: swift 
     image: learninglayers/swift
     ports:
         - "127.0.0.1:8082:8080"
@@ -179,6 +200,7 @@ swift:
 swiftnginx:
     image: gordinlearninglayers/swift-nginx
 tethysuserstorage:
+    container_name: tethys-user-storage   
     image: gordinlearninglayers/tethys-userstorage
     ports:
         - "127.0.0.1:8081:8080"
@@ -191,12 +213,14 @@ tethysuserstorage:
 tethysuserstoragenginx:
     image: gordinlearninglayers/tethys-userstorage-nginx
 mobsosmonitordata:
+    container_name: mobsos-monitor
     image: gordinlearninglayers/mobsos-monitor-data
     env_file:
         - common.env
         - mobsos-monitor/MM.env
         - openidconnect/OIDC.env
 mobsosmonitor:
+    container_name: mobsos-monitor
     image: gordinlearninglayers/mobsos-monitor
     env_file:
         - common.env
