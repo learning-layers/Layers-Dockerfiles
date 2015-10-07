@@ -5,7 +5,7 @@ chmod +x ./jq
 alias jq='./jq'
 
 
-OIDC_DATA=$(curl -X POST '$LAYERS_API_URI/o/oauth2/register' -d \
+OIDC_DATA=$(curl $LAYERS_API_URI/o/oauth2/register -d \
 "{
 	'application_type':'web',
 	'redirect_uris':[${REDIRECT_URIS}],
