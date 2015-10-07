@@ -4,13 +4,6 @@ wget http://stedolan.github.io/jq/download/linux64/jq
 chmod +x ./jq
 alias jq='./jq'
 
-echo test
-echo testtest
-echo testtest
-echo testtest
-echo testtest
-
-
 OIDC_DATA=$(curl $LAYERS_API_URI/o/oauth2/register -d \
 "{
 	'application_type':'web',
