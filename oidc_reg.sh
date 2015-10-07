@@ -12,7 +12,7 @@ OIDC_DATA=$(curl $LAYERS_API_URI/o/oauth2/register -d \
 	'client_name':'${CLIENT_NAME}'
 }" -H 'Content-Type: application/json' -v)
 
-testtest
+
 
 CLIENT_ID=echo $OIDC_DATA | jq '.client_id' 
 CLIENT_SECRET=echo $OIDC_DATA | jq '.client_secret'
