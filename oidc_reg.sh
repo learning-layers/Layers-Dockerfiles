@@ -7,6 +7,7 @@ alias jq='./jq'
 i=0
 while [ $(curl --write-out %{http_code} --silent --output /dev/null $LAYERS_API_URI/o/oauth2/)  != 200 && i<12]
 do sleep 5 && ((i++))
+done
 
 if[ "$i" == 12 ]; then
 	echo "Connection to server timed out, exiting..." && exit
