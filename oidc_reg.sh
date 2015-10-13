@@ -1,5 +1,8 @@
 #!/bin/bash
-if [ "$DYN_REG" == 1]; then
+if [ "$DYN_REG" == 0]; then
+	echo "Client already registered, exiting..." && exit
+fi
+
 wget http://stedolan.github.io/jq/download/linux64/jq
 chmod +x ./jq
 alias jq='./jq'
@@ -29,7 +32,4 @@ CLIENT_SECRET=echo $OIDC_DATA | jq '.client_secret'
 sed -i "s#CLIENT_ID#${CLIENT_ID}#g" $CONF_FILE_LOC && \
 sed -i "s#CLIENT_SECRET#${CLIENT_SECRET}#g" $CONF_FILE_LOC
 
-else
-	echo "Client already registered, exiting..."
-fi	
 
