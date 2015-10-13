@@ -4,6 +4,14 @@ wget http://stedolan.github.io/jq/download/linux64/jq
 chmod +x ./jq
 alias jq='./jq'
 
+i=0
+while [ $(curl --write-out %{http_code} --silent --output /dev/null $LAYERS_API_URI/o/oauth2/)  != 200 && i<12]
+do sleep 5 && ((i++))
+
+if[ "$i" == 12 ]; then
+	echo "Connection to server timed out, exiting..." && exit
+fi
+
 OIDC_DATA=$(curl $LAYERS_API_URI/o/oauth2/register -d \
 "{
 	'application_type':'web',
